@@ -6,19 +6,19 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- 
+  <!--
     - primary meta tags
   -->
-  <title>Personal Blog Website</title>
-  <meta name="title" content=" Personal Blog Website">
-  <meta name="description" content="This is a blog html template made by nydh">
+  <title>Nidhin Narayanan | Eyes of Nydh Photography</title>
+  <meta name="title" content="Eyes of Nydh — Photography by Nidhin Narayanan">
+  <meta name="description" content="Explore photographs of nature, travel and everyday moments through the eyes of Nidhin Narayanan, Alappuzha, Kerala.">
 
-  <!-- 
+  <!--
     - favicon
   -->
   <link rel="shortcut icon" href="./favicon.svg" type="image/svg+xml">
 
-  <!-- 
+  <!--
     - google font link
   -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -26,38 +26,39 @@
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;500;600;700;800&display=swap"
     rel="stylesheet">
 
-  <!-- 
+  <!--
     - custom css link
   -->
   <link rel="stylesheet" href="./assets/css/style.css">
 
-  <!-- 
+  <!--
     - preload images
   -->
-  <link rel="preload" as="image" href="./assets/images/1.png">
+  <link rel="preload" as="image" href="./assets/images/nidhin.png">
   <link rel="preload" as="image" href="./assets/images/pattern-2.svg">
   <link rel="preload" as="image" href="./assets/images/pattern-3.svg">
 
 </head>
 
 <body id="top">
+  <a class="skip-link" href="#main">Skip to content</a>
 
-  <!-- 
+  <!--
     - #HEADER
   -->
 
   <header class="header" data-header>
     <div class="container">
 
-      <a href="#" class="logo">
+      <a href="#gallery" class="logo">
         <img src="./assets/images/999.png" width="70" height="37" alt="nydh logo">
       </a>
 
       <nav class="navbar" data-navbar>
 
         <div class="navbar-top">
-          <a href="#" class="logo">
-            <img src="./assets/images/999.svg" width="119" height="37" alt="nydh logo">
+          <a href="#gallery" class="logo">
+            <img src="./assets/images/999.png" width="119" height="37" alt="nydh logo">
           </a>
 
           <button class="nav-close-btn" aria-label="close menu" data-nav-toggler>
@@ -80,67 +81,24 @@
           </li>
 
           <li>
-            <a href="#recent" class="navbar-link hover-1" data-nav-toggler>Recent Post</a>
+            <a href="#gallery" class="navbar-link hover-1" data-nav-toggler>Explore</a>
           </li>
 
           <li>
-            <a href="#" class="navbar-link hover-1" data-nav-toggler>Contact</a>
+            <a href="#contact" class="navbar-link hover-1" data-nav-toggler>Contact</a>
           </li>
 
         </ul>
 
-        <div class="navbar-bottom">
-
-          <div class="profile-card">
-            <img src="./assets/images/nidhiiii.png" width="48" height="48" alt="Nidhin" class="profile-banner">
-
-            <div>
-              <p class="card-title">Hello nydh !</p>
-
-              <p class="card-subtitle">
-                You have 3 new messages
-              </p>
-            </div>
-          </div>
-
-          <ul class="link-list">
-
-            <li>
-              <a href="#" class="navbar-bottom-link hover-1">Profile</a>
-            </li>
-
-            <li>
-              <a href="#" class="navbar-bottom-link hover-1">Articles Saved</a>
-            </li>
-
-            <li>
-              <a href="#" class="navbar-bottom-link hover-1">Add New Post</a>
-            </li>
-
-            <li>
-              <a href="#" class="navbar-bottom-link hover-1">My Likes</a>
-            </li>
-
-            <li>
-              <a href="#" class="navbar-bottom-link hover-1">Account Setting</a>
-            </li>
-
-            <li>
-              <a href="#" class="navbar-bottom-link hover-1">Sign Out</a>
-            </li>
-
-          </ul>
-
-        </div>
-
+        <div class="navbar-bottom"><a href="#gallery" class="navbar-bottom-link">Explore the photo collection</a></div>
         <p class="copyright-text">
-          Copyright 2024 © nydh <br>
+          Copyright <span data-year></span> © nydh <br>
           Developed by nydh
         </p>
 
       </nav>
 
-      <a href="#" class="btn btn-primary">Subscribe</a>
+      <a href="#contact" class="btn btn-primary">Let’s connect</a>
 
       <button class="nav-open-btn" aria-label="open menu" data-nav-toggler>
         <ion-icon name="menu-outline" aria-hidden="true"></ion-icon>
@@ -153,10 +111,10 @@
 
 
 
-  <main>
+  <main id="main">
     <article>
 
-      <!-- 
+      <!--
         - #HERO
       -->
 
@@ -171,29 +129,15 @@
               I’m <span class="span">Nidhin Narayanan</span>
             </h1>
 
-            <p class="hero-text">
-              A photographer captures, edits, and presents visual images using cameras and various photographic techniques. They ensure that images are aesthetically pleasing, technically accurate, and suitable for different purposes such as portraits, events, commercial projects, or artistic endeavors.
-              Photographers often specialize in a particular style or subject and use both digital and film mediums, focusing on composition, lighting, and post-processing to achieve the desired outcome.
-            </p>
+            <p class="hero-text">Finding extraordinary stories in ordinary moments. Explore nature, coastlines and life through my lens, from Alappuzha, Kerala and beyond.</p>
 
-            <div class="input-wrapper">
-
-              <input type="email" name="email_address" placeholder="Type your email address" required
-                class="input-field" autocomplete="off">
-
-              <button class="btn btn-primary">
-                <span class="span">Subscribe</span>
-
-                <ion-icon name="arrow-forward-outline" aria-hidden="true"></ion-icon>
-              </button>
-
-            </div>
+            <div class="hero-actions"><a href="#gallery" class="btn btn-primary">Explore my photographs ↗</a><a href="#contact" class="text-link">Get in touch →</a></div><p class="hero-note">NATURE · TRAVEL · EVERYDAY STORIES</p>
 
           </div>
 
           <div class="hero-banner">
 
-            <img src="./assets/images/nidhiii.png" width="327" height="490" alt="Nidhin Narayanan" class="w-100">
+            <img src="./assets/images/nidhin.png" width="327" height="490" alt="Nidhin Narayanan" class="w-100">
 
             <img src="./assets/images/pattern-2.svg" width="27" height="26" alt="shape" class="shape shape-1">
 
@@ -212,7 +156,7 @@
 
 
 
-      <!-- 
+      <!--
         - #TOPICS
       -->
 
@@ -224,11 +168,11 @@
             <div class="card-content">
 
               <h2 class="headline headline-2 section-title card-title" id="topic-label">
-                Hot topics
+                Through my lens
               </h2>
 
               <p class="card-text">
-                Don't miss out on the latest news about Travel tips, Hotels review, Food guide...
+                Follow your curiosity. Discover a different perspective in every frame.
               </p>
 
               <div class="btn-group">
@@ -247,7 +191,7 @@
               <ul class="slider-list" data-slider-container>
 
                 <li class="slider-item">
-                  <a href="#" class="slider-card">
+                  <a href="#gallery" class="slider-card">
 
                     <figure class="slider-banner img-holder" style="--width: 507; --height: 618;">
                       <img src="./assets/images/t1.png" width="507" height="618" loading="lazy" alt="Mountains"
@@ -257,14 +201,14 @@
                     <div class="slider-content">
                       <span class="slider-title">Mountains</span>
 
-                      <p class="slider-subtitle">38 Articles</p>
+                      <p class="slider-subtitle">Explore photographs</p>
                     </div>
 
                   </a>
                 </li>
 
                 <li class="slider-item">
-                  <a href="#" class="slider-card">
+                  <a href="#gallery" class="slider-card">
 
                     <figure class="slider-banner img-holder" style="--width: 507; --height: 618;">
                       <img src="./assets/images/t2.png" width="507" height="618" loading="lazy" alt="Sports"
@@ -274,14 +218,14 @@
                     <div class="slider-content">
                       <span class="slider-title">Sports</span>
 
-                      <p class="slider-subtitle">63 Articles</p>
+                      <p class="slider-subtitle">Explore photographs</p>
                     </div>
 
                   </a>
                 </li>
 
                 <li class="slider-item">
-                  <a href="#" class="slider-card">
+                  <a href="#gallery" class="slider-card">
 
                     <figure class="slider-banner img-holder" style="--width: 507; --height: 618;">
                       <img src="./assets/images/t3.png" width="507" height="618" loading="lazy" alt="Travel"
@@ -291,14 +235,14 @@
                     <div class="slider-content">
                       <span class="slider-title">Travel</span>
 
-                      <p class="slider-subtitle">78 Articles</p>
+                      <p class="slider-subtitle">Explore photographs</p>
                     </div>
 
                   </a>
                 </li>
 
                 <li class="slider-item">
-                  <a href="#" class="slider-card">
+                  <a href="#gallery" class="slider-card">
 
                     <figure class="slider-banner img-holder" style="--width: 507; --height: 618;">
                       <img src="./assets/images/t4.png" width="507" height="618" loading="lazy" alt="View point"
@@ -308,14 +252,14 @@
                     <div class="slider-content">
                       <span class="slider-title">View point</span>
 
-                      <p class="slider-subtitle">125 Articles</p>
+                      <p class="slider-subtitle">Explore photographs</p>
                     </div>
 
                   </a>
                 </li>
 
                 <li class="slider-item">
-                  <a href="#" class="slider-card">
+                  <a href="#gallery" class="slider-card">
 
                     <figure class="slider-banner img-holder" style="--width: 507; --height: 618;">
                       <img src="./assets/images/t5.png" width="507" height="618" loading="lazy" alt="Beach"
@@ -325,7 +269,7 @@
                     <div class="slider-content">
                       <span class="slider-title">Beach</span>
 
-                      <p class="slider-subtitle">78 Articles</p>
+                      <p class="slider-subtitle">Explore photographs</p>
                     </div>
 
                   </a>
@@ -343,19 +287,32 @@
 
 
 
-      <!-- 
+      <!--
         - #FEATURED POST
       -->
+
+
+      <section class="section" id="gallery" aria-labelledby="gallery-title">
+        <div class="container">
+          <p class="eyebrow">THE PHOTO COLLECTION</p>
+          <h2 class="headline headline-2" id="gallery-title">Find a frame that speaks to you.</h2>
+          <p class="section-text">Search, explore, and save your favorite moments. Your saved selection stays in this browser.</p>
+          <div class="gallery-tools"><label for="photo-search">Search the collection<input id="photo-search" type="search" placeholder="Try beach, nature, travel…" autocomplete="off"></label><button class="filter-btn" id="saved-filter" aria-pressed="false">♡ Saved photos <span id="saved-count">0</span></button></div>
+          <div class="gallery-filters" role="group" aria-label="Filter photographs"><button class="filter-btn" data-filter="All" aria-pressed="true">All photographs</button><button class="filter-btn" data-filter="Nature" aria-pressed="false">Nature</button><button class="filter-btn" data-filter="Coast" aria-pressed="false">Coast</button><button class="filter-btn" data-filter="Travel" aria-pressed="false">Travel</button></div>
+          <p id="gallery-status" role="status"></p><div class="photo-grid" id="photo-grid"></div>
+          <noscript><p>Enable JavaScript to search and save photos. You can still browse the selected moments below.</p></noscript>
+        </div>
+      </section>
 
       <section class="section feature" aria-label="feature" id="featured">
         <div class="container">
 
           <h2 class="headline headline-2 section-title">
-            <span class="span">Editor's picked</span>
+            <span class="span">Selected moments</span>
           </h2>
 
           <p class="section-text">
-            Featured and highly rated articles
+            A closer look at nature, connection and the world around us.
           </p>
 
           <ul class="feature-list">
@@ -372,20 +329,20 @@
 
                   <div class="card-wrapper">
                     <div class="card-tag">
-                      <a href="#" class="span hover-2">#Elephant</a>
+                      <a href="#gallery" class="span hover-2">#Elephant</a>
 
-                      <a href="#" class="span hover-2">#Komban</a>
+                      <a href="#gallery" class="span hover-2">#Komban</a>
                     </div>
 
                     <div class="wrapper">
                       <ion-icon name="time-outline" aria-hidden="true"></ion-icon>
 
-                      <span class="span">3 mins read</span>
+                      <span class="span">Photo story</span>
                     </div>
                   </div>
 
                   <h3 class="headline headline-3">
-                    <a href="#" class="card-title hover-2">
+                    <a href="#gallery" class="card-title hover-2">
                       Nature's great masterpiece, an elephant; the only harmless great thing.
                     </a>
                   </h3>
@@ -403,7 +360,7 @@
                       </div>
                     </div>
 
-                    <a href="#" class="card-btn">Read more</a>
+                    <a href="#gallery" class="card-btn">View photograph</a>
 
                   </div>
 
@@ -424,20 +381,20 @@
 
                   <div class="card-wrapper">
                     <div class="card-tag">
-                      <a href="#" class="span hover-2">#Beach</a>
+                      <a href="#gallery" class="span hover-2">#Beach</a>
 
-                      <a href="#" class="span hover-2">#Movie</a>
+                      <a href="#gallery" class="span hover-2">#Movie</a>
                     </div>
 
                     <div class="wrapper">
                       <ion-icon name="time-outline" aria-hidden="true"></ion-icon>
 
-                      <span class="span">6 mins read</span>
+                      <span class="span">Photo story</span>
                     </div>
                   </div>
 
                   <h3 class="headline headline-3">
-                    <a href="#" class="card-title hover-2">
+                    <a href="#gallery" class="card-title hover-2">
                       Together is a beautiful place to be, especially with the ocean as our witness.
                     </a>
                   </h3>
@@ -448,14 +405,14 @@
                       <img src="./assets/images/devan.png" width="48" height="48" loading="lazy" alt="Devan"
                         class="profile-banner"></a>
 
-                      <div><p class="card-title" ></p>
+                      <div><p class="card-title">
                         <a href="https://www.instagram.com/_d.vn__/">Devan </a></p>
 
                         <p class="card-subtitle">28 jul 2024</p>
                       </div>
                     </div>
 
-                    <a href="#" class="card-btn">Read more</a>
+                    <a href="#gallery" class="card-btn">View photograph</a>
 
                   </div>
 
@@ -476,20 +433,20 @@
 
                   <div class="card-wrapper">
                     <div class="card-tag">
-                      <a href="#" class="span hover-2">#Beach</a>
+                      <a href="#gallery" class="span hover-2">#Beach</a>
 
-                      <a href="#" class="span hover-2">#Movie</a>
+                      <a href="#gallery" class="span hover-2">#Movie</a>
                     </div>
 
                     <div class="wrapper">
                       <ion-icon name="time-outline" aria-hidden="true"></ion-icon>
 
-                      <span class="span">6 mins read</span>
+                      <span class="span">Photo story</span>
                     </div>
                   </div>
 
                   <h3 class="headline headline-3">
-                    <a href="#" class="card-title hover-2">
+                    <a href="#gallery" class="card-title hover-2">
                       The ocean stirs the heart, inspires the imagination, and brings eternal joy to the soul.
                     </a>
                   </h3>
@@ -507,7 +464,7 @@
                       </div>
                     </div>
 
-                    <a href="#" class="card-btn">Read more</a>
+                    <a href="#gallery" class="card-btn">View photograph</a>
 
                   </div>
 
@@ -528,20 +485,20 @@
 
                   <div class="card-wrapper">
                     <div class="card-tag">
-                      <a href="#" class="span hover-2">#Greenery</a>
+                      <a href="#gallery" class="span hover-2">#Greenery</a>
 
-                      <a href="#" class="span hover-2">#Movie</a>
+                      <a href="#gallery" class="span hover-2">#Movie</a>
                     </div>
 
                     <div class="wrapper">
                       <ion-icon name="time-outline" aria-hidden="true"></ion-icon>
 
-                      <span class="span">6 mins read</span>
+                      <span class="span">Photo story</span>
                     </div>
                   </div>
 
                   <h3 class="headline headline-3">
-                    <a href="#" class="card-title hover-2">
+                    <a href="#gallery" class="card-title hover-2">
                       In every walk with nature, one receives far more than he seeks.
                       <br>
                     </a>
@@ -560,7 +517,7 @@
                       </div>
                     </div>
 
-                    <a href="#" class="card-btn">Read more</a>
+                    <a href="#gallery" class="card-btn">View photograph</a>
 
                   </div>
 
@@ -581,20 +538,20 @@
 
                   <div class="card-wrapper">
                     <div class="card-tag">
-                      <a href="#" class="span hover-2">#Night</a>
+                      <a href="#gallery" class="span hover-2">#Night</a>
 
-                      <a href="#" class="span hover-2">#Movie</a>
+                      <a href="#gallery" class="span hover-2">#Movie</a>
                     </div>
 
                     <div class="wrapper">
                       <ion-icon name="time-outline" aria-hidden="true"></ion-icon>
 
-                      <span class="span">6 mins read</span>
+                      <span class="span">Photo story</span>
                     </div>
                   </div>
 
                   <h3 class="headline headline-3">
-                    <a href="#" class="card-title hover-2">
+                    <a href="#gallery" class="card-title hover-2">
                       Live by the sun, love by the moon.
                       <br>
                       <br>
@@ -614,7 +571,7 @@
                       </div>
                     </div>
 
-                    <a href="#" class="card-btn">Read more</a>
+                    <a href="#gallery" class="card-btn">View photograph</a>
 
                   </div>
 
@@ -625,8 +582,8 @@
 
           </ul>
 
-          <a href="#" class="btn btn-secondary">
-            <span class="span">Show More Posts</span>
+          <a href="#gallery" class="btn btn-secondary">
+            <span class="span">Explore the collection</span>
 
             <ion-icon name="arrow-forward" aria-hidden="true"></ion-icon>
           </a>
@@ -641,129 +598,17 @@
 
 
 
-      <!-- 
+      <!--
         - #POPULAR TAGS
       -->
 
-      <section class="tags" aria-labelledby="tag-label">
-        <div class="container">
-
-          <h2 class="headline headline-2 section-title" id="tag-label">
-            <span class="span">Popular Tags</span>
-          </h2>
-
-          <p class="section-text">
-            Most searched keywords
-          </p>
-
-          <ul class="grid-list">
-
-            <li>
-              <button class="card tag-btn">
-                <img src="./assets/images/tag1.png" width="32" height="32" loading="lazy" alt="Travel">
-
-                <p class="btn-text">Travel</p>
-              </button>
-            </li>
-
-            <li>
-              <button class="card tag-btn">
-                <img src="./assets/images/tag2.png" width="32" height="32" loading="lazy" alt="Culture">
-
-                <p class="btn-text">Culture</p>
-              </button>
-            </li>
-
-            <li>
-              <button class="card tag-btn">
-                <img src="./assets/images/tag3.png" width="32" height="32" loading="lazy" alt="Lifestyle">
-
-                <p class="btn-text">Lifestyle</p>
-              </button>
-            </li>
-
-            <li>
-              <button class="card tag-btn">
-                <img src="./assets/images/tag4.png" width="32" height="32" loading="lazy" alt="Fashion">
-
-                <p class="btn-text">Fashion</p>
-              </button>
-            </li>
-
-            <li>
-              <button class="card tag-btn">
-                <img src="./assets/images/tag5.png" width="32" height="32" loading="lazy" alt="Food">
-
-                <p class="btn-text">Food</p>
-              </button>
-            </li>
-
-            <li>
-              <button class="card tag-btn">
-                <img src="./assets/images/tag6.png" width="32" height="32" loading="lazy" alt="Space">
-
-                <p class="btn-text">Space</p>
-              </button>
-            </li>
-
-            <li>
-              <button class="card tag-btn">
-                <img src="./assets/images/tag7.png" width="32" height="32" loading="lazy" alt="Animal">
-
-                <p class="btn-text">Animal</p>
-              </button>
-            </li>
-
-            <li>
-              <button class="card tag-btn">
-                <img src="./assets/images/tag8.png" width="32" height="32" loading="lazy" alt="Minimal">
-
-                <p class="btn-text">Minimal</p>
-              </button>
-            </li>
-
-            <li>
-              <button class="card tag-btn">
-                <img src="./assets/images/tag9.png" width="32" height="32" loading="lazy" alt="Interior">
-
-                <p class="btn-text">Interior</p>
-              </button>
-            </li>
-
-            <li>
-              <button class="card tag-btn">
-                <img src="./assets/images/tag10.png" width="32" height="32" loading="lazy" alt="Plant">
-
-                <p class="btn-text">Plant</p>
-              </button>
-            </li>
-
-            <li>
-              <button class="card tag-btn">
-                <img src="./assets/images/tag11.png" width="32" height="32" loading="lazy" alt="Nature">
-
-                <p class="btn-text">Nature</p>
-              </button>
-            </li>
-
-            <li>
-              <button class="card tag-btn">
-                <img src="./assets/images/tag12.png" width="32" height="32" loading="lazy" alt="Business">
-
-                <p class="btn-text">Business</p>
-              </button>
-            </li>
-
-          </ul>
-
-        </div>
-      </section>
+      <section class="section" aria-labelledby="field-notes"><div class="container"><p class="eyebrow">A DIFFERENT WAY TO SEE</p><h2 class="headline headline-2" id="field-notes">Take a little inspiration with you.</h2><div class="photo-grid" style="margin-top:24px"><div class="photo-card photo-info"><p>01 / LIGHT</p><h3>Chase the quiet hours</h3><p class="field-note">Look for soft light early in the morning or near sunset. Notice how shadows change the mood of a familiar place.</p></div><div class="photo-card photo-info"><p>02 / COMPOSITION</p><h3>Leave room for the story</h3><p class="field-note">Try a lower viewpoint, a natural frame, or a little negative space. One small shift can change the whole photograph.</p></div><div class="photo-card photo-info"><p>03 / CURIOSITY</p><h3>Find wonder close to home</h3><p class="field-note">Pick one familiar street and look for a detail you usually miss: a reflection, a texture, or a fleeting expression.</p></div></div></div></section>
 
 
 
 
 
-      <!-- 
+      <!--
         - #RECENT POST
       -->
 
@@ -777,7 +622,7 @@
             </h2>
 
             <p class="section-text">
-              Don't miss the latest trends
+              Small stories, captured one frame at a time.
             </p>
 
             <ul class="grid-list">
@@ -792,10 +637,10 @@
 
                   <div class="card-content">
 
-                    <a href="#" class="card-badge">Travel</a>
+                    <a href="#gallery" class="card-badge">Travel</a>
 
                     <h3 class="headline headline-3 card-title">
-                      <a href="#" class="link hover-2">Traveling</a>
+                      <a href="#gallery" class="link hover-2">Traveling</a>
                     </h3>
 
                     <p class="card-text">
@@ -804,15 +649,15 @@
 
                     <div class="card-wrapper">
                       <div class="card-tag">
-                        <a href="#" class="span hover-2"># Travel</a>
+                        <a href="#gallery" class="span hover-2"># Travel</a>
 
-                        <a href="#" class="span hover-2"># Lifestyle</a>
+                        <a href="#gallery" class="span hover-2"># Lifestyle</a>
                       </div>
 
                       <div class="wrapper">
                         <ion-icon name="time-outline" aria-hidden="true"></ion-icon>
 
-                        <span class="span">3 mins read</span>
+                        <span class="span">Photo story</span>
                       </div>
                     </div>
 
@@ -831,10 +676,10 @@
 
                   <div class="card-content">
 
-                    <a href="#" class="card-badge">Hometown</a>
+                    <a href="#gallery" class="card-badge">Hometown</a>
 
                     <h3 class="headline headline-3 card-title">
-                      <a href="#" class="link hover-2">greenery</a>
+                      <a href="#gallery" class="link hover-2">greenery</a>
                     </h3>
 
                     <p class="card-text">
@@ -843,15 +688,15 @@
 
                     <div class="card-wrapper">
                       <div class="card-tag">
-                        <a href="#" class="span hover-2"># Travel</a>
+                        <a href="#gallery" class="span hover-2"># Travel</a>
 
-                        <a href="#" class="span hover-2"># Lifestyle</a>
+                        <a href="#gallery" class="span hover-2"># Lifestyle</a>
                       </div>
 
                       <div class="wrapper">
                         <ion-icon name="time-outline" aria-hidden="true"></ion-icon>
 
-                        <span class="span">3 mins read</span>
+                        <span class="span">Photo story</span>
                       </div>
                     </div>
 
@@ -870,10 +715,10 @@
 
                   <div class="card-content">
 
-                    <a href="#" class="card-badge">Beach</a>
+                    <a href="#gallery" class="card-badge">Beach</a>
 
                     <h3 class="headline headline-3 card-title">
-                      <a href="#" class="link hover-2">Sea Shore</a>
+                      <a href="#gallery" class="link hover-2">Sea Shore</a>
                     </h3>
 
                     <p class="card-text">
@@ -882,15 +727,15 @@
 
                     <div class="card-wrapper">
                       <div class="card-tag">
-                        <a href="#" class="span hover-2"># Travel</a>
+                        <a href="#gallery" class="span hover-2"># Travel</a>
 
-                        <a href="#" class="span hover-2"># Lifestyle</a>
+                        <a href="#gallery" class="span hover-2"># Lifestyle</a>
                       </div>
 
                       <div class="wrapper">
                         <ion-icon name="time-outline" aria-hidden="true"></ion-icon>
 
-                        <span class="span">3 mins read</span>
+                        <span class="span">Photo story</span>
                       </div>
                     </div>
 
@@ -909,10 +754,10 @@
 
                   <div class="card-content">
 
-                    <a href="#" class="card-badge">Hometown</a>
+                    <a href="#gallery" class="card-badge">Hometown</a>
 
                     <h3 class="headline headline-3 card-title">
-                      <a href="#" class="link hover-2">Boat</a>
+                      <a href="#gallery" class="link hover-2">Boat</a>
                     </h3>
 
                     <p class="card-text">
@@ -921,15 +766,15 @@
 
                     <div class="card-wrapper">
                       <div class="card-tag">
-                        <a href="#" class="span hover-2"># Travel</a>
+                        <a href="#gallery" class="span hover-2"># Travel</a>
 
-                        <a href="#" class="span hover-2"># Lifestyle</a>
+                        <a href="#gallery" class="span hover-2"># Lifestyle</a>
                       </div>
 
                       <div class="wrapper">
                         <ion-icon name="time-outline" aria-hidden="true"></ion-icon>
 
-                        <span class="span">3 mins read</span>
+                        <span class="span">Photo story</span>
                       </div>
                     </div>
 
@@ -948,28 +793,28 @@
 
                   <div class="card-content">
 
-                    <a href="#" class="card-badge">Beach</a>
+                    <a href="#gallery" class="card-badge">Beach</a>
 
                     <h3 class="headline headline-3 card-title">
-                      <a href="#" class="link hover-2">Evening</a>
+                      <a href="#gallery" class="link hover-2">Evening</a>
                     </h3>
 
                     <p class="card-text">
-                      
+
                       As the sun dips below the horizon, the evening beach whispers promises of peace and reflection.
                     </p>
 
                     <div class="card-wrapper">
                       <div class="card-tag">
-                        <a href="#" class="span hover-2"># Travel</a>
+                        <a href="#gallery" class="span hover-2"># Travel</a>
 
-                        <a href="#" class="span hover-2"># Lifestyle</a>
+                        <a href="#gallery" class="span hover-2"># Lifestyle</a>
                       </div>
 
                       <div class="wrapper">
                         <ion-icon name="time-outline" aria-hidden="true"></ion-icon>
 
-                        <span class="span">3 mins read</span>
+                        <span class="span">Photo story</span>
                       </div>
                     </div>
 
@@ -980,22 +825,7 @@
 
             </ul>
 
-            <nav aria-label="pagination" class="pagination">
 
-              <a href="#" class="pagination-btn" aria-label="previous page">
-                <ion-icon name="arrow-back" aria-hidden="true"></ion-icon>
-              </a>
-
-              <a href="#" class="pagination-btn">1</a>
-              <a href="#" class="pagination-btn">2</a>
-              <a href="#" class="pagination-btn">3</a>
-              <a href="#" class="pagination-btn" aria-label="more page">...</a>
-
-              <a href="#" class="pagination-btn" aria-label="next page">
-                <ion-icon name="arrow-forward" aria-hidden="true"></ion-icon>
-              </a>
-
-            </nav>
 
           </div>
 
@@ -1020,11 +850,11 @@
                     <div class="card-content">
 
                       <h4 class="headline headline-4 card-title">
-                        <a href="#" class="link hover-2">Creating is a privilege but it’s also a gift</a>
+                        <a href="#gallery" class="link hover-2">Creating is a privilege but it’s also a gift</a>
                       </h4>
 
                       <div class="warpper">
-                        <p class="card-subtitle">15 mins read</p>
+                        <p class="card-subtitle">Photo story</p>
 
                         <time class="publish-date" datetime="2022-04-15">15 April 2022</time>
                       </div>
@@ -1045,11 +875,11 @@
                     <div class="card-content">
 
                       <h4 class="headline headline-4 card-title">
-                        <a href="#" class="link hover-2">Being unique is better than being perfect</a>
+                        <a href="#gallery" class="link hover-2">Being unique is better than being perfect</a>
                       </h4>
 
                       <div class="warpper">
-                        <p class="card-subtitle">15 mins read</p>
+                        <p class="card-subtitle">Photo story</p>
 
                         <time class="publish-date" datetime="2022-04-15">15 April 2022</time>
                       </div>
@@ -1070,11 +900,11 @@
                     <div class="card-content">
 
                       <h4 class="headline headline-4 card-title">
-                        <a href="#" class="link hover-2">Every day, in every city and town across the country</a>
+                        <a href="#gallery" class="link hover-2">Every day, in every city and town across the country</a>
                       </h4>
 
                       <div class="warpper">
-                        <p class="card-subtitle">15 mins read</p>
+                        <p class="card-subtitle">Photo story</p>
 
                         <time class="publish-date" datetime="2022-04-15">15 April 2022</time>
                       </div>
@@ -1095,11 +925,11 @@
                     <div class="card-content">
 
                       <h4 class="headline headline-4 card-title">
-                        <a href="#" class="link hover-2">Your voice, your mind, your story, your vision</a>
+                        <a href="#gallery" class="link hover-2">Your voice, your mind, your story, your vision</a>
                       </h4>
 
                       <div class="warpper">
-                        <p class="card-subtitle">15 mins read</p>
+                        <p class="card-subtitle">Photo story</p>
 
                         <time class="publish-date" datetime="2022-04-15">15 April 2022</time>
                       </div>
@@ -1120,11 +950,11 @@
                     <div class="card-content">
 
                       <h4 class="headline headline-4 card-title">
-                        <a href="#" class="link hover-2">Being unique is better than being perfect</a>
+                        <a href="#gallery" class="link hover-2">Being unique is better than being perfect</a>
                       </h4>
 
                       <div class="warpper">
-                        <p class="card-subtitle">15 mins read</p>
+                        <p class="card-subtitle">Photo story</p>
 
                         <time class="publish-date" datetime="2022-04-15">15 April 2022</time>
                       </div>
@@ -1219,7 +1049,7 @@
 
             <div class="card aside-card insta-card">
 
-              <a href="#" class="logo">
+              <a href="#gallery" class="logo">
                 <img src="./assets/images/999.png" width="50" height="37" loading="lazy" alt="nydh logo">EYESOFNYDH
               </a>
 
@@ -1230,63 +1060,63 @@
               <ul class="insta-list">
 
                 <li>
-                  <a href="#" class="insta-post img-holder" style="--width: 276; --height: 277;">
+                  <a href="#gallery" class="insta-post img-holder" style="--width: 276; --height: 277;">
                     <img src="./assets/images/ip1.png" width="276" height="277" loading="lazy" alt="insta post"
                       class="img-cover">
                   </a>
                 </li>
 
                 <li>
-                  <a href="#" class="insta-post img-holder" style="--width: 276; --height: 277;">
+                  <a href="#gallery" class="insta-post img-holder" style="--width: 276; --height: 277;">
                     <img src="./assets/images/ip2.png" width="276" height="277" loading="lazy" alt="insta post"
                       class="img-cover">
                   </a>
                 </li>
 
                 <li>
-                  <a href="#" class="insta-post img-holder" style="--width: 276; --height: 277;">
+                  <a href="#gallery" class="insta-post img-holder" style="--width: 276; --height: 277;">
                     <img src="./assets/images/ip3.png" width="276" height="277" loading="lazy" alt="insta post"
                       class="img-cover">
                   </a>
                 </li>
 
                 <li>
-                  <a href="#" class="insta-post img-holder" style="--width: 276; --height: 277;">
+                  <a href="#gallery" class="insta-post img-holder" style="--width: 276; --height: 277;">
                     <img src="./assets/images/ip4.png" width="276" height="277" loading="lazy" alt="insta post"
                       class="img-cover">
                   </a>
                 </li>
 
                 <li>
-                  <a href="#" class="insta-post img-holder" style="--width: 276; --height: 277;">
+                  <a href="#gallery" class="insta-post img-holder" style="--width: 276; --height: 277;">
                     <img src="./assets/images/ip5.png" width="276" height="277" loading="lazy" alt="insta post"
                       class="img-cover">
                   </a>
                 </li>
 
                 <li>
-                  <a href="#" class="insta-post img-holder" style="--width: 276; --height: 277;">
+                  <a href="#gallery" class="insta-post img-holder" style="--width: 276; --height: 277;">
                     <img src="./assets/images/ip6.png" width="276" height="277" loading="lazy" alt="insta post"
                       class="img-cover">
                   </a>
                 </li>
 
                 <li>
-                  <a href="#" class="insta-post img-holder" style="--width: 276; --height: 277;">
+                  <a href="#gallery" class="insta-post img-holder" style="--width: 276; --height: 277;">
                     <img src="./assets/images/ip9.png" width="276" height="277" loading="lazy" alt="insta post"
                       class="img-cover">
                   </a>
                 </li>
 
                 <li>
-                  <a href="#" class="insta-post img-holder" style="--width: 276; --height: 277;">
+                  <a href="#gallery" class="insta-post img-holder" style="--width: 276; --height: 277;">
                     <img src="./assets/images/ip8.png "width="276" height="277" loading="lazy" alt="insta post"
                       class="img-cover">
                   </a>
                 </li>
 
                 <li>
-                  <a href="#" class="insta-post img-holder" style="--width: 276; --height: 277;">
+                  <a href="#gallery" class="insta-post img-holder" style="--width: 276; --height: 277;">
                     <img src="./assets/images/ip7.png" width="276" height="277" loading="lazy" alt="insta post"
                       class="img-cover">
                   </a>
@@ -1301,6 +1131,7 @@
         </div>
       </section>
 
+      <section class="section" id="contact" aria-labelledby="contact-title"><div class="container"><div class="contact-card"><p class="eyebrow">LET’S MAKE A CONNECTION</p><h2 class="headline headline-2" id="contact-title">Have a story in mind?</h2><p>For photography enquiries, creative collaborations, or a hello, reach out directly.</p><div class="hero-actions"><a class="btn btn-primary" href="https://www.instagram.com/eyesofnydh/">Message on Instagram ↗</a><a class="text-link" href="https://www.linkedin.com/in/nidhin-narayanan/">Connect on LinkedIn ↗</a></div><p class="hero-note">ALAPPUZHA, KERALA · INDIA</p></div></div></section>
     </article>
   </main>
 
@@ -1308,7 +1139,7 @@
 
 
 
-  <!-- 
+  <!--
     - #FOOTER
   -->
 
@@ -1321,7 +1152,7 @@
 
           <div class="footer-brand">
 
-            <a href="#" class="logo">
+            <a href="#gallery" class="logo">
               <img src="./assets/images/999.png" width="119" height="37" loading="lazy" alt="nydh logo">
             </a>
 
@@ -1338,110 +1169,20 @@
 
           </div>
 
-          <div class="footer-list">
-
-            <p class="footer-list-title">Categories</p>
-
-            <ul>
-
-              <li>
-                <a href="#" class="footer-link hover-2">Action</a>
-              </li>
-
-              <li>
-                <a href="#" class="footer-link hover-2">Business</a>
-              </li>
-
-              <li>
-                <a href="#" class="footer-link hover-2">Adventure</a>
-              </li>
-
-              <li>
-                <a href="#" class="footer-link hover-2">Canada</a>
-              </li>
-
-              <li>
-                <a href="#" class="footer-link hover-2">America</a>
-              </li>
-
-              <li>
-                <a href="#" class="footer-link hover-2">Curiosity</a>
-              </li>
-
-              <li>
-                <a href="#" class="footer-link hover-2">Animal</a>
-              </li>
-
-              <li>
-                <a href="#" class="footer-link hover-2">Dental</a>
-              </li>
-
-              <li>
-                <a href="#" class="footer-link hover-2">Biology</a>
-              </li>
-
-              <li>
-                <a href="#" class="footer-link hover-2">Design</a>
-              </li>
-
-              <li>
-                <a href="#" class="footer-link hover-2">Breakfast</a>
-              </li>
-
-              <li>
-                <a href="#" class="footer-link hover-2">Dessert</a>
-              </li>
-
-            </ul>
-
-          </div>
-
-          <div class="footer-list">
-
-            <p class="footer-list-title">Newsletter</p>
-
-            <p class="footer-text">
-              Sign up to be first to receive the latest stories and photographs.
-            </p>
-
-            <div class="input-wrapper">
-              <input type="text" name="name" placeholder="Your name" required class="input-field" autocomplete="off">
-
-              <ion-icon name="person-outline" aria-hidden="true"></ion-icon>
-            </div>
-
-            <div class="input-wrapper">
-              <input type="email" name="email_address" placeholder="Emaill address" required class="input-field"
-                autocomplete="off">
-
-              <ion-icon name="mail-outline" aria-hidden="true"></ion-icon>
-            </div>
-
-            <a href="#" class="btn btn-primary">
-              <span class="span">Subscribe</span>
-
-              <ion-icon name="arrow-forward" aria-hidden="true"></ion-icon>
-            </a>
-
-          </div>
+          <div class="footer-list"><p class="footer-list-title">Explore</p><a class="footer-link" href="#gallery">Photo collection</a><a class="footer-link" href="#featured">Selected moments</a><a class="footer-link" href="#contact">Contact</a></div>
+          <div class="footer-list"><p class="footer-list-title">Stay inspired</p><p class="footer-text">Follow the latest photographs and everyday discoveries on Instagram.</p><a class="btn btn-primary" href="https://www.instagram.com/eyesofnydh/">Follow @eyesofnydh ↗</a></div>
 
         </div>
 
         <div class="footer-bottom">
 
           <p class="copyright">
-            &copy; Developed by <a href="#" class="copyright-link">nydh.</a>
+            &copy; Developed by <a href="#gallery" class="copyright-link">nydh.</a>
           </p>
 
           <ul class="social-list">
 
-            <li>
-              <a href="#" class="social-link">
-                <ion-icon name="logo-twitter"></ion-icon>
 
-                <span class="span">Twitter</span>
-              </a>
-            </li>
 
             <li>
               <a href="https://www.linkedin.com/in/nidhin-narayanan/" class="social-link">
@@ -1468,7 +1209,7 @@
     </div>
   </footer>
 
-  <!-- 
+  <!--
     - #BACK TO TOP
   -->
 
@@ -1476,51 +1217,18 @@
     <ion-icon name="arrow-up-outline" aria-hidden="true"></ion-icon>
   </a>
 
-  <!-- 
+  <!--
     - custom js link
   -->
+  <dialog id="photo-dialog" aria-labelledby="photo-caption"><button class="dialog-close filter-btn" autofocus aria-label="Close photograph">Close ×</button><img id="dialog-image" alt=""><h2 id="photo-caption"></h2><div class="dialog-controls"><button class="filter-btn" id="photo-prev" aria-label="Previous photograph">← Previous</button><button class="filter-btn" id="photo-next" aria-label="Next photograph">Next →</button></div></dialog>
   <script src="./assets/js/script.js"></script>
+  <script src="./assets/js/gallery.js"></script>
 
-  <!-- 
+  <!--
     - ionicon link
   -->
   <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
   <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
-</script>
 </body>
-<!-- Site Under Construction Overlay -->
-<div id="under-construction" style="
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.95);
-  backdrop-filter: blur(10px);
-  z-index: 9999;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-family: 'Segoe UI', sans-serif;
-  text-align: center;
-  padding: 2rem;
-">
-  <div style="
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    border-radius: 20px;
-    padding: 40px 60px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
-    max-width: 90%;
-  ">
-    <h1 style="font-size: 2rem; margin-bottom: 1rem;">🛠️ Site Under Construction</h1>
-    <p style="font-size: 1.1rem;">
-      We’re working on something great.<br>
-      Please check back later.
-    </p>
-  </div>
-</div>
-
 
 </html>

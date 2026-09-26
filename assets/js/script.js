@@ -24,6 +24,7 @@ const navTogglers = document.querySelectorAll("[data-nav-toggler]");
 const toggleNav = () => {
   navbar.classList.toggle("active");
   document.body.classList.toggle("nav-active");
+  document.querySelector(".nav-open-btn").setAttribute("aria-expanded", String(navbar.classList.contains("active")));
 }
 
 addEventOnElements(navTogglers, "click", toggleNav);
@@ -109,5 +110,9 @@ window.addEventListener("resize", function () {
   totalSliderVisibleItems = Number(getComputedStyle(slider).getPropertyValue("--slider-items"));
   totalSlidableItems = sliderContainer.childElementCount - totalSliderVisibleItems;
 
+  currentSlidePos = Math.max(0, Math.min(currentSlidePos, totalSlidableItems));
   moveSliderItem();
 });
+
+ document.querySelector(".nav-open-btn").setAttribute("aria-expanded", "false");
+ document.addEventListener("keydown", e => { if (e.key === "Escape" && navbar.classList.contains("active")) { toggleNav(); document.querySelector(".nav-open-btn").focus(); } });
