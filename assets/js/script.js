@@ -1,118 +1,236 @@
 'use strict';
-
-
-
-/**
- * Add event listener on multiple elements
- */
-
-const addEventOnElements = function (elements, eventType, callback) {
-  for (let i = 0, len = elements.length; i < len; i++) {
-    elements[i].addEventListener(eventType, callback);
+try { if (localStorage.getItem('nydh-motion-paused') === 'true') document.documentElement.classList.add('motion-paused'); } catch {}
+const motionAllowed = () => !matchMedia('(prefers-reduced-motion: reduce)').matches && !document.documentElement.classList.contains('motion-paused');
+(() => {
+  const nav = document.querySelector('[data-navbar]');
+  const toggle = document.querySelector('.nav-open-btn');
+  function closeMenu(returnFocus = false) {
+    nav.classList.remove('active');
+    document.body.classList.remove('menu-open');
+    toggle.querySelector('.menu-label').textContent = 'Menu';
+    toggle.setAttribute('aria-expanded', 'false');
+    toggle.setAttribute('aria-label', 'Open menu');
+    if (returnFocus) toggle.focus();
   }
-}
+  toggle.addEventListener('click', () => {
+    const open = nav.classList.toggle('active');
+    document.body.classList.toggle('menu-open', open);
+    toggle.querySelector('.menu-label').textContent = open ? 'Close' : 'Menu';
+    toggle.setAttribute('aria-expanded', String(open));
+    toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+  });
+  nav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => closeMenu()));
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && nav.classList.contains('active')) closeMenu(true); });
+  document.addEventListener('click', e => { if (!e.target.closest('.header')) closeMenu(); });
+  document.addEventListener('focusin', e => { if (!e.target.closest('.header')) closeMenu(); });
+  matchMedia('(min-width: 761px)').addEventListener('change', e => { if (e.matches) closeMenu(); });
+  document.querySelectorAll('[data-year]').forEach(el => { el.textContent = new Date().getFullYear(); });
+})();
 
-
-
-/**
- * MOBILE NAVBAR TOGGLER
- */
-
-const navbar = document.querySelector("[data-navbar]");
-const navTogglers = document.querySelectorAll("[data-nav-toggler]");
-
-const toggleNav = () => {
-  navbar.classList.toggle("active");
-  document.body.classList.toggle("nav-active");
-  document.querySelector(".nav-open-btn").setAttribute("aria-expanded", String(navbar.classList.contains("active")));
-}
-
-addEventOnElements(navTogglers, "click", toggleNav);
-
-
-
-/**
- * HEADER ANIMATION
- * When scrolled donw to 100px header will be active
- */
-
-const header = document.querySelector("[data-header]");
-const backTopBtn = document.querySelector("[data-back-top-btn]");
-
-window.addEventListener("scroll", () => {
-  if (window.scrollY > 100) {
-    header.classList.add("active");
-    backTopBtn.classList.add("active");
-  } else {
-    header.classList.remove("active");
-    backTopBtn.classList.remove("active");
+// A real moving focus wheel: page scroll rolls the labels past a fixed pointer.
+(() => {
+  const dial = document.querySelector('.focus-dial');
+  const track = dial.querySelector('.dial-track');
+  const links = [...dial.querySelectorAll('a[href^="#"]')];
+  const sections = links.map(link => document.querySelector(link.hash));
+  const desktop = matchMedia('(min-width: 761px)');
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+  let selected = 0, pending = false, settleTimer, wheelTotal = 0, lastWheel = 0;
+  let preview = null;
+  function paint(position, snap = false) {
+    const visual = preview ?? position;
+    dial.classList.toggle('dial-snapping', snap && motionAllowed());
+    track.style.setProperty('--dial-position', visual);
+    dial.style.setProperty('--tick-offset', `${-visual * 76}px`);
+    links.forEach((link, index) => {
+      const distance = Math.abs(index - visual);
+      link.style.setProperty('--dial-scale', Math.max(.76, 1 - distance * .1));
+      link.style.setProperty('--dial-opacity', Math.max(.25, 1 - distance * .29));
+    });
   }
-});
-
-
-
-/**
- * SLIDER
- */
-
-const slider = document.querySelector("[data-slider]");
-const sliderContainer = document.querySelector("[data-slider-container]");
-const sliderPrevBtn = document.querySelector("[data-slider-prev]");
-const sliderNextBtn = document.querySelector("[data-slider-next]");
-
-let totalSliderVisibleItems = Number(getComputedStyle(slider).getPropertyValue("--slider-items"));
-let totalSlidableItems = sliderContainer.childElementCount - totalSliderVisibleItems;
-
-let currentSlidePos = 0;
-
-const moveSliderItem = function () {
-  sliderContainer.style.transform = `translateX(-${sliderContainer.children[currentSlidePos].offsetLeft}px)`;
-}
-
-/**
- * NEXT SLIDE
- */
-
-const slideNext = function () {
-  const slideEnd = currentSlidePos >= totalSlidableItems;
-
-  if (slideEnd) {
-    currentSlidePos = 0;
-  } else {
-    currentSlidePos++;
+  function updatePosition() {
+    const max = Math.max(0, document.documentElement.scrollHeight - innerHeight);
+    document.documentElement.style.setProperty('--read-progress', max ? Math.min(1, Math.max(0, scrollY / max)) : 0);
+    const stops = sections.map((section, index) => index ? Math.max(0, Math.min(max, section.getBoundingClientRect().top + scrollY - 100)) : 0);
+    let position = 0;
+    for (let i = 0; i < stops.length - 1; i++) {
+      if (scrollY >= stops[i]) position = i + Math.min(1, Math.max(0, (scrollY - stops[i]) / Math.max(1, stops[i + 1] - stops[i])));
+    }
+    selected = Math.round(position);
+    links.forEach((link, index) => {
+      if (index === selected) link.setAttribute('aria-current', 'location');
+      else link.removeAttribute('aria-current');
+    });
+    document.querySelector('#dial-frame').textContent = String(selected + 1).padStart(2, '0');
+    paint(motionAllowed() ? position : selected);
+    clearTimeout(settleTimer);
+    settleTimer = setTimeout(() => paint(selected, true), 140);
+    pending = false;
   }
-
-  moveSliderItem();
-}
-
-sliderNextBtn.addEventListener("click", slideNext);
-
-/**
- * PREVIOUS SLIDE
- */
-
-const slidePrev = function () {
-  if (currentSlidePos <= 0) {
-    currentSlidePos = totalSlidableItems;
-  } else {
-    currentSlidePos--;
+  function schedule() { if (!pending) { pending = true; requestAnimationFrame(updatePosition); } }
+  addEventListener('scroll', () => { preview = null; schedule(); }, {passive: true});
+  addEventListener('resize', schedule);
+  new ResizeObserver(schedule).observe(document.body);
+  desktop.addEventListener('change', () => { preview = null; schedule(); });
+  reduced.addEventListener('change', schedule);
+  document.addEventListener('nydh:motion', schedule);
+  function navigate(index) {
+    preview = null;
+    links[Math.max(0, Math.min(links.length - 1, index))].click();
   }
+  // Only a deliberate wheel gesture over the dial changes chapters.
+  dial.addEventListener('wheel', event => {
+    if (dial.classList.contains('active') || !desktop.matches || event.ctrlKey || Math.abs(event.deltaX) > Math.abs(event.deltaY)) return;
+    const direction = Math.sign(event.deltaY);
+    if (!direction || (selected === 0 && direction < 0) || (selected === links.length - 1 && direction > 0)) return;
+    event.preventDefault();
+    const now = performance.now();
+    if (now - lastWheel < 650) return;
+    wheelTotal += event.deltaY * (event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? innerHeight : 1);
+    if (Math.abs(wheelTotal) >= 35) {
+      navigate(selected + Math.sign(wheelTotal));
+      wheelTotal = 0; lastWheel = now;
+    }
+  }, {passive: false});
+  links.forEach((link, index) => {
+    // Clipped wheel entries remain reachable using Tab and arrow keys.
+    link.addEventListener('focus', () => { preview = index; paint(index, true); });
+    link.addEventListener('click', () => { preview = null; schedule(); });
+    link.addEventListener('keydown', event => {
+      const step = {ArrowDown: 1, ArrowRight: 1, ArrowUp: -1, ArrowLeft: -1}[event.key];
+      if (step) { event.preventDefault(); links[(index + step + links.length) % links.length].focus({preventScroll: true}); }
+      if (event.key === 'Home' || event.key === 'End') {
+        event.preventDefault(); links[event.key === 'Home' ? 0 : links.length - 1].focus({preventScroll: true});
+      }
+    });
+  });
+  dial.addEventListener('focusout', event => { if (!dial.contains(event.relatedTarget)) { preview = null; paint(selected, true); } });
+  updatePosition();
+})();
 
-  moveSliderItem();
-}
+// Deliberately manual: visitors choose the pace of the photographic opening.
+(() => {
+  const scenes = [
+    {file: 'f4.png', title: 'A world of green', alt: 'A quiet waterway through green fields and coconut palms beneath a Kerala sky'},
+    {file: 'f3.png', title: 'Drawn to the sea', alt: 'An illuminated beachside building beneath a blue evening sky'},
+    {file: 'fp2.png', title: 'Together by the ocean', alt: 'Two people standing together on the beach beneath a pink sunset'}
+  ];
+  const image = document.querySelector('#scene-image');
+  const choices = [...document.querySelectorAll('[data-scene]')];
+  const controls = document.querySelector('.scene-selector');
+  const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
+  let selected = 0;
+  function select(index) {
+    selected = (index + scenes.length) % scenes.length;
+    const scene = scenes[selected];
+    image.src = `./assets/images/${scene.file}`;
+    image.alt = scene.alt;
+    document.querySelector('#scene-title').textContent = `${String(selected + 1).padStart(2, '0')} — ${scene.title}`;
+    choices.forEach((button, i) => button.setAttribute('aria-pressed', String(i === selected)));
+    image.getAnimations().forEach(animation => animation.cancel());
+    if (motionAllowed()) image.animate([{clipPath: 'inset(0 100% 0 0)', transform: 'scale(1.08)'}, {clipPath: 'inset(0 0% 0 0)', transform: 'scale(1)'}], {duration: 850, easing: 'cubic-bezier(.2,.65,.3,1)'});
+  }
+  choices.forEach((button, index) => button.addEventListener('click', () => select(index)));
+  document.querySelector('#scene-prev').addEventListener('click', () => select(selected - 1));
+  document.querySelector('#scene-next').addEventListener('click', () => select(selected + 1));
+  controls.addEventListener('keydown', event => {
+    if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
+    event.preventDefault();
+    select(selected + (event.key === 'ArrowRight' ? 1 : -1));
+    choices[selected].focus();
+  });
+  reduceMotion.addEventListener('change', () => { if (reduceMotion.matches) image.getAnimations().forEach(animation => animation.cancel()); });
+})();
 
-sliderPrevBtn.addEventListener("click", slidePrev);
+// A quiet view keeps the image and filmstrip, with an always-visible way back.
+(() => {
+  const hero = document.querySelector('.cinematic-hero');
+  const toggle = document.querySelector('#quiet-toggle');
+  const heading = hero.querySelector('.hero-heading');
+  function setQuiet(quiet) {
+    hero.classList.toggle('quiet-view', quiet);
+    toggle.setAttribute('aria-pressed', String(quiet));
+    toggle.textContent = quiet ? '◉ Bring back the story' : '◉ Just the photograph';
+    heading.inert = quiet;
+    if (quiet) heading.setAttribute('aria-hidden', 'true');
+    else heading.removeAttribute('aria-hidden');
+  }
+  toggle.addEventListener('click', () => setQuiet(toggle.getAttribute('aria-pressed') !== 'true'));
+  hero.addEventListener('keydown', event => { if (event.key === 'Escape') setQuiet(false); });
+})();
 
-/**
- * RESPONSIVE
- */
-window.addEventListener("resize", function () {
-  totalSliderVisibleItems = Number(getComputedStyle(slider).getPropertyValue("--slider-items"));
-  totalSlidableItems = sliderContainer.childElementCount - totalSliderVisibleItems;
+// Optional motion is user-controlled; animations never gate access to content.
+(() => {
+  const toggle = document.querySelector('#motion-toggle');
+  const preference = matchMedia('(prefers-reduced-motion: reduce)');
+  function refresh() {
+    const paused = !motionAllowed();
+    toggle.setAttribute('aria-pressed', String(paused));
+    toggle.setAttribute('aria-label', preference.matches ? 'Reduced motion is enabled in your system settings' : paused ? 'Enable animations' : 'Pause animations');
+    toggle.innerHTML = `Motion <span aria-hidden="true">${paused ? '○' : 'Ⅱ'}</span>`;
+    if (paused) document.getAnimations().forEach(animation => animation.cancel());
+    document.dispatchEvent(new Event('nydh:motion'));
+  }
+  toggle.addEventListener('click', () => {
+    if (preference.matches) return;
+    const paused = document.documentElement.classList.toggle('motion-paused');
+    try { localStorage.setItem('nydh-motion-paused', String(paused)); } catch {}
+    refresh();
+  });
+  preference.addEventListener('change', refresh);
+  refresh();
 
-  currentSlidePos = Math.max(0, Math.min(currentSlidePos, totalSlidableItems));
-  moveSliderItem();
-});
+  // Finite entrance and section reveals, no permanent hidden initial states.
+  if (motionAllowed()) {
+    document.querySelectorAll('.title-line > *').forEach((line, index) => line.animate(
+      [{transform:'translateY(110%) rotate(3deg)',opacity:0},{transform:'translateY(0) rotate(0)',opacity:1}],
+      {duration:1100,delay:120+index*150,easing:'cubic-bezier(.16,1,.3,1)',fill:'backwards'}));
+  }
+  const observer = new IntersectionObserver(entries => entries.forEach(entry => {
+    if (!entry.isIntersecting) return;
+    observer.unobserve(entry.target);
+    if (motionAllowed()) entry.target.animate(
+      [{opacity:0,transform:'translateY(35px)'},{opacity:1,transform:'translateY(0)'}],
+      {duration:800,easing:'cubic-bezier(.16,1,.3,1)'});
+  }), {threshold:.12});
+  document.querySelectorAll('.section-heading,.feature-card,.about-copy,.portrait-wrap,.contact').forEach(el => observer.observe(el));
+  const grid = document.querySelector('#photo-grid');
+  const photoObserver = new IntersectionObserver(entries => entries.forEach(entry => {
+    if (!entry.isIntersecting) return;
+    photoObserver.unobserve(entry.target);
+    if (motionAllowed()) entry.target.animate(
+      [{opacity:.15, transform:'translateY(30px)', clipPath:'inset(8% 0 0 0)'}, {opacity:1, transform:'translateY(0)', clipPath:'inset(0 0 0 0)'}],
+      {duration:700,easing:'cubic-bezier(.16,1,.3,1)'});
+  }), {threshold:.1});
+  new MutationObserver(records => records.forEach(record => {
+    record.addedNodes.forEach(node => { if (node.nodeType === 1) photoObserver.observe(node); });
+    record.removedNodes.forEach(node => { if (node.nodeType === 1) photoObserver.unobserve(node); });
+  })).observe(grid, {childList:true});
 
- document.querySelector(".nav-open-btn").setAttribute("aria-expanded", "false");
- document.addEventListener("keydown", e => { if (e.key === "Escape" && navbar.classList.contains("active")) { toggleNav(); document.querySelector(".nav-open-btn").focus(); } });
+
+  // A soft light follows the pointer on glass surfaces; native cursors stay intact.
+  const finePointer = matchMedia('(hover: hover) and (pointer: fine)');
+  const hero = document.querySelector('.cinematic-hero');
+  let frame;
+  hero.addEventListener('pointermove', event => {
+    if (!finePointer.matches || !motionAllowed()) return;
+    cancelAnimationFrame(frame);
+    frame = requestAnimationFrame(() => {
+      const r = hero.getBoundingClientRect();
+      hero.style.setProperty('--light-x', `${event.clientX-r.left}px`);
+      hero.style.setProperty('--light-y', `${event.clientY-r.top}px`);
+    });
+  });
+  hero.addEventListener('pointerleave', () => { cancelAnimationFrame(frame); hero.style.removeProperty('--light-x'); hero.style.removeProperty('--light-y'); });
+})();
+
+// Two useful viewing modes: expressive magazine layout or a compact contact sheet.
+(() => {
+  const grid = document.querySelector('#photo-grid');
+  document.querySelectorAll('[data-layout]').forEach(button => button.addEventListener('click', () => {
+    const editorial = button.dataset.layout === 'editorial';
+    grid.classList.toggle('editorial-grid', editorial);
+    document.querySelectorAll('[data-layout]').forEach(item => item.setAttribute('aria-pressed', String(item === button)));
+    if (motionAllowed()) grid.animate([{opacity:.35,transform:'translateY(12px)'},{opacity:1,transform:'translateY(0)'}],{duration:450,easing:'ease-out'});
+  }));
+})();

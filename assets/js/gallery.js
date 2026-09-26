@@ -50,6 +50,13 @@
     document.querySelector('#saved-count').textContent = saved.size;
     document.querySelector('#gallery-status').textContent = visible.length ? `${visible.length} photographs to explore` : 'No photographs match. Try another search or turn off a filter.';
   }
+  let lastDiscovery = -1;
+  document.querySelector('#surprise-photo').addEventListener('click', event => {
+    // Draw without immediately repeating the previous discovery.
+    const candidates = photos.map((_, index) => index).filter(index => index !== lastDiscovery);
+    lastDiscovery = candidates[Math.floor(Math.random() * candidates.length)];
+    showPhoto(photos, lastDiscovery, event.currentTarget);
+  });
   search.addEventListener('input', render);
   document.querySelectorAll('[data-filter]').forEach(button => button.addEventListener('click', () => {
     category = button.dataset.filter;
