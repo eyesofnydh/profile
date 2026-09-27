@@ -9,9 +9,12 @@
   <link rel="icon" href="./favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="./assets/css/style.css">
   <link rel="stylesheet" href="./assets/css/experience.css">
-  <noscript><style>@media(min-width:761px){.focus-dial{height:auto}.dial-window{height:auto;flex-basis:auto;overflow:visible;mask-image:none}.dial-track{position:static;transform:none}.focus-dial a{height:56px;min-height:56px}.dial-marker{display:none}}.nav-open-btn,.motion-toggle,.collection-view,.gallery-tools,.search-row,.scene-selector,.quiet-toggle,.discovery-bar{display:none!important}@media(max-width:760px){.header-inner{height:auto;flex-wrap:wrap;padding-block:18px}nav{display:flex!important;visibility:visible!important;opacity:1!important;clip-path:none!important;transform:none!important;position:static;flex-wrap:wrap;padding:0;box-shadow:none;border:0;gap:4px}nav a{padding:8px}.nav-contact{margin:0}}</style></noscript>
+  <link rel="stylesheet" href="./assets/css/archive.css">
+  <noscript><style>@media(min-width:761px){.focus-dial{height:auto}.dial-window{height:auto;flex-basis:auto;overflow:visible;mask-image:none}.dial-track{position:static;transform:none}.focus-dial a{height:56px;min-height:56px}.dial-marker{display:none}}.nav-open-btn,.motion-toggle,.collection-view,.gallery-tools,.search-row,.scene-selector,.quiet-toggle,.discovery-bar,.gallery-pagination,.archive-deck,.archive-toolbar,.chapter-tabs,.chapter-pagination,.chapter-open{display:none!important}@media(max-width:760px){.header-inner{height:auto;flex-wrap:wrap;padding-block:18px}nav{display:flex!important;visibility:visible!important;opacity:1!important;clip-path:none!important;transform:none!important;position:static;flex-wrap:wrap;padding:0;box-shadow:none;border:0;gap:4px}nav a{padding:8px}.nav-contact{margin:0}}</style></noscript>
   <link rel="preload" as="image" href="./assets/images/f4.png">
   <script src="./assets/js/script.js" defer></script>
+  <script src="./assets/js/photos.js" defer></script>
+  <script src="./assets/js/chapters.js" defer></script>
   <script src="./assets/js/gallery.js" defer></script>
 </head>
 <body id="top">
@@ -20,7 +23,7 @@
     <div class="container header-inner">
       <a class="wordmark" href="#home" aria-label="Eyes of Nydh home">eyes of nydh<span class="brand-dot">✳</span></a>
       <span class="header-note"><span class="status-dot"></span> INDEPENDENT PHOTOGRAPHER / KERALA</span>
-      <button class="motion-toggle" id="motion-toggle" aria-pressed="false" aria-label="Pause animations">Motion <span aria-hidden="true">Ⅱ</span></button>
+      <button class="motion-toggle" id="motion-toggle" aria-pressed="false" aria-label="Pause animations" aria-describedby="motion-help">Pause motion</button><span id="motion-help" class="visually-hidden">Controls decorative animations, including scroll effects and card transitions. Browsing still works with motion paused.</span>
       <button class="nav-open-btn" aria-controls="navigation" aria-expanded="false" aria-label="Open menu"><span class="menu-label">Menu</span><span class="menu-icon" aria-hidden="true"><i></i><i></i></span></button>
       <nav id="navigation" class="focus-dial" aria-label="Main navigation" data-navbar>
         <span class="dial-caption" aria-hidden="true">FOCUS / SCROLL</span>
@@ -62,23 +65,60 @@
       <span class="hero-coordinate" aria-hidden="true">KERALA, INDIA &nbsp; / &nbsp; SCROLL TO EXPLORE ↓</span>
     </section>
     <div class="frame-ribbon container" aria-hidden="true"><span>NATURE</span><b>✳</b><span>COASTLINES</span><b>✳</b><span>EVERYDAY STORIES</span><b>✳</b><span>A DIFFERENT PERSPECTIVE</span></div>
-    <section class="section container" id="gallery" aria-labelledby="gallery-title">
-      <div class="section-heading"><div><p class="eyebrow">01 / THE COLLECTION</p><h2 id="gallery-title">Collected <em>moments.</em></h2></div><p>Small discoveries. Wide-open worlds.<br>Find something that stays with you.</p></div>
-      <div class="collection-view" role="group" aria-label="Collection layout"><button class="filter-btn" data-layout="editorial" aria-pressed="true">Editorial</button><button class="filter-btn" data-layout="grid" aria-pressed="false">Contact sheet</button></div>
-      <div class="gallery-tools"><div class="gallery-filters" role="group" aria-label="Filter photographs"><button class="filter-btn" data-filter="All" aria-pressed="true">All photographs</button><button class="filter-btn" data-filter="Nature" aria-pressed="false">Nature</button><button class="filter-btn" data-filter="Coast" aria-pressed="false">Coast</button><button class="filter-btn" data-filter="Travel" aria-pressed="false">Travel</button></div><button class="filter-btn" id="saved-filter" aria-pressed="false">♡ Saved <span id="saved-count">0</span></button></div>
-      <div class="discovery-bar"><p>Let a frame find you.</p><button class="filter-btn" id="surprise-photo">✳ Surprise me</button></div>
+    <section class="section container archive-section" id="gallery" aria-labelledby="gallery-title">
+      <div class="archive-heading"><p class="eyebrow">THE PERSONAL ARCHIVE / NIDHIN NARAYANAN</p><h2 id="gallery-title">Life, <em>collected.</em></h2><p>A few places. A few people. A thousand little feelings.</p></div>
+      <div class="collection-view" role="group" aria-label="Collection layout"><button class="filter-btn" data-layout="stack" aria-pressed="true"><span aria-hidden="true">▱</span> Journal</button><button class="filter-btn" data-layout="shelf" aria-pressed="false"><span aria-hidden="true">▥</span> Record shelf</button><button class="filter-btn" data-layout="grid" aria-pressed="false"><span aria-hidden="true">▦</span> Photo wall</button></div>
+      <div class="archive-toolbar"><details class="archive-tools"><summary><span>Search & filter</span><span id="archive-count">27 frames</span></summary>
+      <div class="gallery-tools"><div class="gallery-filters" role="group" aria-label="Filter photographs"><button class="filter-btn" data-filter="All" aria-pressed="true">All photographs</button><button class="filter-btn" data-filter="Nature" aria-pressed="false">Nature</button><button class="filter-btn" data-filter="Coast" aria-pressed="false">Coast</button><button class="filter-btn" data-filter="Travel" aria-pressed="false">Travel</button><button class="filter-btn" data-filter="People" aria-pressed="false">People</button></div><button class="filter-btn" id="saved-filter" aria-pressed="false">♡ Saved <span id="saved-count">0</span></button></div>
       <div class="search-row"><label class="search-label" for="photo-search"><span aria-hidden="true">⌕</span><input id="photo-search" type="search" placeholder="Find a moment — try nature or beach" autocomplete="off"><span class="visually-hidden">Search the collection</span></label><p id="gallery-status" role="status" aria-live="polite"></p></div>
-      <div class="photo-grid editorial-grid" id="photo-grid"></div><noscript><p>Enable JavaScript to search and save photographs. Enjoy the photographs and field notes below.</p></noscript>
+      </details><button class="archive-random deck-arrow" id="surprise-photo" aria-label="Discover a random photograph">✳</button></div>
+      <div id="archive-deck" class="archive-deck" data-mode="stack">
+        <div class="deck-stage" id="deck-stage" role="group" aria-label="Photo journal. Drag sideways or use the previous and next buttons."></div>
+        <p class="deck-empty" id="deck-empty" hidden>No frames in this selection. Try another filter.</p>
+        <div class="deck-caption" aria-live="polite"><p id="deck-category"></p><h3 id="deck-title"></h3></div>
+        <div class="deck-controls"><button class="deck-arrow" id="deck-prev" aria-label="Previous journal photograph">←</button><button class="deck-open" id="deck-open">Open frame ↗</button><button class="deck-arrow" id="deck-next" aria-label="Next journal photograph">→</button></div>
+        <div class="deck-scrubber"><span id="deck-current">01</span><label class="visually-hidden" for="deck-range">Browse photographs</label><input id="deck-range" type="range" min="0" max="26" value="0"><span id="deck-total">27</span></div>
+        <p class="deck-hint">DRAG TO EXPLORE <span>·</span> CLICK A CARD TO BRING IT FORWARD <span>·</span> OPEN TO LOOK CLOSER</p>
+      </div>
+      <div class="photo-grid mosaic-grid" id="photo-grid" hidden></div><noscript><p>Enable JavaScript to search and save photographs. Enjoy the photographs and field notes below.</p></noscript>
+      <div class="gallery-pagination" hidden><button class="filter-btn" id="load-more">More moments ↓</button><p id="collection-progress"></p></div>
       <p class="collection-note">A little collection of your own. Tap ♡ to save your favorites in this browser.</p>
     </section>
     <section class="stories section" id="featured" aria-labelledby="stories-title"><div class="container">
       <div class="section-heading"><div><p class="eyebrow">02 / FIELD NOTES</p><h2 id="stories-title">More than <em>what you see.</em></h2></div><span class="section-aside">THE STORIES BETWEEN THE FRAMES</span></div>
+      <div class="chapter-explorer" aria-labelledby="chapter-title">
+        <div class="chapter-tabs" role="group" aria-label="Choose a photo story">
+          <button data-chapter="coast" aria-pressed="true"><span>01</span> By the water</button>
+          <button data-chapter="green" aria-pressed="false"><span>02</span> Into the green</button>
+          <button data-chapter="night" aria-pressed="false"><span>03</span> After hours</button>
+        </div>
+        <div class="chapter-body">
+          <div class="chapter-visual">
+            <button class="chapter-photo" id="chapter-photo" aria-label="Open By the water photo story"><img id="chapter-image" src="./assets/images/f3.png" width="996" height="618" alt="An illuminated beachside building beneath a blue evening sky" loading="lazy"><span>OPEN THE PHOTO STORY ↗</span></button>
+            <figure class="chapter-print"><img id="chapter-detail" src="./assets/images/fp2.png" width="1602" height="903" alt="Two people beside the sea at sunset" loading="lazy"><figcaption id="chapter-print-caption">a little closer to the sea</figcaption></figure>
+          </div>
+          <div class="chapter-copy" aria-live="polite">
+            <p class="eyebrow" id="chapter-number">A SMALL PHOTO ESSAY / 01</p>
+            <h3 id="chapter-title">A slower kind<br>of <em>blue.</em></h3>
+            <p id="chapter-description">A pink horizon, a glowing beachside building, and the tide finding its way back. Three different ways to pause by the water.</p>
+            <p class="chapter-count" id="chapter-count">03 FRAMES / COAST & CONNECTION</p>
+            <button class="chapter-open" id="chapter-open">Explore this story <span aria-hidden="true">↗</span></button>
+            <div class="chapter-pagination"><button id="chapter-prev" class="deck-arrow" aria-label="Previous photo story">←</button><span id="chapter-progress">01 / 03</span><button id="chapter-next" class="deck-arrow" aria-label="Next photo story">→</button></div>
+          </div>
+        </div>
+      </div>
       <div class="story-grid"><article class="feature-card"><img src="./assets/images/fp2.png" width="1000" height="700" loading="lazy" alt="A moment of connection by the ocean"><div class="story-copy"><p class="eyebrow">COAST / CONNECTION</p><h3><a href="#gallery">Together is a beautiful place to be.</a></h3><p>Some moments ask for nothing more than a little company and the sea.</p><a class="card-btn text-link" href="#gallery">Take a closer look ↗</a></div></article><article class="feature-card"><img src="./assets/images/f1.png" width="1000" height="700" loading="lazy" alt="An elephant photographed by Nidhin Narayanan"><div class="story-copy"><p class="eyebrow">NATURE / WONDER</p><h3><a href="#gallery">In the presence of something great.</a></h3><p>A quiet pause for the beauty, scale, and character of the natural world.</p><a class="card-btn text-link" href="#gallery">Take a closer look ↗</a></div></article></div>
     </div></section>
     <section class="section container about" id="about" aria-labelledby="about-title"><div class="portrait-wrap"><img src="./assets/images/nidhin.png" width="327" height="490" loading="lazy" alt="Nidhin Narayanan"><span class="portrait-label">THE PERSON BEHIND THE PICTURES ↗</span></div><div class="about-copy"><p class="eyebrow">03 / BEHIND THE LENS</p><h2 id="about-title">Hi, I’m Nidhin.<br><em>Always looking closer.</em></h2><p>Based in Alappuzha, Kerala, I photograph nature, coastlines, and everyday life. This is my space for the moments that made me stop, look, and reach for the camera.</p><p>Thanks for seeing a little of the world through my eyes.</p><a class="text-link" href="https://www.instagram.com/eyesofnydh/">Follow the everyday discoveries ↗</a><span class="signature">Nidhin.</span></div></section>
     <section class="contact container" id="contact" aria-labelledby="contact-title"><div><p class="eyebrow">GOOD STORIES START WITH A HELLO</p><h2 id="contact-title">Let’s make something<br><em>worth remembering.</em></h2><p>A photography enquiry, a creative idea, or just a friendly hello.</p><div class="hero-actions"><a class="btn" href="https://www.instagram.com/eyesofnydh/">Say hello on Instagram ↗</a><a class="text-link" href="https://www.linkedin.com/in/nidhin-narayanan/">Connect on LinkedIn ↗</a></div></div><span class="contact-flower" aria-hidden="true">✳</span></section>
   </main>
+  <div class="memory-strip container" aria-label="A few more moments">
+    <p>Take a little<br><em>wonder with you.</em></p>
+    <button class="memory-print" data-photo="f4.png" aria-label="Open A world of green"><img src="./assets/images/f4.png" alt="Palms beside a waterway" width="996" height="618" loading="lazy"><span>the places</span></button>
+    <button class="memory-print" data-photo="fp2.png" aria-label="Open Together by the ocean"><img src="./assets/images/fp2.png" alt="Two people by the sea at sunset" width="1602" height="903" loading="lazy"><span>the people</span></button>
+    <button class="memory-print" data-photo="t1.png" aria-label="Open Above the clouds"><img src="./assets/images/t1.png" alt="A mountain beneath clouds" width="507" height="618" loading="lazy"><span>the feeling</span></button>
+  </div>
   <footer class="container"><div class="footer-top"><a class="wordmark" href="#home">eyes of nydh<span class="brand-dot">✳</span></a><p>A little closer to the extraordinary.</p><a href="#top" class="text-link">Back to top ↑</a></div><div class="footer-bottom"><span>© <span data-year></span> Nidhin Narayanan</span><span>MADE WITH CURIOSITY · KERALA, INDIA</span><a href="https://www.instagram.com/eyesofnydh/">Instagram ↗</a></div></footer>
-  <dialog id="photo-dialog" aria-labelledby="photo-caption"><button class="dialog-close filter-btn" autofocus aria-label="Close photograph">Close ×</button><img id="dialog-image" alt=""><h2 id="photo-caption"></h2><div class="dialog-controls"><button class="filter-btn" id="photo-prev" aria-label="Previous photograph">← Previous</button><button class="filter-btn" id="photo-next" aria-label="Next photograph">Next →</button></div></dialog>
+  <dialog id="photo-dialog" aria-labelledby="photo-caption"><p id="photo-position" class="eyebrow" role="status"></p><button class="dialog-close filter-btn" autofocus aria-label="Close photograph">Close ×</button><img id="dialog-image" alt=""><h2 id="photo-caption"></h2><div id="dialog-filmstrip" class="dialog-filmstrip" role="group" aria-label="Photographs in this selection"></div><div class="dialog-controls"><button class="filter-btn" id="photo-prev" aria-label="Previous photograph">← Previous</button><button class="filter-btn" id="photo-next" aria-label="Next photograph">Next →</button></div></dialog>
 </body>
 </html>

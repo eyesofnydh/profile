@@ -167,7 +167,9 @@ const motionAllowed = () => !matchMedia('(prefers-reduced-motion: reduce)').matc
     const paused = !motionAllowed();
     toggle.setAttribute('aria-pressed', String(paused));
     toggle.setAttribute('aria-label', preference.matches ? 'Reduced motion is enabled in your system settings' : paused ? 'Enable animations' : 'Pause animations');
-    toggle.innerHTML = `Motion <span aria-hidden="true">${paused ? '○' : 'Ⅱ'}</span>`;
+    toggle.textContent = preference.matches ? 'Reduced motion' : paused ? 'Enable motion' : 'Pause motion';
+    toggle.setAttribute('aria-disabled', String(preference.matches));
+    toggle.title = preference.matches ? 'Your device requests reduced motion. Animations stay off.' : paused ? 'Turn on scroll, card, and photo transitions.' : 'Turn off scroll, card, and photo transitions. Photos and navigation still work.';
     if (paused) document.getAnimations().forEach(animation => animation.cancel());
     document.dispatchEvent(new Event('nydh:motion'));
   }
@@ -200,7 +202,7 @@ const motionAllowed = () => !matchMedia('(prefers-reduced-motion: reduce)').matc
     photoObserver.unobserve(entry.target);
     if (motionAllowed()) entry.target.animate(
       [{opacity:.15, transform:'translateY(30px)', clipPath:'inset(8% 0 0 0)'}, {opacity:1, transform:'translateY(0)', clipPath:'inset(0 0 0 0)'}],
-      {duration:700,easing:'cubic-bezier(.16,1,.3,1)'});
+      {duration:700,delay:Number(entry.target.dataset.revealOrder || 0)*65,easing:'cubic-bezier(.16,1,.3,1)',fill:'backwards'});
   }), {threshold:.1});
   new MutationObserver(records => records.forEach(record => {
     record.addedNodes.forEach(node => { if (node.nodeType === 1) photoObserver.observe(node); });
@@ -224,13 +226,25 @@ const motionAllowed = () => !matchMedia('(prefers-reduced-motion: reduce)').matc
   hero.addEventListener('pointerleave', () => { cancelAnimationFrame(frame); hero.style.removeProperty('--light-x'); hero.style.removeProperty('--light-y'); });
 })();
 
-// Two useful viewing modes: expressive magazine layout or a compact contact sheet.
+// Scroll-linked depth: finite, clamped movement using the native document scroll.
 (() => {
-  const grid = document.querySelector('#photo-grid');
-  document.querySelectorAll('[data-layout]').forEach(button => button.addEventListener('click', () => {
-    const editorial = button.dataset.layout === 'editorial';
-    grid.classList.toggle('editorial-grid', editorial);
-    document.querySelectorAll('[data-layout]').forEach(item => item.setAttribute('aria-pressed', String(item === button)));
-    if (motionAllowed()) grid.animate([{opacity:.35,transform:'translateY(12px)'},{opacity:1,transform:'translateY(0)'}],{duration:450,easing:'ease-out'});
-  }));
+  const hero = document.querySelector('.cinematic-hero');
+  const frame = hero.querySelector('.hero-frame');
+  const ribbon = document.querySelector('.frame-ribbon');
+  let pending = false;
+  function draw() {
+    const top = hero.getBoundingClientRect().top;
+    const depth = motionAllowed() && innerWidth > 760 ? Math.min(65, Math.max(0, -top * .15)) : 0;
+    frame.style.translate = `0 ${depth}px`;
+    frame.style.scale = depth ? '1.08' : '1';
+    const r = ribbon.getBoundingClientRect();
+    const progress = motionAllowed() ? Math.max(-1,Math.min(1,(innerHeight*.5-r.top)/innerHeight)) : 0;
+    ribbon.querySelectorAll('b').forEach((star,index) => { star.style.rotate = `${progress * (index%2 ? -100 : 100)}deg`; });
+    pending = false;
+  }
+  function schedule() { if (!pending) { pending = true; requestAnimationFrame(draw); } }
+  addEventListener('scroll',schedule,{passive:true});
+  addEventListener('resize',schedule);
+  document.addEventListener('nydh:motion',schedule);
+  draw();
 })();
