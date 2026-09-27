@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#101b30">
   <title>Eyes of Nydh — Photography by Nidhin Narayanan</title>
   <meta name="description" content="A little closer to the extraordinary. Nature, coastlines and everyday stories photographed by Nidhin Narayanan in Kerala and beyond.">
@@ -39,6 +39,20 @@
       </nav>
     </div>
   </header>
+  <div class="mobile-lens" id="mobile-lens" hidden>
+    <div class="lens-fan" aria-hidden="true"></div>
+    <nav id="mobile-lens-options" class="lens-options" aria-label="Mobile lens navigation" aria-hidden="true" inert>
+      <a href="#home" style="--lens-x:-106px;--lens-rise:25px;--lens-order:0"><span>01</span>Home</a>
+      <a href="#gallery" style="--lens-x:-83px;--lens-rise:92px;--lens-order:1"><span>02</span>Gallery</a>
+      <a href="#featured" style="--lens-x:0px;--lens-rise:125px;--lens-order:2"><span>03</span>Stories</a>
+      <a href="#about" style="--lens-x:83px;--lens-rise:92px;--lens-order:3"><span>04</span>About</a>
+      <a href="#contact" style="--lens-x:106px;--lens-rise:25px;--lens-order:4"><span>05</span>Hello</a>
+    </nav>
+    <button id="mobile-lens-toggle" class="lens-toggle" aria-controls="mobile-lens-options" aria-expanded="false" aria-label="Open lens menu">
+      <span class="lens-ring" aria-hidden="true"></span><span class="lens-glass" aria-hidden="true"><span class="lens-iris"></span></span><span class="lens-button-label">Menu</span>
+    </button>
+    <span id="mobile-lens-caption" class="lens-section-label" aria-hidden="true">Home</span>
+  </div>
   <div class="reading-progress" aria-hidden="true"></div>
   <main id="main">
     <section class="hero cinematic-hero container" id="home" aria-labelledby="hero-title">

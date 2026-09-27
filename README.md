@@ -12,10 +12,10 @@ From the project directory, run `python -m http.server 4173`, then open http://l
 - Collection search, category filters, and browser-local favorites.
 - Accessible native photo dialog with previous/next controls, arrow keys, Escape, and focus restoration.
 - Camera-dial desktop navigation inspired by https://epochtales.com/, with a moving label drum, fixed center pointer, scroll snapping, wheel gestures, and keyboard controls.
-- Mobile menu with keyboard and outside-click dismissal.
+- Bottom mobile camera lens with a rotating focus ring, five-section fan menu, scroll tracking, touch targets, keyboard controls, and outside-click dismissal.
 - Cinematic hero with three manually selectable photographs, a glass filmstrip, arrow-key controls, and reduced-motion support.
 - Reading-progress indicator, photo reveals, pointer lighting, and animated headline entrances.
-- Expandable glass navigation with staggered links and a sliding mobile menu.
+- Expandable glass navigation with staggered links and a glass mobile lens menu.
 - A 27-photo archive with a layered journal, angled record shelf, and paginated photo wall.
 - Drag, horizontal trackpad scrolling, arrow keys, and a range slider browse the 3D cards. Click a side card to select it; click the selected card to open it.
 - Collapsible search/filter controls and a clickable strip of tilted photo prints near the footer.
@@ -46,3 +46,5 @@ Place new images in `assets/images/`, then add an entry in `assets/js/photos.js`
 Run `node tests/archive.cjs` with the same Playwright environment as the sanity test. It checks the journal and shelf, drag and native touch gestures, keyboard navigation, photo-wall pagination, filters, empty states, focus restoration, and responsive card bounds. Reference images were used for visual direction only; all displayed photographs come from the existing project assets.
 
 Run `node tests/chapters.cjs` to verify motion labels, system preferences, story navigation, curated photo sequences, focus restoration, and responsive layouts.
+
+Run `node tests/mobile-lens.cjs` to verify touch navigation, keyboard controls, responsive bounds, reduced motion, and desktop navigation.
