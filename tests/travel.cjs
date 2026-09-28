@@ -11,7 +11,7 @@ const {chromium} = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
     page.on('response', response => {if (response.status() >= 400) errors.push(`${response.status()} ${response.url()}`);});
     page.on('request', request => requests.push(request.url()));
     await page.goto(`${base}/`);
-    await page.locator('a[href="./travel.html"]').click();
+    await page.locator('.journey-preview-cta').click();
     await page.locator('.journey-motion').waitFor();
     assert.equal(new URL(page.url()).pathname,'/travel.html');
     assert.equal(await page.locator('h1').count(),1);

@@ -4,14 +4,14 @@ A responsive photography portfolio for Nidhin Narayanan. Built with plain HTML, 
 
 ## My Journey — travel extension
 
-Open [the local travel chapter](http://localhost:4173/travel.html). The homepage footer links to it; the existing homepage sections, camera navigation, gallery, and shared styles are unchanged. Travel uses the same navy/cyan colors, Segoe UI and Georgia accents, spacing scale, original archive images, responsive preview pipeline, and saved motion preference. Its CSS and JavaScript load only on `travel.html`.
+Open [the local travel chapter](http://localhost:4173/travel.html). A prominent homepage My Journey section, header shortcut, and footer link lead to it; the existing homepage sections, camera navigation, gallery, and shared styles are unchanged. Travel uses the same navy/cyan colors, Segoe UI and Georgia accents, spacing scale, original archive images, responsive preview pipeline, and saved motion preference. The full journal CSS and JavaScript load only on `travel.html`; the homepage preview uses the existing homepage styles.
 
 ### Local development and production
 
 1. **Dependencies:** no npm install, framework, map SDK, API key, or environment variables are needed. Python 3.9+ is needed only to regenerate the static page and run the local server. A browser can also view the checked-in HTML directly.
 2. **Start:** from the repository root, run `python -m http.server 4173`.
 3. **Local URLs:** homepage `http://localhost:4173/`; travel `http://localhost:4173/travel.html`.
-4. **Production generation:** run `python tools/build-travel.py`, then `python tools/build-travel.py --check`. This generates the checked-in `travel.html` from the data and template. It never rewrites the homepage. There is no bundling step for this static site.
+4. **Production generation:** run `python tools/build-travel.py`, then `python tools/build-travel.py --check`. This generates the checked-in `travel.html` from the data and template. It also updates only the marked Journey preview block in the homepage. There is no bundling step for this static site.
 5. **Production preview:** serve the same repository root with `python -m http.server 4173`; these are the exact static HTML/CSS/JS/assets served in production.
 
 Netlify can continue publishing the same site root with its existing settings. Commit the generated `travel.html` alongside the travel data, CSS, and JS. No SPA rewrite is needed: `/travel.html` is a real file, and story URLs such as `/travel.html#story-munnar` use local anchors. No deployment configuration was added or changed. Local validation does not deploy the website.
@@ -102,3 +102,5 @@ Run `node tests/gallery-ui.cjs` to check gallery layout bounds at six viewport w
 My Journey includes sticky chapter tracking, a reading-progress line, subtle story/map transitions, photo hover cues, and an original-image viewer with arrow keys, swipe navigation, Escape, and focus restoration. All effects respect Pause motion and system reduced motion. Run `node tests/travel-ui.cjs` to verify those interactions.
 
 The gallery record shelf uses even, thin borders and separates neighboring sleeves from the selected frame. Run `node tests/shelf-frames.cjs` to verify selected-frame visibility, bounds, and symmetric borders at nine widths from 320px through 1920px.
+
+The homepage Journey preview is generated from the same trip data, using `tools/travel-home-template.html`. Run `node tests/journey-home.cjs` to check the header shortcut, preview layout, original section presence, and story links at nine screen widths.

@@ -126,11 +126,23 @@ def render(data):
     return output
 
 
+def render_home_preview(data):
+    items = normalize(data)
+    photos = [item.get('image') for item in items if item.get('image') in PHOTOS]
+    template = (ROOT/'tools/travel-home-template.html').read_text(encoding='utf-8')
+    chapters = ''.join(f'<a href="./travel.html#story-{item["id"]}"><span class="journey-preview-number">{index+1:02d}</span><span><strong>{esc(item["destination"])}</strong><small>{esc(item["region"])} · {esc(item["year"])}</small></span><span aria-hidden="true">↗</span></a>' for index,item in enumerate(items[:3]))
+    values = {'MAIN_PHOTO': photo(photos[0] if photos else None), 'SIDE_PHOTO': photo(photos[1] if len(photos)>1 else None), 'CHAPTERS': chapters, 'NOTE': 'A preview of the journal · sample trips and archive photographs for now.' if data.get('sample',True) else 'Places, photographs, and one memory from every journey.'}
+    for key,value in values.items():
+        template=template.replace('{{'+key+'}}',value)
+    return template
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--check',action='store_true',help='Verify checked-in travel.html matches its source data and template')
     args = parser.parse_args()
-    result = render(json.loads((ROOT/'assets/data/travel.json').read_text(encoding='utf-8')))
+    data = json.loads((ROOT/'assets/data/travel.json').read_text(encoding='utf-8'))
+    result = render(data)
     target = ROOT/'travel.html'
     if args.check:
         if not target.exists() or target.read_text(encoding='utf-8') != result:
@@ -138,4 +150,20 @@ if __name__ == '__main__':
         print('PASS: static travel build is current.')
     else:
         target.write_text(result,encoding='utf-8')
-        print('Built travel.html; existing homepage untouched.')
+        print('Built travel.html.')
+
+    home = ROOT/'index.html'
+    content = home.read_text(encoding='utf-8')
+    start, end = '<!-- JOURNEY-PREVIEW:START -->', '<!-- JOURNEY-PREVIEW:END -->'
+    if start not in content or end not in content:
+        raise SystemExit('Homepage journey-preview markers are missing.')
+    before, rest = content.split(start,1)
+    _, after = rest.split(end,1)
+    updated = before+start+'\n'+render_home_preview(data)+end+after
+    if args.check:
+        if updated != content:
+            raise SystemExit('Homepage journey preview is out of date. Run python tools/build-travel.py')
+        print('PASS: homepage journey preview is current.')
+    else:
+        home.write_text(updated,encoding='utf-8')
+        print('Updated homepage journey preview; other sections preserved.')

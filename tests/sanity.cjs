@@ -147,7 +147,7 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
   await page.evaluate(()=>window.scrollTo({top:0,behavior:'instant'}));
   await page.waitForTimeout(650);
   await page.evaluate(()=>window.scrollTo({top:document.querySelector('#gallery').offsetTop/3,behavior:'instant'}));
-  await page.waitForTimeout(40);
+  await page.waitForFunction(()=>{const value=Number(document.querySelector('.dial-track').style.getPropertyValue('--dial-position'));return value>0&&value<1;});
   const position = await page.locator('.dial-track').evaluate(e=>Number(e.style.getPropertyValue('--dial-position')));
   assert.ok(position>0 && position<1,'Dial rolls between section positions');
   await page.waitForTimeout(650);
