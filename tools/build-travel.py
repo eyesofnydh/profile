@@ -116,10 +116,10 @@ def render(data):
     def number(key, suffix=''):
         value = stats.get(key)
         return f'{value:,}{suffix}' if isinstance(value, (int,float)) and value >= 0 else '—'
-    statistics = ''.join(f'<div><dt>{label}</dt><dd>{value}</dd></div>' for label,value in [('Destinations',f'{len(items):02d}'),('Trips',number('trips')),('Photos',f'{len(seen):02d}'),('Distance travelled',number('distanceKm',' km'))])
+    statistics = ''.join(f'<div><dt>{label}</dt><dd>{value}</dd></div>' for label,value in [('Story series',f'{len(items):02d}'),('Archive status','Ongoing'),('Photos',f'{len(seen):02d}'),('Home base','Kerala')])
     current = ''.join(f'<div><dt>{esc(key)}</dt><dd>{esc(value or "Still deciding")}</dd></div>' for key,value in (data.get('currently') or {}).items())
     kit = ''.join(f'<details><summary>{esc(item.get("name", "An essential"))}</summary><p>{esc(item.get("note", "A little something for the road."))}</p></details>' for item in data.get('kit',[]) if isinstance(item,dict))
-    values = {'NOTICE':warning, 'INTRO':esc(data.get('intro')), 'HERO':photo(data.get('heroImage'),eager=True,sizes='(max-width: 760px) 100vw, 85vw'), 'DESTINATIONS':''.join(destination(item,i+1) for i,item in enumerate(items)) or '<p>The first destination is on its way.</p>', 'STORIES':''.join(story(item) for item in items) or '<p>The next story is still being written.</p>', 'MEMORIES':''.join(memory(item,i+1) for i,item in enumerate(items)), 'MOMENTS':''.join(moments), 'MAP':travel_map(items), 'STATS':statistics, 'STATS_NOTE':'Sample destinations and archive photos. Trip totals and distance await real travel records.' if sample else 'An ongoing record. A dash means the number has not been recorded yet.', 'CURRENT':current, 'KIT':kit, 'ROBOTS':'<meta name="robots" content="noindex,follow">' if sample else '<meta name="robots" content="index,follow,max-image-preview:large">'}
+    values = {'NOTICE':warning, 'INTRO':esc(data.get('intro')), 'HERO':photo(data.get('heroImage'),eager=True,sizes='(max-width: 760px) 100vw, 85vw'), 'DESTINATIONS':''.join(destination(item,i+1) for i,item in enumerate(items)) or '<p>The first series is on its way.</p>', 'STORIES':''.join(story(item) for item in items) or '<p>The next story is still being written.</p>', 'MEMORIES':''.join(memory(item,i+1) for i,item in enumerate(items)), 'MOMENTS':''.join(moments), 'MAP':'', 'STATS':statistics, 'STATS_NOTE':'Three honest, ongoing studies assembled from photographs already in the archive.', 'CURRENT':current, 'KIT':kit, 'ROBOTS':'<meta name="robots" content="noindex,follow">' if sample else '<meta name="robots" content="index,follow,max-image-preview:large">'}
     output = (ROOT/'tools/travel-template.html').read_text(encoding='utf-8')
     for key,value in values.items():
         output = output.replace('{{'+key+'}}',value)
@@ -133,7 +133,7 @@ def render_home_preview(data):
     if data.get('sample',True):
         template = template.replace('class="journey-preview-chapters"','class="journey-preview-chapters" data-nosnippet')
     chapters = ''.join(f'<a href="./travel.html#story-{item["id"]}"><span class="journey-preview-number">{index+1:02d}</span><span><strong>{esc(item["destination"])}</strong><small>{esc(item["region"])} · {esc(item["year"])}</small></span><span aria-hidden="true">↗</span></a>' for index,item in enumerate(items[:3]))
-    values = {'MAIN_PHOTO': photo(photos[0] if photos else None), 'SIDE_PHOTO': photo(photos[1] if len(photos)>1 else None), 'CHAPTERS': chapters, 'NOTE': 'A preview of the journal · sample trips and archive photographs for now.' if data.get('sample',True) else 'Places, photographs, and one memory from every journey.'}
+    values = {'MAIN_PHOTO': photo(photos[0] if photos else None), 'SIDE_PHOTO': photo(photos[1] if len(photos)>1 else None), 'CHAPTERS': chapters, 'NOTE': 'A preview of the journal · sample trips and archive photographs for now.' if data.get('sample',True) else 'Three honest photo stories drawn from the existing archive.'}
     for key,value in values.items():
         template=template.replace('{{'+key+'}}',value)
     return template

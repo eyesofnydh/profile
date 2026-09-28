@@ -124,7 +124,7 @@
   }
   enter(document.querySelector('#journey-title'));
   document.querySelectorAll('.journey-story').forEach(story=>story.addEventListener('toggle',()=>{
-    if(story.open) enter(story.querySelector('.journey-story-body'));
+    if(story.open) { enter(story.querySelector('.journey-story-body')); window.nydhTrack?.('Travel story open', { story: story.id.replace('story-','') }); }
   }));
   markers.forEach(marker=>marker.addEventListener('click',()=>enter(document.getElementById(`map-${marker.dataset.stop}`))));
 

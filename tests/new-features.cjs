@@ -1,0 +1,23 @@
+const assert=require('node:assert/strict');
+const {chromium}=require(process.env.PLAYWRIGHT_MODULE||'playwright');
+(async()=>{const browser=await chromium.launch({headless:true,executablePath:process.env.CHROMIUM_PATH});try{
+ const base=process.env.SITE_URL||'http://localhost:4173';
+ const page=await browser.newPage({viewport:{width:390,height:844},reducedMotion:'reduce'});const errors=[];
+ page.on('pageerror',e=>errors.push(e.message));await page.goto(base);
+ assert.equal(await page.locator('.service-grid article').count(),3);
+ assert.match(await page.locator('.availability-card').innerText(),/Within two business days/);
+ assert.equal(await page.locator('.selected-work-grid a').count(),3);
+ assert.match(await page.locator('.testimonial-ready').innerText(),/No invented endorsements/);
+ await page.evaluate(()=>{window.__events=[];document.addEventListener('nydh:analytics',e=>window.__events.push(e.detail));document.querySelector('#contact a').addEventListener('click',e=>e.preventDefault(),{capture:true});});
+ await page.locator('#deck-open').click();await page.locator('#photo-save').click();await page.keyboard.press('Escape');await page.locator('#contact a').first().click();
+ const events=await page.evaluate(()=>window.__events.map(e=>e.name));
+ for(const name of ['Gallery open','Photo saved','Enquiry click'])assert.ok(events.includes(name),`missing analytics event ${name}`);
+ await page.locator('#mobile-lens-toggle').click();await page.locator('#mobile-lens-options a[href="#gallery"]').click();
+ assert.equal(await page.locator('#mobile-lens').evaluate(e=>e.classList.contains('is-minimized')),true);
+ await page.goto(base+'/photos/a-world-of-green.html');
+ assert.equal(await page.locator('h1').innerText(),'A world of green');assert.equal(await page.locator('script[type="application/ld+json"]').count(),1);
+ assert.equal(await page.locator('.photo-related-grid a').count(),3);assert.equal(await page.locator('link[rel=canonical]').getAttribute('href'),'https://eyesofnydh.netlify.app/photos/a-world-of-green.html');
+ await page.goto(base+'/travel.html');await page.evaluate(()=>{window.__events=[];document.addEventListener('nydh:analytics',e=>window.__events.push(e.detail));});await page.locator('#story-waterways summary').click();
+ assert.ok((await page.evaluate(()=>window.__events.map(e=>e.name))).includes('Travel story open'));
+ assert.deepEqual(errors,[]);console.log('PASS: services, availability, selected work, honest testimonial state, shareable photo SEO, privacy analytics events and minimized mobile lens.');
+}finally{await browser.close()}})().catch(e=>{console.error(e);process.exit(1)});

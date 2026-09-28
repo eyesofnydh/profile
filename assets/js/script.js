@@ -260,6 +260,7 @@ const motionAllowed = () => !matchMedia('(prefers-reduced-motion: reduce)').matc
   const links = [...options.querySelectorAll('a')];
   const mobile = matchMedia('(max-width: 760px)');
   function setOpen(open, restoreFocus = false) {
+    if(open)root.classList.remove('is-minimized');
     root.classList.toggle('is-open',open);
     options.inert = !open;
     options.setAttribute('aria-hidden',String(!open));
@@ -289,10 +290,11 @@ const motionAllowed = () => !matchMedia('(prefers-reduced-motion: reduce)').matc
   }
   toggle.addEventListener('click',()=>setOpen(!root.classList.contains('is-open')));
   links.forEach((link,index)=>{
-    link.addEventListener('click',()=>{
-      syncSection(index);setOpen(false);
+    link.addEventListener('click',event=>{
+      event.preventDefault();
+      syncSection(index);setOpen(false);root.classList.add('is-minimized');
       const section=document.querySelector(link.hash);
-      if(section){section.tabIndex=-1;section.focus({preventScroll:true});}
+      if(section){history.pushState(null,'',link.hash);section.scrollIntoView({block:'start',behavior:'instant'});section.tabIndex=-1;section.focus({preventScroll:true});}
     });
     link.addEventListener('keydown',e=>{
       if(e.key==='ArrowLeft'||e.key==='ArrowRight'){
@@ -311,8 +313,12 @@ const motionAllowed = () => !matchMedia('(prefers-reduced-motion: reduce)').matc
   document.addEventListener('click',e=>{if(!root.contains(e.target)&&!topToggle.contains(e.target))setOpen(false);});
   document.addEventListener('focusin',e=>{if(!root.contains(e.target)&&!topToggle.contains(e.target))setOpen(false);});
   document.addEventListener('nydh:section',e=>syncSection(e.detail.selected,e.detail.position));
+  addEventListener('scroll',()=>{
+    if(!root.classList.contains('is-open'))root.classList.toggle('is-minimized',scrollY>120);
+  },{passive:true});
   mobile.addEventListener('change',syncMode);
   syncMode();
   const initial=[...document.querySelectorAll('.focus-dial a')].findIndex(link=>link.hasAttribute('aria-current'));
   syncSection(Math.max(0,initial));
+  root.classList.toggle('is-minimized',scrollY>120);
 })();

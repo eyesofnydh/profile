@@ -218,6 +218,11 @@
 @media(max-width:760px) {
   /* Park the closed menu at the edge, away from the active photograph. */
   .mobile-lens:not(.is-open) { left: auto; right: 12px; transform: none; width: 86px; height: 114px; }
+  .mobile-lens.is-minimized:not(.is-open) { width:64px; height:82px; right:8px; opacity:.82; }
+  .mobile-lens.is-minimized:not(.is-open) .lens-toggle { width:50px; height:50px; bottom:18px; }
+  .mobile-lens.is-minimized:not(.is-open) .lens-section-label { display:none; }
+  .mobile-lens.is-minimized:not(.is-open) .lens-button-label { font-size:0; }
+  .mobile-lens.is-minimized:not(.is-open) .lens-button-label::after { content:'Menu'; font-size:8px; }
   .archive-section .search-label { width: 100%; min-width: 0; }
   .archive-section .search-label input { font-size: 16px; min-width: 0; }
   .mosaic-grid .photo-info { padding-bottom: 12px; }

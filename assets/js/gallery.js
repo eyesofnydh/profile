@@ -23,6 +23,7 @@
   } catch {}
   function source(photo) { return photo.src || `./assets/images/${photo.file}`; }
   function preview(photo, size = 800) { return `./assets/images/previews/${photo.file.replace('.png','')}-${size}.jpg`; }
+  function slug(photo) { return photo.title.toLowerCase().normalize('NFKD').replace(/[’']/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,''); }
   function syncSave(button, photo) {
     button.disabled = !photo;
     const isSaved = photo && saved.has(photo.file);
@@ -32,7 +33,9 @@
   }
   function toggleSave(photo) {
     if (!photo) return;
-    saved.has(photo.file) ? saved.delete(photo.file) : saved.add(photo.file);
+    const removing = saved.has(photo.file);
+    removing ? saved.delete(photo.file) : saved.add(photo.file);
+    window.nydhTrack?.('Photo saved', { photo: slug(photo), action: removing ? 'removed' : 'saved' });
     let stored = true;
     try { localStorage.setItem('nydh-saved', JSON.stringify([...saved])); } catch { stored = false; }
     if (savedOnly) render();
@@ -60,6 +63,7 @@
     const changed = collection !== items;
     collection = items; active = (index + items.length) % items.length;
     const photo = items[active];
+    window.nydhTrack?.('Gallery open', { photo: slug(photo), category: photo.category });
     const image = document.querySelector('#dialog-image');
     syncSave(document.querySelector('#photo-save'), photo);
     document.querySelector('#share-status').textContent = '';
@@ -314,8 +318,7 @@
   });
   document.querySelector('#photo-save').addEventListener('click', () => toggleSave(collection[active]));
   document.querySelector('#photo-share').addEventListener('click', async () => {
-    const photo = collection[active], url = new URL(location.href);
-    url.searchParams.set('photo', photo.file); url.hash = 'gallery';
+    const photo = collection[active], url = new URL(`./photos/${slug(photo)}.html`, location.href);
     const status = document.querySelector('#share-status');
     try {
       if (navigator.share) { await navigator.share({title: photo.title, url: url.href}); return; }

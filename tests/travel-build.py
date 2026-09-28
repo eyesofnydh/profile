@@ -14,11 +14,11 @@ class TravelBuildTests(unittest.TestCase):
         output = travel.render({'destinations':[{'destination':'A new place'}]})
         self.assertIn('A photograph will live here.', output)
         self.assertIn('The full story is still being written.', output)
-        self.assertIn('Add destination coordinates', output)
+        self.assertIn('PREVIEW JOURNAL', output)
 
     def test_empty_collection(self):
         output = travel.render({})
-        self.assertIn('The first destination is on its way.',output)
+        self.assertIn('The first series is on its way.',output)
         self.assertNotIn('{{',output)
 
     def test_html_is_escaped_and_ids_are_unique(self):
@@ -37,7 +37,7 @@ class TravelBuildTests(unittest.TestCase):
         self.assertNotIn('Dummy trips',output)
 
     def test_single_destination_and_hemispheres(self):
-        output = travel.render({'destinations':[{'destination':'Somewhere','coordinates':{'lat':-12,'lng':-70}}]})
+        output = travel.travel_map(travel.normalize({'destinations':[{'destination':'Somewhere','coordinates':{'lat':-12,'lng':-70}}]}))
         self.assertIn('left:50.00%;top:50.00%',output)
         self.assertIn('12.0000° S / 70.0000° W',output)
 

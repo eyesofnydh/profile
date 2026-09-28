@@ -1,0 +1,74 @@
+"""Generate one indexable, shareable page for every portfolio photograph."""
+import argparse
+import html
+import json
+import re
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+ORIGIN = 'https://eyesofnydh.netlify.app'
+
+
+def photos():
+    text = (ROOT/'assets/js/photos.js').read_text(encoding='utf-8').split('=', 1)[1].lstrip()
+    return json.JSONDecoder().raw_decode(text)[0]
+
+
+def slug(title):
+    value = title.lower().replace('’', '').replace("'", '')
+    return re.sub(r'(^-|-$)', '', re.sub(r'[^a-z0-9]+', '-', value))
+
+
+def preview(photo, size=800):
+    return f'../assets/images/previews/{Path(photo["file"]).stem}-{size}.jpg'
+
+
+def render(photo, collection):
+    item_slug = slug(photo['title'])
+    canonical = f'{ORIGIN}/photos/{item_slug}.html'
+    same = [item for item in collection if item['file'] != photo['file'] and item['category'] == photo['category']]
+    if len(same) < 3:
+        same += [item for item in collection if item['file'] != photo['file'] and item not in same]
+    related = ''.join(
+        f'<a href="./{slug(item["title"])}.html"><img src="{preview(item)}" alt="{html.escape(item["alt"])}" loading="lazy"><span>{html.escape(item["title"])}</span></a>'
+        for item in same[:3]
+    )
+    schema = json.dumps({
+        '@context':'https://schema.org', '@type':'ImageObject', 'name':photo['title'],
+        'description':photo['alt'], 'contentUrl':f'{ORIGIN}/assets/images/{photo["file"]}',
+        'thumbnailUrl':f'{ORIGIN}/assets/images/previews/{Path(photo["file"]).stem}-800.jpg',
+        'creator':{'@type':'Person','name':'Nidhin Narayanan'}, 'creditText':'Nidhin Narayanan / eyesofnydh',
+        'copyrightNotice':'© Nidhin Narayanan'
+    }, ensure_ascii=False).replace('</', '<\\/')
+    title = html.escape(photo['title']); caption = html.escape(photo['alt'])
+    return f'''<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{title} — eyesofnydh</title><meta name="description" content="{caption}. A photograph by Nidhin Narayanan.">
+<link rel="canonical" href="{canonical}"><meta name="robots" content="index,follow,max-image-preview:large"><meta name="analytics-domain" content="eyesofnydh.netlify.app">
+<meta property="og:type" content="article"><meta property="og:title" content="{title} — eyesofnydh"><meta property="og:description" content="{caption}"><meta property="og:url" content="{canonical}"><meta property="og:image" content="{ORIGIN}/assets/images/{photo['file']}">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="{ORIGIN}/assets/images/{photo['file']}">
+<script type="application/ld+json">{schema}</script><link rel="icon" href="../favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="../assets/css/style.css?v=20260929"><link rel="stylesheet" href="../assets/css/photo.css?v=20260929"><script src="../assets/js/analytics.js?v=20260929" defer></script></head>
+<body class="photo-page" id="top"><header class="header"><div class="container header-inner"><a class="wordmark" href="../index.html">eyesofnydh<span class="brand-dot">✳</span></a><a class="text-link" href="../index.html#gallery">Back to collection ←</a></div></header>
+<main class="container"><a class="photo-back text-link" href="../index.html#gallery">← All photographs</a><article class="photo-detail"><figure><a href="../assets/images/{photo['file']}" aria-label="Open the original photograph"><img src="{preview(photo)}" srcset="../assets/images/previews/{Path(photo['file']).stem}-320.jpg 320w, {preview(photo)} 800w" sizes="(max-width:760px) 100vw,65vw" width="{photo['width']}" height="{photo['height']}" alt="{caption}"></a></figure><div class="photo-detail-copy"><p class="eyebrow">{html.escape(photo['category'])} / THE PERSONAL ARCHIVE</p><h1>{title}</h1><p>{caption}.</p><dl class="photo-facts"><div><dt>Place</dt><dd>Location not published</dd></div><div><dt>Camera</dt><dd>Camera details not recorded</dd></div><div><dt>Archive</dt><dd>eyesofnydh personal collection</dd></div></dl><a class="btn" href="../index.html#contact">Enquire about this work ↗</a></div></article><section class="photo-related" aria-labelledby="related-title"><p class="eyebrow">KEEP LOOKING</p><h2 id="related-title">Related photographs.</h2><div class="photo-related-grid">{related}</div></section></main>
+<footer class="container"><div class="footer-top"><a class="wordmark" href="../index.html">eyesofnydh<span class="brand-dot">✳</span></a><a href="#top" class="text-link">Back to top ↑</a></div><div class="footer-bottom"><span>© 2026 Nidhin Narayanan</span><span>KERALA, INDIA</span></div></footer></body></html>'''
+
+
+def build():
+    collection = photos()
+    return {slug(photo['title'])+'.html': render(photo, collection) for photo in collection}
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description=__doc__); parser.add_argument('--check', action='store_true'); args = parser.parse_args()
+    target = ROOT/'photos'; pages = build()
+    if args.check:
+        stale = [name for name, body in pages.items() if not (target/name).is_file() or (target/name).read_text(encoding='utf-8') != body]
+        extras = [path.name for path in target.glob('*.html') if path.name not in pages] if target.exists() else []
+        if stale or extras: raise SystemExit(f'Photo pages are stale: {stale + extras}')
+        print(f'PASS: {len(pages)} shareable photo pages are current.')
+    else:
+        target.mkdir(exist_ok=True)
+        for path in target.glob('*.html'):
+            if path.name not in pages: path.unlink()
+        for name, body in pages.items(): (target/name).write_text(body, encoding='utf-8')
+        print(f'Built {len(pages)} shareable photo pages.')

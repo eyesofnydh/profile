@@ -16,6 +16,7 @@
   <meta property="og:site_name" content="eyesofnydh">
   <meta property="og:locale" content="en_IN">
   <meta name="author" content="Nidhin Narayanan">
+  <meta name="analytics-domain" content="eyesofnydh.netlify.app">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="My Journey — eyesofnydh">
   <meta name="twitter:description" content="Places, photographs, and the moments I keep. A personal travel journal.">
@@ -23,9 +24,10 @@
   <meta name="twitter:image:alt" content="Palm trees beside a waterway under a cloudy sky">
   {{ROBOTS}}
   <link rel="icon" href="./favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="./assets/css/style.css">
-  <link rel="stylesheet" href="./assets/css/travel.css">
-  <script src="./assets/js/travel.js" defer></script>
+  <link rel="stylesheet" href="./assets/css/style.css?v=20260929">
+  <link rel="stylesheet" href="./assets/css/travel.css?v=20260929">
+  <script src="./assets/js/travel.js?v=20260929" defer></script>
+  <script src="./assets/js/analytics.js?v=20260929" defer></script>
 </head>
 <body class="journey-page" id="top">
   <div class="journey-reading-progress" aria-hidden="true"></div>
@@ -35,20 +37,19 @@
     <div class="container">{{NOTICE}}</div>
     
     <section class="journey-intro container" aria-labelledby="journey-title">
-      <div class="journey-intro-top"><p class="journey-meta">BEYOND THE WORK</p><span class="journey-meta">A PERSONAL TRAVEL JOURNAL / VOL. 01</span></div>
-      <h1 id="journey-title">The places.<br><em>The in-between.</em></h1>
-      <div class="journey-intro-copy"><p>Beyond the things I create,<br>there are places I explore.</p><p>{{INTRO}}</p></div>
-      <figure class="journey-hero">{{HERO}}<figcaption><span>MY JOURNEY</span><span>Away from the usual. Closer to everything.</span><a href="#places">Start wandering ↓</a></figcaption></figure>
+      <div class="journey-intro-top"><p class="journey-meta">BEYOND THE WORK</p><span class="journey-meta">FIELD NOTES / VOL. 01</span></div>
+      <h1 id="journey-title">The stories.<br><em>The in-between.</em></h1>
+      <div class="journey-intro-copy"><p>Not invented itineraries.<br>Honest notes from the archive.</p><p>{{INTRO}}</p></div>
+      <figure class="journey-hero">{{HERO}}<figcaption><span>FIELD NOTES</span><span>Close to home. Open to wonder.</span><a href="#places">Start looking ↓</a></figcaption></figure>
     </section>
 
-    <nav class="journey-nav container" aria-label="Travel chapters"><a href="#places">01 / Places</a><a href="#stories">02 / Stories</a><a href="#moments">03 / Moments</a><a href="#memories">04 / Memories</a><a href="#map">05 / Map</a><a href="#currently">06 / Currently</a></nav>
-    <section class="journey-section container" id="places" aria-labelledby="places-title"><div class="journey-section-heading"><div><p class="journey-meta">01 / A LITTLE FURTHER</p><h2 id="places-title">Places I've <em>been.</em></h2></div><div class="journey-rail-controls" hidden><button data-rail="-1" aria-label="Previous destination">←</button><button data-rail="1" aria-label="Next destination">→</button></div></div><p class="journey-section-note">Not a checklist. A collection of places that stayed with me.</p><div class="journey-destinations" tabindex="0" role="region" aria-label="Destinations. Scroll horizontally or use the arrow buttons.">{{DESTINATIONS}}</div></section>
+    <nav class="journey-nav container" aria-label="Journal chapters"><a href="#places">01 / Series</a><a href="#stories">02 / Stories</a><a href="#moments">03 / Moments</a><a href="#memories">04 / Notes</a><a href="#currently">05 / Currently</a></nav>
+    <section class="journey-section container" id="places" aria-labelledby="places-title"><div class="journey-section-heading"><div><p class="journey-meta">01 / RECURRING THEMES</p><h2 id="places-title">Stories I <em>keep.</em></h2></div><div class="journey-rail-controls" hidden><button data-rail="-1" aria-label="Previous series">←</button><button data-rail="1" aria-label="Next series">→</button></div></div><p class="journey-section-note">Three focused studies drawn from photographs already in the archive.</p><div class="journey-destinations" tabindex="0" role="region" aria-label="Photo series. Scroll horizontally or use the arrow buttons.">{{DESTINATIONS}}</div></section>
     <section class="journey-section container" id="stories" aria-labelledby="stories-title"><div class="journey-section-heading"><div><p class="journey-meta">02 / NOTES FROM THE ROAD</p><h2 id="stories-title">More than <em>a place.</em></h2></div><p>Open a chapter.<br>Stay a little longer.</p></div><div class="journey-stories">{{STORIES}}</div></section>
     <section class="journey-section container" id="moments" aria-labelledby="moments-title"><div class="journey-section-heading"><div><p class="journey-meta">03 / THROUGH MY EYES</p><h2 id="moments-title">Little things.<br><em>Lasting impressions.</em></h2></div><p>The light. The pause.<br>The frame I nearly missed.</p></div><div class="journey-moments">{{MOMENTS}}</div></section>
-    <section class="journey-section container" id="memories" aria-labelledby="memories-title"><p class="journey-meta">04 / THE PART I TAKE HOME</p><h2 id="memories-title">One memory.<br><em>From every place.</em></h2><div class="journey-memories">{{MEMORIES}}</div></section>
-    <section class="journey-section container" id="map" aria-labelledby="map-title"><div class="journey-section-heading"><div><p class="journey-meta">05 / CONNECTING THE DOTS</p><h2 id="map-title">A few points.<br><em>A thousand stories.</em></h2></div><p>Select a place on the map.<br>Find the memory behind it.</p></div>{{MAP}}<noscript><p>The map locations link directly to their stories. All destinations and photographs remain available without JavaScript.</p></noscript></section>
+    <section class="journey-section container" id="memories" aria-labelledby="memories-title"><p class="journey-meta">04 / THE PART I KEEP</p><h2 id="memories-title">One note.<br><em>From every series.</em></h2><div class="journey-memories">{{MEMORIES}}</div></section>
     <section class="journey-section journey-stats container" aria-label="The journey in numbers"><p class="journey-meta">A JOURNAL, STILL GROWING</p><dl>{{STATS}}</dl><p>{{STATS_NOTE}}</p></section>
-    <section class="journey-section journey-now container" id="currently" aria-labelledby="currently-title"><div><p class="journey-meta">06 / HERE, FOR NOW</p><h2 id="currently-title">Always <em>curious.</em></h2><dl>{{CURRENT}}</dl></div><div class="journey-kit"><p class="journey-meta">PACK LIGHT. NOTICE MORE.</p><h3>What's in my travel bag?</h3>{{KIT}}</div></section>
+    <section class="journey-section journey-now container" id="currently" aria-labelledby="currently-title"><div><p class="journey-meta">05 / HERE, FOR NOW</p><h2 id="currently-title">Always <em>curious.</em></h2><dl>{{CURRENT}}</dl></div><div class="journey-kit"><p class="journey-meta">PACK LIGHT. NOTICE MORE.</p><h3>What's in my camera bag?</h3>{{KIT}}</div></section>
     <section class="journey-outro container" aria-label="Continue exploring"><p>There is always<br><em>another way home.</em></p><a class="journey-text-link" href="./index.html#gallery">Explore the photography collection ↗</a><a class="journey-text-link" href="./index.html#contact">Have a story to share? Say hello ↗</a></section>
   </main>
   <footer class="container"><div class="footer-top"><a class="wordmark" href="./index.html">eyesofnydh<span class="brand-dot" aria-hidden="true">✳</span></a><a class="journey-text-link" href="#top">Back to top ↑</a></div><div class="footer-bottom"><span>© <span data-year>2026</span> Nidhin Narayanan</span><span>A LITTLE CLOSER TO THE EXTRAORDINARY</span><a href="./index.html">Back to the portfolio</a></div></footer>

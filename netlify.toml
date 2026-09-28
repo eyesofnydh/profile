@@ -1,0 +1,21 @@
+[build.processing.html]
+  pretty_urls = false
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' https://plausible.io; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://plausible.io; connect-src 'self' https://plausible.io; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=(), payment=()"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "DENY"
+
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=604800, stale-while-revalidate=86400"
+
+[[headers]]
+  for = "/photos/*"
+  [headers.values]
+    Cache-Control = "public, max-age=3600, must-revalidate"

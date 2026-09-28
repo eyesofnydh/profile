@@ -1,43 +1,34 @@
 {
-  "sample": true,
-  "intro": "I travel to slow down, meet people, and notice what I would otherwise miss. A camera comes along. The best things I bring back are usually memories.",
+  "sample": false,
+  "intro": "These are honest notes from the archive: recurring places, changing light, and the small details that made me lift the camera. No invented itineraries—just photographs and what they continue to hold.",
   "heroImage": "f4.png",
   "stats": {"trips": null, "distanceKm": null},
-  "currently": {"Based in": "Alappuzha, Kerala", "Planning": "A few days away from the familiar", "Next destination": "Still deciding", "Currently exploring": "The roads closer to home", "Currently photographing": "Light, water, and everyday life"},
-  "kit": [{"name":"Camera", "note":"For the light I want to take home."}, {"name":"Phone", "note":"Maps, quick notes, and the moments between photographs."}, {"name":"Notebook", "note":"A place for names, directions, and things I do not want to forget."}, {"name":"Power bank", "note":"A little extra time off the beaten path."}],
+  "currently": {"Based in": "Alappuzha, Kerala", "Available for": "Portraits, events, and editorial stories", "Coverage": "Kerala, with travel by arrangement", "Currently exploring": "The roads closer to home", "Currently photographing": "Light, water, and everyday life"},
+  "kit": [{"name":"Camera", "note":"For the light I want to take home."}, {"name":"Phone", "note":"Maps, quick notes, and the moments between photographs."}, {"name":"Notebook", "note":"A place for names, directions, and things I do not want to forget."}, {"name":"Power bank", "note":"A little extra time away from a socket."}],
   "destinations": [
     {
-      "id": "munnar", "destination": "Munnar", "region": "Kerala, India", "year": "2025", "date": "June 2025", "duration": "3 days",
-      "image": "t1.png", "photos": ["t1.png", "t4.png", "f4.png"],
-      "description": "Three days of mist, mountain roads, and quiet mornings.",
-      "headline": "Some mornings are worth getting lost in.",
-      "introduction": "We left before the town woke up. Somewhere along the climb, the road disappeared into a cloud.",
-      "story": ["There was no grand plan for the morning. Just a winding road, a flask of tea, and enough time to stop whenever the view asked us to.", "By afternoon the mist had lifted. The hills looked completely different, but it was that first quiet hour that stayed with me."],
-      "details": "Slow drives, short walks, tea stops. A light layer for the early mornings.",
-      "memory": "For a few minutes, the mountains disappeared and the whole road belonged to the mist.",
-      "coordinates": {"lat": 10.0889, "lng": 77.0595}
+      "id": "waterways", "destination": "Along the waterways", "region": "Kerala archive", "year": "Ongoing", "date": "An ongoing study", "duration": "Four frames",
+      "image": "f4.png", "photos": ["f4.png", "rp2.png", "rp5.png", "rp10.png"],
+      "description": "Green edges, still water, and the routes that feel like home.", "headline": "Where the water slows everything down.",
+      "introduction": "Water keeps returning to these photographs—not as a destination, but as part of the everyday landscape around me.",
+      "story": ["I am drawn to the quiet structure of palms, banks, reflections, and narrow passages of light. The scene rarely asks for attention; it rewards waiting instead.", "Together, these frames form a continuing record of familiar Kerala landscapes and the different moods they carry."],
+      "details": "Made slowly, close to home, whenever weather and light turn an ordinary route into something worth keeping.", "memory": "The familiar can still surprise you when the light changes."
     },
     {
-      "id": "varkala", "destination": "Varkala", "region": "Kerala, India", "year": "2025", "date": "September 2025", "duration": "2 days",
-      "image": "fp2.png", "photos": ["fp2.png", "f3.png"],
-      "description": "Salt in the air. Nowhere to be before sunset.",
-      "headline": "We stayed until the sky ran out of color.",
-      "introduction": "The afternoon was meant to be a short stop by the sea. It became the whole day.",
-      "story": ["We walked without checking the time, stopping for something cold and finding our way back to the water. The conversations moved at the same pace as the waves.", "At sunset, everyone seemed to pause together. I took a few photographs, then put the camera away."],
-      "details": "A coastal weekend with long walks and an unhurried evening. Carry water and leave room in the day for doing very little.",
-      "memory": "We forgot what we were talking about when the sea turned pink.",
-      "coordinates": {"lat": 8.7379, "lng": 76.7163}
+      "id": "shoreline", "destination": "At the shoreline", "region": "Coastal archive", "year": "Ongoing", "date": "An ongoing study", "duration": "Four frames",
+      "image": "fp2.png", "photos": ["fp2.png", "t5.png", "ip6.png", "ip9.png"],
+      "description": "People, tide, and the last color of the day.", "headline": "The coast is never the same twice.",
+      "introduction": "The shoreline gives every photograph a horizon, but the human moments are what make me stay.",
+      "story": ["Some frames are about scale; others are about two people sharing the edge of the day. I look for gestures that feel unarranged and for light that makes the ordinary briefly cinematic.", "This is not a record of one trip. It is a growing coastal essay assembled across different visits and evenings."],
+      "details": "Unhurried walks, changing weather, and enough time to watch the light disappear.", "memory": "The best coastal photographs often arrive after the plan has ended."
     },
     {
-      "id": "fort-kochi", "destination": "Fort Kochi", "region": "Kerala, India", "year": "2026", "date": "January 2026", "duration": "1 day",
-      "image": "f3.png", "photos": ["f3.png", "f5.png"],
-      "description": "Old streets, unexpected conversations, and the last blue light.",
-      "headline": "A different story around every corner.",
-      "introduction": "I went looking for a change of scene and found a reason to take the long way around.",
-      "story": ["The best part of the day was not a place on a list. It was a conversation outside a small shop, followed by a street I had almost walked past.", "We stayed out as the lights came on. The city softened into blue, and familiar things started to look new."],
-      "details": "A day on foot, a few café stops, and an evening by the water. Comfortable shoes matter more than a busy itinerary.",
-      "memory": "A stranger's directions became the best detour of the day.",
-      "coordinates": {"lat": 9.9658, "lng": 76.2421}
+      "id": "after-dark", "destination": "After the light", "region": "Kerala archive", "year": "Ongoing", "date": "An ongoing study", "duration": "Four frames",
+      "image": "f5.png", "photos": ["f5.png", "t3.png", "rp4.png", "rp9.png"],
+      "description": "Blue hour, small lights, silhouettes, and details in the dark.", "headline": "When less light reveals a different story.",
+      "introduction": "Night changes the way I look. Shapes become simpler, color becomes more deliberate, and small details begin to lead the frame.",
+      "story": ["These photographs collect the moments after daylight stops doing the obvious work. A silhouette, a lit doorway, or a line across a pink sky becomes enough.", "The series is still growing. Its connection is a way of seeing rather than a single place or date."],
+      "details": "Made around blue hour and after dark, with patience for slower, quieter frames.", "memory": "When the light falls away, attention becomes the most useful piece of equipment."
     }
   ]
 }

@@ -1,6 +1,16 @@
 # eyesofnydh
 
-A responsive photography portfolio for Nidhin Narayanan. Built with plain HTML, CSS, and JavaScript; no framework or external runtime dependencies. The travel chapter includes an optional static-page generator.
+A responsive photography portfolio for Nidhin Narayanan. Built with plain HTML, CSS, and JavaScript; the portfolio remains fully usable without third-party runtime code, while optional production analytics uses Plausible. The travel chapter includes a static-page generator.
+
+The homepage also includes service and availability details, an honest selected-work/testimonial-ready area, privacy-friendly analytics hooks, and 27 generated shareable photograph pages with canonical metadata and related work.
+
+## Production content and generated pages
+
+- `python tools/build-photo-pages.py` rebuilds the 27 pages in `photos/` from `assets/js/photos.js`. Every page includes a caption, an honest “not published/not recorded” value where location or camera data is unavailable, related photographs, canonical metadata, and `ImageObject` structured data.
+- `python tools/build-photo-pages.py --check` verifies those pages. Run `python tools/build-seo.py` after rebuilding so every page is represented in the sitemap.
+- The travel journal now contains three archive-based visual essays rather than invented trips. Update `assets/data/travel.json` when verified place, date, or equipment information becomes available.
+- `assets/js/analytics.js` loads Plausible only on the production hostname and records gallery opens, saved-photo actions, enquiry clicks, and journal-story opens. Register `eyesofnydh.netlify.app` in Plausible (or replace the provider adapter) before expecting dashboard data. No analytics request is made on localhost.
+- `netlify.toml` disables Pretty URL rewriting so internal links, canonical URLs, and tests consistently use `/travel.html`. It also adds security headers and browser caching for static assets.
 
 ## My Journey — travel extension
 
@@ -20,8 +30,8 @@ Netlify can continue publishing the same site root with its existing settings. C
 
 Edit `assets/data/travel.json`, then regenerate the page. Each destination has an ID, name, region, year, date, duration, cover image, photo list, introduction, story paragraphs, travel details, memory, and optional latitude/longitude. IDs should stay stable so saved story links continue to work.
 
-- `sample: true` labels the dummy journal and adds `noindex,follow`. Change it to `false` after replacing the example trips with verified content. The canonical URL is set in `tools/travel-template.html`; update it if the production domain changes.
-- `stats.trips` and `stats.distanceKm` accept real totals or `null` (displayed as a dash). Destination/photo counts come from the data. The dummy examples do not claim real trip totals.
+- `sample: false` publishes the current archive-based essays. Set it to `true` while drafting unverified material; draft mode adds a visible warning and `noindex,follow`.
+- The published essays avoid unverified destinations, dates, client names, and equipment. Add those details only when they are known.
 - `currently` and `kit` are editable separately. Remove kit entries to omit those items.
 - Image filenames refer to `assets/js/photos.js`. To add new photographs, follow the existing photo workflow below, generate previews, and reference the filename in the travel data. The travel page reuses JPEG previews rather than adding another image toolchain; full originals open from the moments gallery.
 - The lightweight map is a coordinate-based location sketch, not a street map or a claimed travel route. It runs locally without tiles or a third-party service. Entries without valid coordinates still appear in the destination/story sections.
@@ -33,7 +43,7 @@ The generator is split into destination, story, memory, map, image, and page fun
 
 - `python tests/travel-build.py`: incomplete data, empty collection, safe text/IDs, invalid coordinates, and sample indexing behavior.
 - `python tools/build-travel.py --check`: generated production HTML matches the data/template and referenced previews exist.
-- `node tests/travel.cjs`: homepage integration; stories and direct links; all map markers; desktop horizontal and mobile vertical destinations; touch/keyboard controls; all eight requested widths (375, 390, 414, 768, 1024, 1280, 1440, 1920); images and local links; SEO metadata; reduced motion; no JavaScript; failed images and blocked storage. Uses the same Playwright environment described below.
+- `node tests/travel.cjs`: homepage integration; archive stories and direct links; desktop horizontal and mobile vertical layouts; keyboard controls; all eight requested widths (375, 390, 414, 768, 1024, 1280, 1440, 1920); images and local links; SEO metadata; reduced motion; no JavaScript; failed images and blocked storage. Uses the same Playwright environment described below.
 - Existing gallery/navigation tests remain applicable. The gallery-experience test now waits for browser motion updates instead of relying on 60 ms timing.
 
 Travel screenshots are generated in `tests/travel-*.png`. Test tooling is optional and is not shipped as a runtime dependency.
@@ -91,7 +101,7 @@ Gallery, story, and hero images use generated JPEG previews with responsive cand
 
 Save is available in the journal, shelf, photo wall, and viewer. Favorites persist in this browser when storage is available; otherwise a message explains that they last for this visit. Every empty layout offers a reset, and status describes the current layout and position.
 
-The viewer can share a photo link using native sharing, clipboard copy, or a selectable link when those are unavailable. Links with `?photo=f4.png#gallery`, for example, reopen that original photograph. Contact guidance uses the existing Instagram and LinkedIn profiles. With JavaScript disabled, all 27 photographs remain available as links to originals.
+The viewer can share a photo link using native sharing, clipboard copy, or a selectable link when those are unavailable. Shared links now open a durable page such as `/photos/a-world-of-green.html`, with canonical metadata and related photographs. Contact guidance uses the existing Instagram and LinkedIn profiles. With JavaScript disabled, all 27 photographs remain available as links to originals.
 
 Run `node tests/improvements.cjs` with the same browser environment as the other tests to check previews, original viewing, sharing fallback and deep links, Save synchronization, all-layout recovery, blocked storage, and JavaScript-free browsing.
 
@@ -110,9 +120,9 @@ The homepage Journey preview is generated from the same trip data, using `tools/
 
 My Journey is in both the desktop camera menu and mobile lens menu, between Stories and About. There is no standalone Journey link in the header.
 
-The homepage includes a production canonical, descriptive title/description, Open Graph and Twitter cards, and factual Person/WebSite/WebPage JSON-LD. `robots.txt` permits crawling and advertises the XML sitemap. The sitemap includes the indexable homepage and 27 original photographs. Dummy destination names in the homepage preview are excluded from search snippets; the sample journal remains `noindex,follow` and is omitted from the sitemap.
+The homepage includes a production canonical, descriptive title/description, Open Graph and Twitter cards, and factual Person/WebSite/WebPage JSON-LD. `robots.txt` permits crawling and advertises the XML sitemap. The sitemap includes the homepage, journal, 27 photograph pages, and 27 original images.
 
-After changing trip data, run `python tools/build-travel.py` followed by `python tools/build-seo.py`. Run both commands with `--check` to verify the committed output. When real travel content is ready, set `sample` to `false` and rebuild both: the journal then becomes indexable and enters the sitemap. No keywords stuffing, fabricated reviews, business addresses, trip dates, or ranking claims are added.
+After changing journal data, run `python tools/build-travel.py` followed by `python tools/build-seo.py`. Run both commands with `--check` to verify the committed output. No keyword stuffing, fabricated reviews, business addresses, trip dates, client quotes, or ranking claims are added.
 
 After publishing these files to Netlify, verify the deployed canonical URL, robots.txt and sitemap.xml. Verify ownership of `https://eyesofnydh.netlify.app/` in Google Search Console, submit `https://eyesofnydh.netlify.app/sitemap.xml`, and use URL Inspection to request indexing. Search Console ownership, live deployment, indexing, rich-result eligibility and rankings are not confirmed by local tests. Consistent real travel stories, descriptive original photographs and relevant links from your existing profiles support ongoing visibility.
 

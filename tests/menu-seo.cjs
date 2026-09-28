@@ -26,7 +26,7 @@ const {chromium}=require(process.env.PLAYWRIGHT_MODULE||'playwright');
  assert.match(await page.locator('meta[name=robots]').getAttribute('content'),/^index,follow/);
  const schema=JSON.parse(await page.locator('script[type="application/ld+json"]').textContent());assert.deepEqual(schema['@graph'].map(x=>x['@type']),['Person','WebSite','WebPage']);
  const robots=await page.request.get(base+'/robots.txt');assert.equal(robots.status(),200);assert.match(await robots.text(),/Sitemap: https:\/\/eyesofnydh.netlify.app\/sitemap.xml/);
- const sitemap=await page.request.get(base+'/sitemap.xml');assert.equal(sitemap.status(),200);assert.ok(!(await sitemap.text()).includes('/travel.html'));assert.equal(((await sitemap.text()).match(/<image:image>/g)||[]).length,27);
+ const sitemap=await page.request.get(base+'/sitemap.xml');assert.equal(sitemap.status(),200);const sitemapText=await sitemap.text();assert.ok(sitemapText.includes('/travel.html'));assert.equal((sitemapText.match(/<image:image>/g)||[]).length,27);assert.equal((sitemapText.match(/<loc>/g)||[]).length,29);
  await page.setViewportSize({width:390,height:844});await page.locator('.nav-open-btn').click();await page.screenshot({path:'tests/menu-six-mobile.png'});
  assert.deepEqual(errors,[]);console.log('PASS: six-item menus across 11 viewport/landscape sizes, touch bounds/no overlap, Journey tracking, metadata, canonical, heading/ID integrity, structured data, robots and image sitemap.');
 }finally{await browser.close()}})().catch(e=>{console.error(e);process.exit(1)});

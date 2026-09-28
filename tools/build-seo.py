@@ -29,12 +29,13 @@ def build():
     ET.register_namespace('', NS)
     ET.register_namespace('image', IMAGE_NS)
     root = ET.Element(f'{{{NS}}}urlset')
-    for filename in ('index.html', 'travel.html'):
+    filenames = ['index.html', 'travel.html'] + sorted(str(path.relative_to(ROOT)).replace('\\','/') for path in (ROOT/'photos').glob('*.html'))
+    for filename in filenames:
         parser = Head()
         parser.feed((ROOT/filename).read_text(encoding='utf-8'))
         if not parser.indexable:
             continue
-        expected = ORIGIN + ('/' if filename == 'index.html' else '/travel.html')
+        expected = ORIGIN + ('/' if filename == 'index.html' else '/'+filename)
         if parser.canonical != expected:
             raise ValueError(f'Unexpected canonical for {filename}: {parser.canonical}')
         url = ET.SubElement(root, f'{{{NS}}}url')
