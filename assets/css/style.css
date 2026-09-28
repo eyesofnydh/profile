@@ -935,8 +935,8 @@ dialog {
     backdrop-filter: blur(22px); -webkit-backdrop-filter: blur(22px);
   }
   .focus-dial a { position: relative; width: 100%; height: clamp(56px, 9vh, 79px); display: flex; align-items: center; justify-content: center; gap: 9px; color: #c1cfe0; border-radius: 8px; transition: background .25s, color .25s; }
-  .dial-label { writing-mode: vertical-rl; transform: rotate(180deg); font-size: 9px; font-weight: 600; letter-spacing: 1.6px; text-transform: uppercase; }
-  .dial-stop { font-size: 8px; font-family: monospace; color: #8aa5bd; writing-mode: vertical-rl; transform: rotate(180deg); }
+  .dial-label { writing-mode: vertical-rl; transform: rotate(180deg); margin-inline:auto; font-size: 8px; line-height:1; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; white-space:nowrap; }
+  .dial-stop { position:absolute; left:6px; font-size: 7px; line-height:1; font-family: monospace; color: #8aa5bd; writing-mode: vertical-rl; transform: rotate(180deg); }
   .focus-dial a[aria-current] { background: linear-gradient(90deg,#0bd1d124,transparent); color: #8cfff5; }
   .focus-dial a[aria-current]::before { content: ''; position: absolute; left: -7px; width: 3px; height: 24px; border-radius: 3px; background: #71fff0; box-shadow: 0 0 15px #0bd1d1; }
   .focus-dial a:hover { background: #0ea5ea20; color: white; }
@@ -1069,6 +1069,8 @@ dialog {
 
 /* Services, availability, and verified-client-work placeholders. */
 .service-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:18px; margin-top:42px; }
+.services .section-heading>div,.selected-work .section-heading>div { flex:0 1 620px; }
+.services .section-heading>p,.selected-work .section-heading>p { max-width:430px; padding-bottom:8px; }
 .service-grid article { min-height:260px; padding:28px; border:1px solid var(--line); border-radius:20px; background:linear-gradient(145deg,#15304b99,#0c1b2e99); }
 .service-grid article > span { color:var(--cyan); font:11px/1 monospace; letter-spacing:.16em; }
 .service-grid h3 { margin:58px 0 16px; font-size:clamp(28px,3vw,42px); }

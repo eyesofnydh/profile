@@ -52,9 +52,9 @@
 .memory-print img { width: 100%; aspect-ratio: 1; height: auto; object-fit: cover; pointer-events: none; }
 .memory-print span { display: block; font: italic 12px Georgia,serif; margin-top: 12px; }
 .memory-print:is(:hover,:focus-visible) { transform: translateY(-30px) rotate(0); }
-/* A shorter opening lets the interactive archive appear sooner. */
+/* Give the opening image enough scale to feel like a true photographic hero. */
 @media(min-width:1101px) {
-  .cinematic-hero { min-height: 500px; height: 56svh; max-height: 620px; }
+  .cinematic-hero { width:min(1432px,calc(100% - 176px)); min-height:600px; height:68svh; max-height:720px; margin-left:max(40px,calc((100% - 1540px) / 2)); }
   .cinematic-hero .hero-heading { top: 14%; }
   .cinematic-hero h1 { font-size: clamp(62px,6.2vw,91px); }
   .cinematic-intro { font-size: 13px; margin-top: 13px; }

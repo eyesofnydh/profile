@@ -8,6 +8,16 @@ const {chromium}=require(process.env.PLAYWRIGHT_MODULE||'playwright');
  assert.match(await page.locator('.availability-card').innerText(),/Within two business days/);
  assert.equal(await page.locator('.selected-work-grid a').count(),3);
  assert.match(await page.locator('.testimonial-ready').innerText(),/No invented endorsements/);
+ await page.setViewportSize({width:1920,height:920});
+ const heroBox=await page.locator('.cinematic-hero').boundingBox();assert.ok(heroBox.width>=1400&&heroBox.height>=600,'desktop hero should have a larger cinematic footprint');
+ for(const link of await page.locator('.focus-dial a').all()){
+  const overlap=await link.evaluate(el=>{const a=el.querySelector('.dial-stop').getBoundingClientRect(),b=el.querySelector('.dial-label').getBoundingClientRect();return !(a.right<=b.left||b.right<=a.left||a.bottom<=b.top||b.bottom<=a.top)});
+  assert.equal(overlap,false,'dial number and label must not overlap');
+ }
+ for(const selector of ['.services','.selected-work']){
+  const heading=page.locator(`${selector} .section-heading`);assert.equal(await heading.locator(':scope > div').count(),1,'section eyebrow and title stay grouped');
+ }
+ await page.setViewportSize({width:390,height:844});
  await page.evaluate(()=>{window.__events=[];document.addEventListener('nydh:analytics',e=>window.__events.push(e.detail));document.querySelector('#contact a').addEventListener('click',e=>e.preventDefault(),{capture:true});});
  await page.locator('#deck-open').click();await page.locator('#photo-save').click();await page.keyboard.press('Escape');await page.locator('#contact a').first().click();
  const events=await page.evaluate(()=>window.__events.map(e=>e.name));

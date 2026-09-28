@@ -33,7 +33,7 @@ body {
   .focus-dial.active .dial-caption { text-align: left; width: 100%; font-size: 9px; padding-bottom: 20px; }
   .focus-dial.active a { height: 80px; min-height: 64px; transform: none; opacity: 1; justify-content: start; gap: 18px; border-bottom: 1px solid #ffffff20; border-radius: 0; }
   .focus-dial.active .dial-label { writing-mode: horizontal-tb; transform: none; font-size: 30px; letter-spacing: -1px; text-transform: none; font-weight: 400; }
-  .focus-dial.active .dial-stop { writing-mode: horizontal-tb; transform: none; font-size: 10px; }
+  .focus-dial.active .dial-stop { position:static; writing-mode: horizontal-tb; transform: none; font-size: 10px; }
   .focus-dial.active a::after { content: '↗'; margin-left: auto; font-size: 24px; opacity: 0; transform: translate(-8px,8px); transition: opacity .3s,transform .3s; }
   .focus-dial.active a:hover::after, .focus-dial.active a:focus-visible::after { opacity: 1; transform: none; }
 }
