@@ -177,3 +177,28 @@
   .is-open .lens-options a { visibility: visible; opacity: 1; pointer-events: auto; transform: translate(-50%,0) scale(1) rotate(0); transition-delay: calc(var(--lens-order)*30ms); }
   .photo-open .mobile-lens { visibility: hidden; }
 }
+
+/* Shared controls stay available in every collection layout. */
+#gallery-status, #save-status { text-align: center; color: #bdd1e0; font-size: 14px; margin: 12px auto; }
+#save-status:empty { display: none; }
+.deck-controls, .photo-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+.photo-actions { margin-block: 12px; }
+#share-link { width: 100%; padding: 12px; font-size: 16px; }
+.fallback-gallery { display: grid; grid-template-columns: repeat(auto-fit,minmax(140px,1fr)); gap: 16px; }
+.fallback-gallery img { width: 100%; height: 180px; object-fit: cover; }
+.memory-print { text-align: center; }
+@media(max-width:760px) {
+  .archive-heading .eyebrow, .eyebrow, .deck-card-top, #deck-category, .deck-hint,
+  .deck-scrubber, #archive-count, .chapter-count, .chapter-pagination > span,
+  .chapter-tabs button span, .chapter-photo>span, .lens-options a span { font-size: 12px; letter-spacing: .5px; }
+  .archive-section .collection-view button, .filter-btn, .archive-tools summary,
+  .deck-card-title, .memory-print span, .chapter-print figcaption, .chapter-tabs button,
+  .chapter-open, .lens-options a, .lens-button-label, .lens-section-label { font-size: 14px; }
+  .archive-heading > p:last-child, #chapter-description, .collection-note { font-size: 16px; }
+  .header-inner .motion-toggle, .nav-open-btn { font-size: 12px; min-width: 0; }
+  .header-inner { flex-wrap: wrap; height: auto; min-height: 80px; padding-block: 12px; }
+  .archive-section .collection-view { flex-wrap: wrap; }
+  .deck-controls { padding-inline: 20px; }
+  .deck-card-top { letter-spacing: 0; }
+  .deck-hint { max-width: 290px; }
+}

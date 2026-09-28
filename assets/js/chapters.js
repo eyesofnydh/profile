@@ -13,7 +13,7 @@
     const chapter=chapters[index];
     const images=chapter.files.map(file=>window.NYDH_PHOTOS.find(photo=>photo.file===file));
     [main,detail].forEach((image,i)=>{
-      image.src=`./assets/images/${images[i].file}`; image.alt=images[i].alt;
+      window.setPhotoPreview(image, images[i]); image.alt=images[i].alt;
       image.width=images[i].width; image.height=images[i].height;
       image.getAnimations().forEach(a=>a.cancel());
       if(motionAllowed())image.animate([{opacity:.25,transform:'scale(1.025)'},{opacity:1,transform:'scale(1)'}],{duration:500,easing:'ease-out'});
@@ -37,7 +37,8 @@
   });
   document.querySelector('#chapter-prev').addEventListener('click',()=>select(index-1));
   document.querySelector('#chapter-next').addEventListener('click',()=>select(index+1));
-  [document.querySelector('#chapter-open'),document.querySelector('#chapter-photo')].forEach(button=>button.addEventListener('click',()=>{
+  [document.querySelector('#chapter-open'),document.querySelector('#chapter-photo')].forEach(button=>button.addEventListener('click',event=>{
+    event.preventDefault();
     document.dispatchEvent(new CustomEvent('nydh:open-story',{detail:{files:chapters[index].files,trigger:button}}));
   }));
 })();

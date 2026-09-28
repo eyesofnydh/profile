@@ -125,7 +125,7 @@ const motionAllowed = () => !matchMedia('(prefers-reduced-motion: reduce)').matc
   function select(index) {
     selected = (index + scenes.length) % scenes.length;
     const scene = scenes[selected];
-    image.src = `./assets/images/${scene.file}`;
+    window.setPhotoPreview(image, window.NYDH_PHOTOS.find(p=>p.file===scene.file), '(max-width: 760px) 100vw, 90vw');
     image.alt = scene.alt;
     document.querySelector('#scene-title').textContent = `${String(selected + 1).padStart(2, '0')} — ${scene.title}`;
     choices.forEach((button, i) => button.setAttribute('aria-pressed', String(i === selected)));

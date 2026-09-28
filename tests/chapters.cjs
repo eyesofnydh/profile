@@ -13,6 +13,7 @@ const {chromium}=require(process.env.PLAYWRIGHT_MODULE||'playwright');
     assert.equal(await page.locator('#motion-toggle').innerText(),'Enable motion');
     await page.locator('#motion-toggle').click();
     await page.emulateMedia({reducedMotion:'reduce'});
+    await page.waitForFunction(()=>document.querySelector('#motion-toggle').textContent==='Reduced motion');
     assert.equal(await page.locator('#motion-toggle').innerText(),'Reduced motion');
     assert.equal(await page.locator('#motion-toggle').getAttribute('aria-disabled'),'true');
     await page.locator('#featured').evaluate(e=>e.scrollIntoView());

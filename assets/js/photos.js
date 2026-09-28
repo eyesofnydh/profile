@@ -217,3 +217,10 @@ window.NYDH_PHOTOS = [
     "height": 618
   }
 ];
+
+window.setPhotoPreview = (image, photo, sizes = '(max-width: 760px) 100vw, 50vw') => {
+  const widths = [320,800,1600].filter((size,i,all)=>i===0 || all[i-1]<photo.width);
+  image.srcset = widths.map(size=>`./assets/images/previews/${photo.file.replace('.png','')}-${size}.jpg ${Math.min(size,photo.width)}w`).join(', ');
+  image.sizes = sizes;
+  image.src = `./assets/images/previews/${photo.file.replace('.png','')}-800.jpg`;
+};

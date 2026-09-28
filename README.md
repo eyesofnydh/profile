@@ -48,3 +48,13 @@ Run `node tests/archive.cjs` with the same Playwright environment as the sanity 
 Run `node tests/chapters.cjs` to verify motion labels, system preferences, story navigation, curated photo sequences, focus restoration, and responsive layouts.
 
 Run `node tests/mobile-lens.cjs` to verify touch navigation, keyboard controls, responsive bounds, reduced motion, and desktop navigation.
+
+## Image delivery and recovery
+
+Gallery, story, and hero images use generated JPEG previews with responsive candidates; the viewer always opens the unchanged PNG originals. Regenerate previews after adding photos with `powershell -File tools/build-previews.ps1` (Windows, System.Drawing). The 800px preview set is about 0.93 MB versus 11.92 MB for the collection originals (92% smaller). Small originals are never enlarged during generation.
+
+Save is available in the journal, shelf, photo wall, and viewer. Favorites persist in this browser when storage is available; otherwise a message explains that they last for this visit. Every empty layout offers a reset, and status describes the current layout and position.
+
+The viewer can share a photo link using native sharing, clipboard copy, or a selectable link when those are unavailable. Links with `?photo=f4.png#gallery`, for example, reopen that original photograph. Contact guidance uses the existing Instagram and LinkedIn profiles. With JavaScript disabled, all 27 photographs remain available as links to originals.
+
+Run `node tests/improvements.cjs` with the same browser environment as the other tests to check previews, original viewing, sharing fallback and deep links, Save synchronization, all-layout recovery, blocked storage, and JavaScript-free browsing.

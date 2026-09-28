@@ -22,12 +22,48 @@
     if (Array.isArray(stored)) saved = new Set(stored.filter(file => photos.some(p => p.file === file)));
   } catch {}
   function source(photo) { return photo.src || `./assets/images/${photo.file}`; }
+  function preview(photo, size = 800) { return `./assets/images/previews/${photo.file.replace('.png','')}-${size}.jpg`; }
+  function syncSave(button, photo) {
+    button.disabled = !photo;
+    const isSaved = photo && saved.has(photo.file);
+    button.textContent = isSaved ? '♥ Saved' : '♡ Save';
+    button.setAttribute('aria-pressed', String(!!isSaved));
+    button.setAttribute('aria-label', photo ? `${isSaved ? 'Unsave' : 'Save'} ${photo.title}` : 'Save photograph');
+  }
+  function toggleSave(photo) {
+    if (!photo) return;
+    saved.has(photo.file) ? saved.delete(photo.file) : saved.add(photo.file);
+    let stored = true;
+    try { localStorage.setItem('nydh-saved', JSON.stringify([...saved])); } catch { stored = false; }
+    if (savedOnly) render();
+    else {
+      const items = matches();
+      grid.querySelectorAll('.save-photo').forEach((button,index)=>syncSave(button,items[index]));
+      syncSave(document.querySelector('#deck-save'), deckItems[deckIndex]);
+      document.querySelector('#saved-count').textContent = saved.size;
+    }
+    syncSave(document.querySelector('#photo-save'), collection[active]);
+    document.querySelector('#save-status').textContent = stored ? '' : 'Browser storage is unavailable; favorites are saved for this visit only.';
+  }
+  function resetFilters() {
+    search.value = ''; category = 'All'; savedOnly = false; limit = pageSize;
+    savedButton.setAttribute('aria-pressed','false');
+    document.querySelectorAll('[data-filter]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.filter==='All')));
+    render(); document.querySelector('.archive-tools').open = true; search.focus();
+  }
+  function updateStatus() {
+    const total = deckItems.length;
+    document.querySelector('#gallery-status').textContent = total ? (mode === 'grid' ? `${total} photographs · ${Math.min(limit,total)} on view` : `${total} photographs · ${mode === 'stack' ? 'Journal' : 'Record shelf'} · frame ${deckIndex+1} of ${total}`) : 'No photographs match. Try another search or turn off a filter.';
+  }
   function showPhoto(items, index, trigger) {
     if (!items.length) return;
     const changed = collection !== items;
     collection = items; active = (index + items.length) % items.length;
     const photo = items[active];
     const image = document.querySelector('#dialog-image');
+    syncSave(document.querySelector('#photo-save'), photo);
+    document.querySelector('#share-status').textContent = '';
+    document.querySelector('#share-link').hidden = true;
     image.src = source(photo); image.alt = photo.alt || photo.title;
     document.querySelector('#photo-caption').textContent = photo.title;
     document.querySelector('#photo-position').textContent = `FRAME ${String(active + 1).padStart(2, '0')} / ${String(items.length).padStart(2, '0')}`;
@@ -38,7 +74,7 @@
       if (items.length > 1) items.forEach((item, i) => {
         const button = document.createElement('button');
         button.className = 'filmstrip-thumb'; button.setAttribute('aria-label', `View ${item.title}`);
-        const thumb = document.createElement('img'); thumb.src = source(item); thumb.alt = ''; thumb.width = 64; thumb.height = 48; thumb.loading = 'lazy'; thumb.decoding = 'async';
+        const thumb = document.createElement('img'); thumb.src = preview(item, 320); thumb.alt = ''; thumb.width = 64; thumb.height = 48; thumb.loading = 'lazy'; thumb.decoding = 'async';
         button.append(thumb);
         button.addEventListener('click', () => showPhoto(items, i));
         filmstrip.append(button);
@@ -58,24 +94,17 @@
   function makeCard(photo, index, items) {
     const card = document.createElement('article'); card.className = 'photo-card'; card.dataset.revealOrder = index % 3;
     const view = document.createElement('button'); view.className = 'photo-view'; view.setAttribute('aria-label', `View ${photo.title}`);
-    const img = document.createElement('img'); img.src = source(photo); img.alt = photo.alt; img.loading = 'lazy'; img.decoding = 'async'; img.width = photo.width; img.height = photo.height;
+    const img = document.createElement('img'); window.setPhotoPreview(img, photo, '(max-width: 760px) 100vw, 33vw'); img.alt = photo.alt; img.loading = 'lazy'; img.decoding = 'async'; img.width = photo.width; img.height = photo.height;
     view.append(img); view.addEventListener('click', () => showPhoto(items, index, view));
     const info = document.createElement('div'); info.className = 'photo-info';
     const title = document.createElement('h3'); title.textContent = photo.title;
     const tag = document.createElement('p'); tag.textContent = `${String(photos.indexOf(photo)+1).padStart(2,'0')} / ${photo.category}`;
     const save = document.createElement('button'); save.className = 'save-photo';
-    function updateSave() {
-      save.textContent = saved.has(photo.file) ? '♥ Saved' : '♡ Save';
-      save.setAttribute('aria-pressed', String(saved.has(photo.file))); save.setAttribute('aria-label', `Save ${photo.title}`);
-      document.querySelector('#saved-count').textContent = saved.size;
-    }
-    updateSave();
+    syncSave(save, photo);
     save.addEventListener('click', () => {
-      saved.has(photo.file) ? saved.delete(photo.file) : saved.add(photo.file);
-      let stored = true;
-      try { localStorage.setItem('nydh-saved', JSON.stringify([...saved])); } catch { stored = false; }
-      if (savedOnly) { render(); savedButton.focus(); } else updateSave();
-      if (!stored) document.querySelector('#gallery-status').textContent = 'Browser storage is unavailable; favorites are saved for this visit only.';
+      toggleSave(photo);
+      if (savedOnly) { document.querySelector('.archive-tools').open = true; savedButton.focus(); }
+      else [...grid.querySelectorAll('.save-photo')][index]?.focus({preventScroll:true});
     });
     info.append(tag,title,save); card.append(view,info); return card;
   }
@@ -89,15 +118,10 @@
     grid.append(fragment);
     more.hidden = count >= items.length;
     document.querySelector('#collection-progress').textContent = items.length ? `${count} of ${items.length} frames` : '';
-    document.querySelector('#gallery-status').textContent = items.length ? `${items.length} photographs · ${count} on view` : 'No photographs match. Try another search or turn off a filter.';
     document.querySelector('#saved-count').textContent = saved.size;
     if (!items.length) {
       const reset = document.createElement('button'); reset.className = 'filter-btn gallery-reset'; reset.textContent = 'Clear search & filters ↗';
-      reset.addEventListener('click', () => {
-        search.value = ''; category = 'All'; savedOnly = false; savedButton.setAttribute('aria-pressed','false');
-        document.querySelectorAll('[data-filter]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.filter==='All')));
-        limit = pageSize; render(); search.focus();
-      });
+      reset.addEventListener('click', resetFilters);
       grid.append(reset);
     }
     buildDeck(items);
@@ -119,7 +143,7 @@
     if(e.target!==dialog) return;
     const r=dialog.getBoundingClientRect(); if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom) dialog.close();
   });
-  dialog.addEventListener('close',()=>{ document.body.classList.remove('photo-open'); opener?.focus({preventScroll:true}); });
+  dialog.addEventListener('close',()=>{ document.body.classList.remove('photo-open'); (opener?.isConnected && !opener.closest('[hidden]') ? opener : document.querySelector(`[data-layout="${mode}"]`))?.focus({preventScroll:true}); });
   document.querySelector('#photo-prev').addEventListener('click',()=>showPhoto(collection,active-1));
   document.querySelector('#photo-next').addEventListener('click',()=>showPhoto(collection,active+1));
   dialog.addEventListener('keydown', e => {
@@ -137,7 +161,7 @@
   document.querySelectorAll('.feature-card').forEach(card=>{
     const img=card.querySelector('img'),title=card.querySelector('h3')?.textContent.trim();
     if(!img||!title)return;
-    card.querySelectorAll('h3 a,.card-btn').forEach(link=>link.addEventListener('click',e=>{e.preventDefault();showPhoto([{src:img.src,title,alt:img.alt}],0,link);}));
+    card.querySelectorAll('h3 a,.card-btn').forEach(link=>link.addEventListener('click',e=>{e.preventDefault();showPhoto([photos.find(p=>p.file===img.dataset.original)],0,link);}));
   });
 
   function applyMode() {
@@ -148,7 +172,7 @@
 
     document.querySelector('#archive-count').textContent = `${deckItems.length} frames`;
     document.querySelectorAll('[data-layout]').forEach(button => button.setAttribute('aria-pressed',String(button.dataset.layout===mode)));
-    paintDeck();
+    paintDeck(); updateStatus();
   }
   function paintDeck(position = deckIndex) {
     const count = deckItems.length;
@@ -177,11 +201,13 @@
       card.setAttribute('aria-pressed',String(selected));
       card.setAttribute('aria-label',`${selected ? 'Open' : 'Select'} ${deckItems[index].title}`);
       const img = card.querySelector('img');
-      if (visible && !img.getAttribute('src')) img.src = source(deckItems[index]);
+      if (mode !== 'grid' && visible && !img.getAttribute('src')) img.src = preview(deckItems[index]);
     });
   }
   function updateDeckCaption() {
     const photo = deckItems[deckIndex];
+    syncSave(document.querySelector('#deck-save'), photo);
+    updateStatus();
     document.querySelector('#deck-title').textContent = photo?.title || 'Nothing here yet.';
     document.querySelector('#deck-category').textContent = photo ? `${photo.category.toUpperCase()} / THE PERSONAL ARCHIVE` : '';
     document.querySelector('#deck-current').textContent = photo ? String(deckIndex+1).padStart(2,'0') : '00';
@@ -271,11 +297,30 @@
     const items=files.map(file=>photos.find(photo=>photo.file===file)).filter(Boolean);
     if(items.length)showPhoto(items,0,event.detail.trigger);
   });
-  document.querySelectorAll('.memory-print').forEach(button=>button.addEventListener('click',()=>{
+  document.querySelectorAll('.memory-print').forEach(button=>button.addEventListener('click',event=>{
+    event.preventDefault();
     const index=photos.findIndex(photo=>photo.file===button.dataset.photo);
     if(index>=0)showPhoto(photos,index,button);
   }));
 
   document.querySelector('.archive-tools').open = mode === 'grid';
+  document.querySelector('#deck-reset').addEventListener('click', resetFilters);
+  document.querySelector('#deck-save').addEventListener('click', () => toggleSave(deckItems[deckIndex]));
+  document.querySelector('#photo-save').addEventListener('click', () => toggleSave(collection[active]));
+  document.querySelector('#photo-share').addEventListener('click', async () => {
+    const photo = collection[active], url = new URL(location.href);
+    url.searchParams.set('photo', photo.file); url.hash = 'gallery';
+    const status = document.querySelector('#share-status');
+    try {
+      if (navigator.share) { await navigator.share({title: photo.title, url: url.href}); return; }
+      await navigator.clipboard.writeText(url.href); status.textContent = 'Photo link copied.';
+    } catch (error) {
+      if (error.name === 'AbortError') return;
+      const field = document.querySelector('#share-link'); field.hidden = false; field.value = url.href; field.focus(); field.select();
+      status.textContent = 'Copy this link to share the photograph.';
+    }
+  });
   render();
+  const shared = photos.findIndex(p=>p.file===new URL(location.href).searchParams.get('photo'));
+  if (shared >= 0) showPhoto(photos, shared, document.querySelector('[data-layout]'));
 })();
