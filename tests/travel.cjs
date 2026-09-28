@@ -17,7 +17,7 @@ const {chromium} = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
     assert.equal(await page.locator('h1').count(),1);
     assert.equal(await page.locator('.journey-destination').count(),3);
     assert.equal(await page.locator('.journey-motion').innerText(),'Reduced motion');
-    assert.equal(await page.locator('link[rel=canonical]').getAttribute('href'),'https://nydh.netlify.app/travel.html');
+    assert.equal(await page.locator('link[rel=canonical]').getAttribute('href'),'https://eyesofnydh.netlify.app/travel.html');
     assert.equal(await page.locator('meta[name=robots]').getAttribute('content'),'noindex,follow');
     assert.ok(requests.every(url=>url.startsWith(base)), 'travel must not require external requests');
     await page.evaluate(async () => {

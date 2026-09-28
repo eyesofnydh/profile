@@ -231,7 +231,7 @@
     stage.replaceChildren();
     items.forEach((photo,index)=>{
       const card = document.createElement('button'); card.className='deck-card'; card.type='button';
-      const top = document.createElement('span'); top.className='deck-card-top'; top.textContent=`EYES OF NYDH — ${String(index+1).padStart(2,'0')}`;
+      const top = document.createElement('span'); top.className='deck-card-top'; top.textContent=`EYESOFNYDH — ${String(index+1).padStart(2,'0')}`;
       const frame = document.createElement('span'); frame.className='deck-card-photo';
       const img = document.createElement('img'); img.alt=photo.alt; img.width=photo.width; img.height=photo.height; img.decoding='async'; img.draggable=false; frame.append(img);
       const label = document.createElement('span'); label.className='deck-card-title'; label.textContent=photo.title;

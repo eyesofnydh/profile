@@ -1,4 +1,4 @@
-# Eyes of Nydh
+# eyesofnydh
 
 A responsive photography portfolio for Nidhin Narayanan. Built with plain HTML, CSS, and JavaScript; no framework or external runtime dependencies. The travel chapter includes an optional static-page generator.
 
@@ -114,8 +114,10 @@ The homepage includes a production canonical, descriptive title/description, Ope
 
 After changing trip data, run `python tools/build-travel.py` followed by `python tools/build-seo.py`. Run both commands with `--check` to verify the committed output. When real travel content is ready, set `sample` to `false` and rebuild both: the journal then becomes indexable and enters the sitemap. No keywords stuffing, fabricated reviews, business addresses, trip dates, or ranking claims are added.
 
-After publishing these files to Netlify, verify the deployed canonical URL, robots.txt and sitemap.xml. Verify ownership of `https://nydh.netlify.app/` in Google Search Console, submit `https://nydh.netlify.app/sitemap.xml`, and use URL Inspection to request indexing. Search Console ownership, live deployment, indexing, rich-result eligibility and rankings are not confirmed by local tests. Consistent real travel stories, descriptive original photographs and relevant links from your existing profiles support ongoing visibility.
+After publishing these files to Netlify, verify the deployed canonical URL, robots.txt and sitemap.xml. Verify ownership of `https://eyesofnydh.netlify.app/` in Google Search Console, submit `https://eyesofnydh.netlify.app/sitemap.xml`, and use URL Inspection to request indexing. Search Console ownership, live deployment, indexing, rich-result eligibility and rankings are not confirmed by local tests. Consistent real travel stories, descriptive original photographs and relevant links from your existing profiles support ongoing visibility.
 
 References: [Google canonical guidance](https://developers.google.com/search/docs/crawling-indexing/consolidate-duplicate-urls), [sitemap guidance](https://developers.google.com/search/docs/crawling-indexing/sitemaps/build-sitemap), and [robots/snippet controls](https://developers.google.com/search/docs/crawling-indexing/robots-meta-tag).
 
 `node tests/menu-seo.cjs` checks the six menu entries at 11 viewport/landscape sizes, 44px touch targets, overlap, section tracking, titles/metadata, heading and ID integrity, structured data, robots.txt and image-sitemap responses. The rest of the existing browser suites cover gallery, stories, saved photos, blocked storage, motion, the travel viewer and no-JavaScript fallback.
+
+`node tests/header-domain.cjs` checks motion-button text containment, the travel return-arrow alignment, compact gallery hint wrapping, `eyesofnydh` branding and the `eyesofnydh.netlify.app` canonicals at eight widths. The new domain is also used in structured data, social metadata, robots.txt and the generated image sitemap.

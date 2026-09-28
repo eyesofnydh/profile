@@ -6,7 +6,7 @@ from pathlib import Path
 import xml.etree.ElementTree as ET
 
 ROOT = Path(__file__).resolve().parents[1]
-ORIGIN = 'https://nydh.netlify.app'
+ORIGIN = 'https://eyesofnydh.netlify.app'
 NS = 'http://www.sitemaps.org/schemas/sitemap/0.9'
 IMAGE_NS = 'http://www.google.com/schemas/sitemap-image/1.1'
 

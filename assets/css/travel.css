@@ -216,3 +216,14 @@ html:has(.journey-page.motion-paused) { scroll-behavior: auto; }
 }
 /* Travel supplies its own sticky-header offset for anchor destinations. */
 html:has(.journey-page) { scroll-padding-top: 0; }
+
+/* Treat the return arrow and its label as two aligned parts of one link. */
+.journey-home { gap: 8px; line-height: 1.4; white-space: nowrap; padding-block: 10px; }
+.journey-back-arrow { display: inline-flex; align-items: center; justify-content: center; width: 20px; line-height: 1; font-size: 20px; }
+.journey-motion { flex-shrink: 0; white-space: nowrap; line-height: 1.4; }
+@media(max-width:760px) {
+  .journey-header .header-inner { display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 6px 12px; }
+  .journey-header .wordmark { grid-column: 1 / -1; }
+  .journey-home { margin-left: 0; justify-self: start; font-size: 13px; }
+  .journey-motion { min-height: 44px; margin-left: 0; }
+}

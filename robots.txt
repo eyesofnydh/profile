@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://nydh.netlify.app/sitemap.xml
+Sitemap: https://eyesofnydh.netlify.app/sitemap.xml
