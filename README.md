@@ -1,6 +1,42 @@
 # Eyes of Nydh
 
-A responsive photography portfolio for Nidhin Narayanan. Built with plain HTML, CSS, and JavaScript; no build step or external runtime dependencies.
+A responsive photography portfolio for Nidhin Narayanan. Built with plain HTML, CSS, and JavaScript; no framework or external runtime dependencies. The travel chapter includes an optional static-page generator.
+
+## My Journey — travel extension
+
+Open [the local travel chapter](http://localhost:4173/travel.html). The homepage footer links to it; the existing homepage sections, camera navigation, gallery, and shared styles are unchanged. Travel uses the same navy/cyan colors, Segoe UI and Georgia accents, spacing scale, original archive images, responsive preview pipeline, and saved motion preference. Its CSS and JavaScript load only on `travel.html`.
+
+### Local development and production
+
+1. **Dependencies:** no npm install, framework, map SDK, API key, or environment variables are needed. Python 3.9+ is needed only to regenerate the static page and run the local server. A browser can also view the checked-in HTML directly.
+2. **Start:** from the repository root, run `python -m http.server 4173`.
+3. **Local URLs:** homepage `http://localhost:4173/`; travel `http://localhost:4173/travel.html`.
+4. **Production generation:** run `python tools/build-travel.py`, then `python tools/build-travel.py --check`. This generates the checked-in `travel.html` from the data and template. It never rewrites the homepage. There is no bundling step for this static site.
+5. **Production preview:** serve the same repository root with `python -m http.server 4173`; these are the exact static HTML/CSS/JS/assets served in production.
+
+Netlify can continue publishing the same site root with its existing settings. Commit the generated `travel.html` alongside the travel data, CSS, and JS. No SPA rewrite is needed: `/travel.html` is a real file, and story URLs such as `/travel.html#story-munnar` use local anchors. No deployment configuration was added or changed. Local validation does not deploy the website.
+
+### Updating trips
+
+Edit `assets/data/travel.json`, then regenerate the page. Each destination has an ID, name, region, year, date, duration, cover image, photo list, introduction, story paragraphs, travel details, memory, and optional latitude/longitude. IDs should stay stable so saved story links continue to work.
+
+- `sample: true` labels the dummy journal and adds `noindex,follow`. Change it to `false` after replacing the example trips with verified content. The canonical URL is set in `tools/travel-template.html`; update it if the production domain changes.
+- `stats.trips` and `stats.distanceKm` accept real totals or `null` (displayed as a dash). Destination/photo counts come from the data. The dummy examples do not claim real trip totals.
+- `currently` and `kit` are editable separately. Remove kit entries to omit those items.
+- Image filenames refer to `assets/js/photos.js`. To add new photographs, follow the existing photo workflow below, generate previews, and reference the filename in the travel data. The travel page reuses JPEG previews rather than adding another image toolchain; full originals open from the moments gallery.
+- The lightweight map is a coordinate-based location sketch, not a street map or a claimed travel route. It runs locally without tiles or a third-party service. Entries without valid coordinates still appear in the destination/story sections.
+- Missing optional story fields render readable placeholders. Failed images render a text fallback; content and navigation remain usable. With JavaScript disabled, native story disclosures, destination links, and original-photo links still work.
+
+The generator is split into destination, story, memory, map, image, and page functions in `tools/build-travel.py`; page structure lives in `tools/travel-template.html`. Runtime interactions live in `assets/js/travel.js`, with page-scoped styling in `assets/css/travel.css`.
+
+### Travel validation
+
+- `python tests/travel-build.py`: incomplete data, empty collection, safe text/IDs, invalid coordinates, and sample indexing behavior.
+- `python tools/build-travel.py --check`: generated production HTML matches the data/template and referenced previews exist.
+- `node tests/travel.cjs`: homepage integration; stories and direct links; all map markers; desktop horizontal and mobile vertical destinations; touch/keyboard controls; all eight requested widths (375, 390, 414, 768, 1024, 1280, 1440, 1920); images and local links; SEO metadata; reduced motion; no JavaScript; failed images and blocked storage. Uses the same Playwright environment described below.
+- Existing gallery/navigation tests remain applicable. The gallery-experience test now waits for browser motion updates instead of relying on 60 ms timing.
+
+Travel screenshots are generated in `tests/travel-*.png`. Test tooling is optional and is not shipped as a runtime dependency.
 
 ## Preview
 

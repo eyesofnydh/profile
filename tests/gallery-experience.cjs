@@ -22,10 +22,11 @@ const make=x=>new Touch({identifier:1,target:i,clientX:x,clientY:r.top+r.height/
   await p.keyboard.press('Escape');
   await p.setViewportSize({width:1440,height:1000});
   await p.emulateMedia({reducedMotion:'no-preference'});
+  await p.waitForFunction(()=>document.querySelector('#motion-toggle').textContent==='Pause motion');
   await p.evaluate(()=>window.scrollTo({top:350,behavior:'instant'}));
-  await p.waitForTimeout(60);
+  await p.waitForFunction(()=>document.querySelector('.hero-frame').style.translate.split(' ').some(n=>parseFloat(n)!==0));
   assert.equal(await p.locator('.hero-frame').evaluate(e=>e.style.translate.split(' ').some(n=>parseFloat(n)!==0)),true);
   await p.locator('#motion-toggle').click();
-  await p.waitForTimeout(60);
+  await p.waitForFunction(()=>document.querySelector('.hero-frame').style.translate.split(' ').every(n=>parseFloat(n)===0));
   assert.equal(await p.locator('.hero-frame').evaluate(e=>e.style.translate.split(' ').every(n=>parseFloat(n)===0)),true);
   await b.close();console.log('PASS: mobile swipe navigation, viewer sizing, scroll depth, and motion-pause reset.');})();
