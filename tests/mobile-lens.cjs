@@ -12,7 +12,7 @@ const {chromium}=require(process.env.PLAYWRIGHT_MODULE);
  assert.equal(await page.locator('.nav-open-btn').getAttribute('aria-expanded'),'true');
  await page.waitForTimeout(650);
  await page.screenshot({path:'tests/lens-mobile-open.png'});
- for(const id of ['gallery','featured','about','contact','home']){
+ for(const id of ['gallery','featured','journey','about','contact','home']){
    if(await lens.getAttribute('aria-expanded')==='false')await lens.tap();
    await page.locator(`#mobile-lens-options a[href="#${id}"]`).tap();
    await page.waitForFunction(id=>document.querySelector('#mobile-lens-options a[aria-current]')?.hash===`#${id}`,id);
@@ -45,6 +45,6 @@ const {chromium}=require(process.env.PLAYWRIGHT_MODULE);
  await page.locator('.nav-open-btn').click();
  assert.equal(await page.locator('.focus-dial').evaluate(e=>e.classList.contains('active')),true);
  assert.deepEqual(errors,[]);
- console.log('PASS: touch navigation for five sections, scroll tracking, top menu, keyboard, outside dismissal, 320px and landscape bounds, reduced motion and desktop menu.');
+ console.log('PASS: touch navigation for six sections, scroll tracking, top menu, keyboard, outside dismissal, 320px and landscape bounds, reduced motion and desktop menu.');
  }finally{await browser.close();}
 })().catch(e=>{console.error(e);process.exit(1)});

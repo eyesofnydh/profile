@@ -4,7 +4,7 @@ A responsive photography portfolio for Nidhin Narayanan. Built with plain HTML, 
 
 ## My Journey — travel extension
 
-Open [the local travel chapter](http://localhost:4173/travel.html). A prominent homepage My Journey section, header shortcut, and footer link lead to it; the existing homepage sections, camera navigation, gallery, and shared styles are unchanged. Travel uses the same navy/cyan colors, Segoe UI and Georgia accents, spacing scale, original archive images, responsive preview pipeline, and saved motion preference. The full journal CSS and JavaScript load only on `travel.html`; the homepage preview uses the existing homepage styles.
+Open [the local travel chapter](http://localhost:4173/travel.html). A prominent homepage My Journey section, menu entry, and footer link lead to it; the existing homepage sections, camera navigation, gallery, and shared styles are unchanged. Travel uses the same navy/cyan colors, Segoe UI and Georgia accents, spacing scale, original archive images, responsive preview pipeline, and saved motion preference. The full journal CSS and JavaScript load only on `travel.html`; the homepage preview uses the existing homepage styles.
 
 ### Local development and production
 
@@ -48,7 +48,7 @@ From the project directory, run `python -m http.server 4173`, then open http://l
 - Collection search, category filters, and browser-local favorites.
 - Accessible native photo dialog with previous/next controls, arrow keys, Escape, and focus restoration.
 - Camera-dial desktop navigation inspired by https://epochtales.com/, with a moving label drum, fixed center pointer, scroll snapping, wheel gestures, and keyboard controls.
-- Bottom mobile camera lens with a rotating focus ring, five-section fan menu, scroll tracking, touch targets, keyboard controls, and outside-click dismissal.
+- Bottom mobile camera lens with a rotating focus ring, six-section fan menu, scroll tracking, touch targets, keyboard controls, and outside-click dismissal.
 - Cinematic hero with three manually selectable photographs, a glass filmstrip, arrow-key controls, and reduced-motion support.
 - Reading-progress indicator, photo reveals, pointer lighting, and animated headline entrances.
 - Expandable glass navigation with staggered links and a glass mobile lens menu.
@@ -103,4 +103,19 @@ My Journey includes sticky chapter tracking, a reading-progress line, subtle sto
 
 The gallery record shelf uses even, thin borders and separates neighboring sleeves from the selected frame. Run `node tests/shelf-frames.cjs` to verify selected-frame visibility, bounds, and symmetric borders at nine widths from 320px through 1920px.
 
-The homepage Journey preview is generated from the same trip data, using `tools/travel-home-template.html`. Run `node tests/journey-home.cjs` to check the header shortcut, preview layout, original section presence, and story links at nine screen widths.
+The homepage Journey preview is generated from the same trip data, using `tools/travel-home-template.html`. Run `node tests/journey-home.cjs` to check the menu entry, preview layout, original section presence, and story links at nine screen widths.
+
+
+## Search visibility and menu validation
+
+My Journey is in both the desktop camera menu and mobile lens menu, between Stories and About. There is no standalone Journey link in the header.
+
+The homepage includes a production canonical, descriptive title/description, Open Graph and Twitter cards, and factual Person/WebSite/WebPage JSON-LD. `robots.txt` permits crawling and advertises the XML sitemap. The sitemap includes the indexable homepage and 27 original photographs. Dummy destination names in the homepage preview are excluded from search snippets; the sample journal remains `noindex,follow` and is omitted from the sitemap.
+
+After changing trip data, run `python tools/build-travel.py` followed by `python tools/build-seo.py`. Run both commands with `--check` to verify the committed output. When real travel content is ready, set `sample` to `false` and rebuild both: the journal then becomes indexable and enters the sitemap. No keywords stuffing, fabricated reviews, business addresses, trip dates, or ranking claims are added.
+
+After publishing these files to Netlify, verify the deployed canonical URL, robots.txt and sitemap.xml. Verify ownership of `https://nydh.netlify.app/` in Google Search Console, submit `https://nydh.netlify.app/sitemap.xml`, and use URL Inspection to request indexing. Search Console ownership, live deployment, indexing, rich-result eligibility and rankings are not confirmed by local tests. Consistent real travel stories, descriptive original photographs and relevant links from your existing profiles support ongoing visibility.
+
+References: [Google canonical guidance](https://developers.google.com/search/docs/crawling-indexing/consolidate-duplicate-urls), [sitemap guidance](https://developers.google.com/search/docs/crawling-indexing/sitemaps/build-sitemap), and [robots/snippet controls](https://developers.google.com/search/docs/crawling-indexing/robots-meta-tag).
+
+`node tests/menu-seo.cjs` checks the six menu entries at 11 viewport/landscape sizes, 44px touch targets, overlap, section tracking, titles/metadata, heading and ID integrity, structured data, robots.txt and image-sitemap responses. The rest of the existing browser suites cover gallery, stories, saved photos, blocked storage, motion, the travel viewer and no-JavaScript fallback.

@@ -227,7 +227,6 @@
 .deck-caption, .deck-hint { padding-inline: 20px; }
 
 /* An in-page introduction makes the travel journal easy to discover. */
-.header-journey { flex-shrink: 0; display: inline-flex; align-items: center; min-height: 44px; color: #b4f5ed; font-size: 13px; white-space: nowrap; }
 .journey-preview { display: grid; grid-template-columns: .9fr 1.1fr; gap: 50px 60px; align-items: center; padding-block: 85px; border-block: 1px solid #d5edff26; margin-block: 35px; }
 .journey-preview-intro h2 { font: 400 clamp(38px,4.5vw,66px)/1.1 'Segoe UI',Arial,sans-serif; letter-spacing: -2px; margin: 22px 0; }
 .journey-preview-intro h2 em { font-family: Georgia,serif; color: #b4f5ed; }
@@ -250,11 +249,17 @@
 .journey-preview-chapters a > span:last-child { margin-left: auto; color: #b4f5ed; }
 @media(max-width:1050px) { .journey-preview { gap: 35px; }.journey-preview-visual { gap: 12px; }.journey-preview-chapters a { padding-inline: 8px; gap: 12px; } }
 @media(max-width:760px) {
-  .header-journey { font-size: 12px; }
   .journey-preview { grid-template-columns: 1fr; padding-block: 50px; gap: 32px; }
   .journey-preview-intro h2 { font-size: 42px; }
   .journey-preview-visual img { height: 290px; }
   .journey-preview-side img { height: 200px; }
   .journey-preview-chapters { grid-template-columns: 1fr; }
   .journey-preview-chapters a { padding-block: 20px; }
+}
+
+/* Six menu destinations, with distinct touch targets for the journey chapter. */
+@media(max-width:760px) {
+  .mobile-lens.is-open { height: 280px; }
+  .is-open .lens-fan { inset: 0 0 17px; }
+  .lens-options a { width: 64px; min-height: 60px; font-size: 12px; text-align: center; }
 }

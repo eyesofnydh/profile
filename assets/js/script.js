@@ -281,7 +281,7 @@ const motionAllowed = () => !matchMedia('(prefers-reduced-motion: reduce)').matc
     if(!mobile.matches&&focusInside)topToggle.focus({preventScroll:true});
   }
   function syncSection(selected,position=selected){
-    root.style.setProperty('--lens-rotation',`${(motionAllowed()?position:selected)*72}deg`);
+    root.style.setProperty('--lens-rotation',`${(motionAllowed()?position:selected)*(360/links.length)}deg`);
     links.forEach((link,index)=>{
       if(index===selected)link.setAttribute('aria-current','location');else link.removeAttribute('aria-current');
     });
