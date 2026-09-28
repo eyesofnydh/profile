@@ -147,6 +147,7 @@
   document.querySelector('#photo-prev').addEventListener('click',()=>showPhoto(collection,active-1));
   document.querySelector('#photo-next').addEventListener('click',()=>showPhoto(collection,active+1));
   dialog.addEventListener('keydown', e => {
+    if (e.target.matches('input, textarea')) return;
     if(e.key==='ArrowLeft'||e.key==='ArrowRight'){e.preventDefault();showPhoto(collection,active+(e.key==='ArrowLeft'?-1:1));}
   });
   let touchStart;
@@ -187,8 +188,8 @@
       const visible = distance <= Math.min(mode === 'shelf' ? 6 : 5,Math.floor(count/2));
       const selected = index === deckIndex;
       const x = mode === 'shelf' ? offset*spread : direction * (Math.min(distance,1)*cardWidth*.4 + Math.max(0,distance-1)*spread);
-      const y = mode === 'shelf' ? offset*-13 - (selected ? 22 : 0) : distance*7;
-      const z = mode === 'shelf' ? (selected ? 110 : -distance*18) : -distance*85;
+      const y = mode === 'shelf' ? offset*-13 : distance*7;
+      const z = mode === 'shelf' ? (selected ? 40 : -distance*18) : -distance*85;
       const rotateY = mode === 'shelf' ? (selected ? -10 : -57) : -direction*Math.min(distance*10,24);
       const rotateZ = mode === 'shelf' ? -5 : direction*Math.min(distance,3);
       card.style.transform = `translate(-50%,-50%) translate3d(${x}px,${y}px,${z}px) rotateY(${rotateY}deg) rotateZ(${rotateZ}deg)`;
@@ -226,6 +227,7 @@
     deckItems = items;
     const retained = items.findIndex(photo=>photo.file===deckFile);
     deckIndex = retained >= 0 ? retained : Math.min(deckIndex, Math.max(0,items.length-1));
+    deckFile = items[deckIndex]?.file || null;
     stage.replaceChildren();
     items.forEach((photo,index)=>{
       const card = document.createElement('button'); card.className='deck-card'; card.type='button';
@@ -239,13 +241,14 @@
     });
     stage.hidden = !items.length;
     document.querySelector('#deck-empty').hidden = !!items.length;
+    deck.querySelectorAll('.deck-caption,.deck-controls,.deck-scrubber,.deck-hint').forEach(element => element.hidden = !items.length);
     document.querySelectorAll('#deck-prev,#deck-next').forEach(button=>button.disabled=items.length<2);
     range.disabled=items.length<2; document.querySelector('#deck-open').disabled=!items.length;
     updateDeckCaption(); applyMode();
   }
   document.querySelectorAll('[data-layout]').forEach(button=>button.addEventListener('click',()=>{
     mode=button.dataset.layout;
-    document.querySelector('.archive-tools').open = mode === 'grid';
+    if (mode === 'grid') document.querySelector('.archive-tools').open = true;
     try { localStorage.setItem('nydh-gallery-mode',mode); } catch {}
     applyMode();
   }));
@@ -305,7 +308,10 @@
 
   document.querySelector('.archive-tools').open = mode === 'grid';
   document.querySelector('#deck-reset').addEventListener('click', resetFilters);
-  document.querySelector('#deck-save').addEventListener('click', () => toggleSave(deckItems[deckIndex]));
+  document.querySelector('#deck-save').addEventListener('click', () => {
+    toggleSave(deckItems[deckIndex]);
+    if (!deckItems.length) document.querySelector('#deck-reset').focus({preventScroll:true});
+  });
   document.querySelector('#photo-save').addEventListener('click', () => toggleSave(collection[active]));
   document.querySelector('#photo-share').addEventListener('click', async () => {
     const photo = collection[active], url = new URL(location.href);

@@ -58,3 +58,5 @@ Save is available in the journal, shelf, photo wall, and viewer. Favorites persi
 The viewer can share a photo link using native sharing, clipboard copy, or a selectable link when those are unavailable. Links with `?photo=f4.png#gallery`, for example, reopen that original photograph. Contact guidance uses the existing Instagram and LinkedIn profiles. With JavaScript disabled, all 27 photographs remain available as links to originals.
 
 Run `node tests/improvements.cjs` with the same browser environment as the other tests to check previews, original viewing, sharing fallback and deep links, Save synchronization, all-layout recovery, blocked storage, and JavaScript-free browsing.
+
+Run `node tests/gallery-ui.cjs` to check gallery layout bounds at six viewport widths, selected shelf-card clipping, arrow alignment, Save/title overlap, preserved filter controls, empty-state keyboard focus, and share-link editing. It also captures mobile and desktop gallery screenshots in `tests/`.
