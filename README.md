@@ -96,3 +96,9 @@ The viewer can share a photo link using native sharing, clipboard copy, or a sel
 Run `node tests/improvements.cjs` with the same browser environment as the other tests to check previews, original viewing, sharing fallback and deep links, Save synchronization, all-layout recovery, blocked storage, and JavaScript-free browsing.
 
 Run `node tests/gallery-ui.cjs` to check gallery layout bounds at six viewport widths, selected shelf-card clipping, arrow alignment, Save/title overlap, preserved filter controls, empty-state keyboard focus, and share-link editing. It also captures mobile and desktop gallery screenshots in `tests/`.
+
+## Travel interactions and shelf-frame checks
+
+My Journey includes sticky chapter tracking, a reading-progress line, subtle story/map transitions, photo hover cues, and an original-image viewer with arrow keys, swipe navigation, Escape, and focus restoration. All effects respect Pause motion and system reduced motion. Run `node tests/travel-ui.cjs` to verify those interactions.
+
+The gallery record shelf uses even, thin borders and separates neighboring sleeves from the selected frame. Run `node tests/shelf-frames.cjs` to verify selected-frame visibility, bounds, and symmetric borders at nine widths from 320px through 1920px.

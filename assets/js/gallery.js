@@ -187,11 +187,11 @@
       const distance = Math.abs(offset), direction = Math.sign(offset);
       const visible = distance <= Math.min(mode === 'shelf' ? 6 : 5,Math.floor(count/2));
       const selected = index === deckIndex;
-      const x = mode === 'shelf' ? offset*spread : direction * (Math.min(distance,1)*cardWidth*.4 + Math.max(0,distance-1)*spread);
-      const y = mode === 'shelf' ? offset*-13 : distance*7;
-      const z = mode === 'shelf' ? (selected ? 40 : -distance*18) : -distance*85;
-      const rotateY = mode === 'shelf' ? (selected ? -10 : -57) : -direction*Math.min(distance*10,24);
-      const rotateZ = mode === 'shelf' ? -5 : direction*Math.min(distance,3);
+      const x = direction * (Math.min(distance,1)*cardWidth*(mode === 'shelf' ? .85 : .4) + Math.max(0,distance-1)*spread);
+      const y = distance*7;
+      const z = mode === 'shelf' ? -distance*45 : -distance*85;
+      const rotateY = mode === 'shelf' ? -direction*Math.min(distance*55,55) : -direction*Math.min(distance*10,24);
+      const rotateZ = direction*Math.min(distance,3);
       card.style.transform = `translate(-50%,-50%) translate3d(${x}px,${y}px,${z}px) rotateY(${rotateY}deg) rotateZ(${rotateZ}deg)`;
       card.style.zIndex = String(100-Math.round(distance*10));
       card.style.opacity = visible ? '1' : '0';

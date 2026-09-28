@@ -171,3 +171,48 @@
 }
 html:has(.journey-page.motion-paused) { scroll-behavior: auto; }
 .journey-page.motion-paused *, .journey-page.motion-paused *::before { transition: none!important; animation: none!important; scroll-behavior: auto!important; }
+
+/* A quiet editorial layer: chapter tracking, photographic reveals, and a viewer. */
+.journey-reading-progress { position: fixed; inset: 0 auto auto 0; width: 100%; height: 2px; background: #b4f5ed; transform: scaleX(var(--journey-progress,0)); transform-origin: left; z-index: 40; pointer-events: none; }
+.journey-page .journey-nav { position: sticky; top: var(--journey-header-height,88px); z-index: 18; background: #101b30f5; padding-block: 8px; gap: 8px 28px; border-bottom-color: #b4f5ed30; }
+.journey-nav a { position: relative; transition: color .2s; white-space: nowrap; }
+.journey-nav a::after { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 2px; background: #b4f5ed; transform: scaleX(0); transform-origin: left; transition: transform .3s; }
+.journey-nav a[aria-current=location] { color: #b4f5ed; }
+.journey-nav a[aria-current=location]::after { transform: scaleX(1); }
+.journey-page .journey-section,.journey-page .journey-story { scroll-margin-top: calc(var(--journey-header-height,88px) + 78px); }
+.journey-page { --journey-header-height: 88px; }
+.journey-destination .journey-image-link { border-radius: 2px; }
+.journey-destination .journey-image-link::after,.journey-moments .journey-image-link::after { content: 'EXPLORE THE CHAPTER ↗'; position: absolute; bottom: 18px; left: 18px; padding: 10px 14px; font: 11px/1.5 monospace; letter-spacing: 1px; background: #101b30ed; color: #e8f3ff; transform: translateY(8px); opacity: 0; transition: opacity .25s,transform .25s; }
+.journey-moments .journey-image-link::after { content: 'VIEW PHOTOGRAPH ↗'; }
+.journey-image-link:is(:hover,:focus-visible)::after { opacity: 1; transform: none; }
+.journey-memory figure { overflow: hidden; }
+.journey-memory img { transition: transform .7s ease; }
+.journey-memory:hover img { transform: scale(1.025); }
+.journey-map-marker { transition: background .2s,box-shadow .2s; }
+.journey-map-marker[aria-pressed=true] { box-shadow: 0 0 0 7px #b4f5ed16; }
+.journey-viewer { width: min(1100px,94vw); max-height: 94dvh; padding: 20px; border: 1px solid #b4f5ed40; background: #101b30; color: #e8f3ff; border-radius: 12px; }
+.journey-viewer::backdrop { background: #030a15ed; backdrop-filter: blur(12px); }
+.journey-viewer-bar,.journey-viewer-controls { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.journey-viewer button,.journey-viewer-original { padding: 10px 14px; min-height: 44px; border: 1px solid var(--line); border-radius: 24px; color: var(--ink); background: transparent; font-size: 14px; }
+.journey-viewer-image { display: block; width: auto; height: auto; max-width: 100%; max-height: 62dvh; margin: 20px auto; object-fit: contain; touch-action: pan-y pinch-zoom; }
+#journey-viewer-caption { font: 400 24px/1.3 Georgia,serif; margin-bottom: 18px; }
+.journey-viewer-status:empty { display: none; }
+.journey-viewer-status { color: var(--muted); margin-bottom: 16px; }
+.journey-viewer-open { overflow: hidden; }
+@media(max-width:760px) {
+  .journey-page .journey-nav { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: thin; gap: 22px; }
+  .journey-nav a { flex-shrink: 0; }
+  .journey-viewer { padding: 14px; }
+  .journey-viewer-image { max-height: 48dvh; }
+  .journey-viewer-controls { flex-wrap: wrap; }
+  .journey-viewer-original { order: 3; width: 100%; text-align: center; }
+}
+@media(prefers-reduced-motion:reduce) { .journey-memory:hover img { transform: none; } }
+.journey-page.motion-paused .journey-memory:hover img { transform: none; }
+@media(max-width:760px) {
+  .journey-page .journey-nav { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 0 12px; overflow: visible; }
+  .journey-nav a { font-size: 12px; }
+  .journey-page .journey-section,.journey-page .journey-story { scroll-margin-top: calc(var(--journey-header-height,88px) + 120px); }
+}
+/* Travel supplies its own sticky-header offset for anchor destinations. */
+html:has(.journey-page) { scroll-padding-top: 0; }

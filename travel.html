@@ -20,6 +20,7 @@
   <script src="./assets/js/travel.js" defer></script>
 </head>
 <body class="journey-page" id="top">
+  <div class="journey-reading-progress" aria-hidden="true"></div>
   <a class="skip-link" href="#journey-main">Skip to the journey</a>
   <header class="header journey-header"><div class="container header-inner"><a class="wordmark" href="./index.html">eyes of nydh<span class="brand-dot" aria-hidden="true">✳</span></a><a class="journey-home" href="./index.html">← Back to the portfolio</a><button class="journey-motion" hidden aria-pressed="false">Pause motion</button></div></header>
   <main id="journey-main">
@@ -73,5 +74,6 @@
     <section class="journey-outro container" aria-label="Continue exploring"><p>There is always<br><em>another way home.</em></p><a class="journey-text-link" href="./index.html#gallery">Explore the photography collection ↗</a><a class="journey-text-link" href="./index.html#contact">Have a story to share? Say hello ↗</a></section>
   </main>
   <footer class="container"><div class="footer-top"><a class="wordmark" href="./index.html">eyes of nydh<span class="brand-dot" aria-hidden="true">✳</span></a><a class="journey-text-link" href="#top">Back to top ↑</a></div><div class="footer-bottom"><span>© <span data-year>2026</span> Nidhin Narayanan</span><span>A LITTLE CLOSER TO THE EXTRAORDINARY</span><a href="./index.html">Back to the portfolio</a></div></footer>
+  <dialog class="journey-viewer" aria-labelledby="journey-viewer-caption"><div class="journey-viewer-bar"><span class="journey-meta" id="journey-viewer-count" role="status"></span><button class="journey-viewer-close" autofocus>Close ×</button></div><img class="journey-viewer-image" alt=""><h2 id="journey-viewer-caption"></h2><p class="journey-viewer-status" role="status"></p><div class="journey-viewer-controls"><button data-viewer-step="-1" aria-label="Previous travel photograph">← Previous</button><a class="journey-viewer-original" href="#moments">Open original ↗</a><button data-viewer-step="1" aria-label="Next travel photograph">Next →</button></div></dialog>
 </body>
 </html>

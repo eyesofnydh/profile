@@ -21,8 +21,8 @@ const {chromium} = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
     assert.equal(await page.locator('meta[name=robots]').getAttribute('content'),'noindex,follow');
     assert.ok(requests.every(url=>url.startsWith(base)), 'travel must not require external requests');
     await page.evaluate(async () => {
-      for (const image of document.images) image.loading = 'eager';
-      await Promise.all([...document.images].map(image=>image.decode()));
+      for (const image of document.querySelectorAll('main img')) image.loading = 'eager';
+      await Promise.all([...document.querySelectorAll('main img')].map(image=>image.decode()));
     });
     await page.locator('[data-rail="1"]').click();
     await page.waitForFunction(()=>document.querySelector('.journey-destinations').scrollLeft>100);
@@ -66,7 +66,7 @@ const {chromium} = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
       assert.equal(response.status(),200,`broken link ${href}`);
       if (url.hash && url.pathname==='/travel.html') assert.ok(await page.evaluate(hash=>!!document.getElementById(hash.slice(1)),url.hash),`missing anchor ${href}`);
     }
-    assert.deepEqual(await page.locator('img').evaluateAll(images=>images.filter(image=>!image.alt || !image.naturalWidth).map(image=>image.src)),[]);
+    assert.deepEqual(await page.locator('main img').evaluateAll(images=>images.filter(image=>!image.alt || !image.naturalWidth).map(image=>image.src)),[]);
     await page.goto(`${base}/travel.html#story-varkala`);
     assert.ok(await page.locator('#story-varkala').evaluate(element=>element.open),'direct story URL');
     await page.locator('#story-varkala summary').click();
@@ -79,7 +79,7 @@ const {chromium} = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
     await page.waitForFunction(()=>document.querySelector('.journey-motion').textContent==='Reduced motion');
     assert.equal(await page.evaluate(()=>document.getAnimations().length),0);
     await page.goto(`${base}/travel.html`);
-    await page.evaluate(async()=>{for(const image of document.images)image.loading='eager';await Promise.all([...document.images].map(image=>image.decode()));});
+    await page.evaluate(async()=>{for(const image of document.querySelectorAll('main img'))image.loading='eager';await Promise.all([...document.querySelectorAll('main img')].map(image=>image.decode()));});
     await page.setViewportSize({width:1440,height:1000});
     await page.screenshot({path:'tests/travel-desktop.png',fullPage:true});
     await page.screenshot({path:'tests/travel-hero-desktop.png'});
