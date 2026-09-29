@@ -4,8 +4,10 @@ const motionAllowed = () => !matchMedia('(prefers-reduced-motion: reduce)').matc
 (() => {
   const nav = document.querySelector('[data-navbar]');
   const toggle = document.querySelector('.nav-open-btn');
+  nav.inert = matchMedia('(max-width: 760px)').matches;
   function closeMenu(returnFocus = false) {
     nav.classList.remove('active');
+    nav.inert = matchMedia('(max-width: 760px)').matches;
     document.body.classList.remove('menu-open');
     toggle.querySelector('.menu-label').textContent = 'Menu';
     toggle.setAttribute('aria-expanded', 'false');
@@ -15,101 +17,64 @@ const motionAllowed = () => !matchMedia('(prefers-reduced-motion: reduce)').matc
   toggle.addEventListener('click', () => {
     if (matchMedia('(max-width: 760px)').matches) { document.querySelector('#mobile-lens-toggle').click(); return; }
     const open = nav.classList.toggle('active');
+    nav.inert = matchMedia('(max-width: 760px)').matches;
     document.body.classList.toggle('menu-open', open);
     toggle.querySelector('.menu-label').textContent = open ? 'Close' : 'Menu';
     toggle.setAttribute('aria-expanded', String(open));
     toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
   });
+  nav.addEventListener('focusin', () => { if (!nav.classList.contains('active') && matchMedia('(min-width: 761px)').matches) toggle.click(); });
   nav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => closeMenu()));
   document.addEventListener('keydown', e => { if (e.key === 'Escape' && nav.classList.contains('active')) closeMenu(true); });
   document.addEventListener('click', e => { if (!e.target.closest('.header, .mobile-lens')) closeMenu(); });
   document.addEventListener('focusin', e => { if (!e.target.closest('.header, .mobile-lens')) closeMenu(); });
-  matchMedia('(min-width: 761px)').addEventListener('change', e => { if (e.matches) closeMenu(); });
+  matchMedia('(min-width: 761px)').addEventListener('change', () => closeMenu());
   document.querySelectorAll('[data-year]').forEach(el => { el.textContent = new Date().getFullYear(); });
 })();
 
-// A real moving focus wheel: page scroll rolls the labels past a fixed pointer.
+// The focus barrel follows native page scroll; links remain keyboard accessible.
 (() => {
-  const dial = document.querySelector('.focus-dial');
-  const track = dial.querySelector('.dial-track');
-  const links = [...dial.querySelectorAll('a[href^="#"]')];
+  const links = [...document.querySelectorAll('.focus-dial a[href^="#"]')];
   const sections = links.map(link => document.querySelector(link.hash));
-  const desktop = matchMedia('(min-width: 761px)');
-  const reduced = matchMedia('(prefers-reduced-motion: reduce)');
-  let selected = 0, pending = false, settleTimer, wheelTotal = 0, lastWheel = 0;
-  let preview = null;
-  function paint(position, snap = false) {
-    const visual = preview ?? position;
-    dial.classList.toggle('dial-snapping', snap && motionAllowed());
-    track.style.setProperty('--dial-position', visual);
-    dial.style.setProperty('--tick-offset', `${-visual * 76}px`);
-    links.forEach((link, index) => {
-      const distance = Math.abs(index - visual);
-      link.style.setProperty('--dial-scale', Math.max(.76, 1 - distance * .1));
-      link.style.setProperty('--dial-opacity', Math.max(.25, 1 - distance * .29));
-    });
-  }
-  function updatePosition() {
+  let pending = false;
+  function update() {
+    pending = false;
     const max = Math.max(0, document.documentElement.scrollHeight - innerHeight);
-    document.documentElement.style.setProperty('--read-progress', max ? Math.min(1, Math.max(0, scrollY / max)) : 0);
-    const stops = sections.map((section, index) => index ? Math.max(0, Math.min(max, section.getBoundingClientRect().top + scrollY - 100)) : 0);
-    let position = 0;
-    for (let i = 0; i < stops.length - 1; i++) {
-      if (scrollY >= stops[i]) position = i + Math.min(1, Math.max(0, (scrollY - stops[i]) / Math.max(1, stops[i + 1] - stops[i])));
-    }
-    selected = Math.round(position);
+    document.documentElement.style.setProperty('--read-progress', max ? scrollY / max : 0);
+    const threshold = Math.max(document.querySelector('.header').getBoundingClientRect().height + 24, (parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop) || 0) + 22);
+    let selected = 0;
+    sections.forEach((section, index) => { if (section.getBoundingClientRect().top <= threshold) selected = index; });
+    if (max > 0 && scrollY >= max - 4) selected = links.length - 1;
     links.forEach((link, index) => {
       if (index === selected) link.setAttribute('aria-current', 'location');
       else link.removeAttribute('aria-current');
     });
-    document.querySelector('#dial-frame').textContent = String(selected + 1).padStart(2, '0');
-    document.dispatchEvent(new CustomEvent('nydh:section', {detail:{selected,position}}));
-    paint(motionAllowed() ? position : selected);
-    clearTimeout(settleTimer);
-    settleTimer = setTimeout(() => paint(selected, true), 140);
-    pending = false;
-  }
-  function schedule() { if (!pending) { pending = true; requestAnimationFrame(updatePosition); } }
-  addEventListener('scroll', () => { preview = null; schedule(); }, {passive: true});
-  addEventListener('resize', schedule);
-  new ResizeObserver(schedule).observe(document.body);
-  desktop.addEventListener('change', () => { preview = null; schedule(); });
-  reduced.addEventListener('change', schedule);
-  document.addEventListener('nydh:motion', schedule);
-  function navigate(index) {
-    preview = null;
-    links[Math.max(0, Math.min(links.length - 1, index))].click();
-  }
-  // Only a deliberate wheel gesture over the dial changes chapters.
-  dial.addEventListener('wheel', event => {
-    if (dial.classList.contains('active') || !desktop.matches || event.ctrlKey || Math.abs(event.deltaX) > Math.abs(event.deltaY)) return;
-    const direction = Math.sign(event.deltaY);
-    if (!direction || (selected === 0 && direction < 0) || (selected === links.length - 1 && direction > 0)) return;
-    event.preventDefault();
-    const now = performance.now();
-    if (now - lastWheel < 650) return;
-    wheelTotal += event.deltaY * (event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? innerHeight : 1);
-    if (Math.abs(wheelTotal) >= 35) {
-      navigate(selected + Math.sign(wheelTotal));
-      wheelTotal = 0; lastWheel = now;
-    }
-  }, {passive: false});
-  links.forEach((link, index) => {
-    // Clipped wheel entries remain reachable using Tab and arrow keys.
-    link.addEventListener('focus', () => { preview = index; paint(index, true); });
-    link.addEventListener('click', () => { preview = null; schedule(); });
-    link.addEventListener('keydown', event => {
-      const step = {ArrowDown: 1, ArrowRight: 1, ArrowUp: -1, ArrowLeft: -1}[event.key];
-      if (step) { event.preventDefault(); links[(index + step + links.length) % links.length].focus({preventScroll: true}); }
-      if (event.key === 'Home' || event.key === 'End') {
-        event.preventDefault(); links[event.key === 'Home' ? 0 : links.length - 1].focus({preventScroll: true});
-      }
+    const currentTop = sections[selected].getBoundingClientRect().top;
+    const nextTop = sections[selected + 1]?.getBoundingClientRect().top;
+    const fraction = nextTop == null ? 0 : Math.max(0, Math.min(1, (threshold-currentTop)/(nextTop-currentTop)));
+    const position = selected + fraction;
+    const dial = document.querySelector('.focus-dial');
+    dial.style.setProperty('--dial-position', motionAllowed() ? position : selected);
+    dial.style.setProperty('--tick-offset', `${position*18}px`);
+    document.querySelector('#dial-frame').textContent = String(selected+1).padStart(2,'0');
+    links.forEach((link,index) => {
+      const distance = Math.abs(index-position);
+      link.style.setProperty('--dial-scale', Math.max(.78,1-distance*.12));
+      link.style.setProperty('--dial-opacity', Math.max(.3,1-distance*.3));
     });
-  });
-  dial.addEventListener('focusout', event => { if (!dial.contains(event.relatedTarget)) { preview = null; paint(selected, true); } });
-  updatePosition();
+    document.dispatchEvent(new CustomEvent('nydh:section', {detail:{selected,position}}));
+  }
+  function queue() { if (!pending) { pending = true; requestAnimationFrame(update); } }
+  addEventListener('scroll', queue, {passive:true});
+  addEventListener('resize', queue);
+  document.addEventListener('nydh:motion', queue);
+  new ResizeObserver(queue).observe(document.body);
+  links.forEach((link,index) => link.addEventListener('keydown', event => {
+    const step = {ArrowDown:1,ArrowUp:-1}[event.key];
+    if (step) { event.preventDefault(); links[(index+step+links.length)%links.length].focus(); }
+  }));
+  update();
 })();
-
 // Deliberately manual: visitors choose the pace of the photographic opening.
 (() => {
   const scenes = [
@@ -197,7 +162,7 @@ const motionAllowed = () => !matchMedia('(prefers-reduced-motion: reduce)').matc
       [{opacity:0,transform:'translateY(35px)'},{opacity:1,transform:'translateY(0)'}],
       {duration:800,easing:'cubic-bezier(.16,1,.3,1)'});
   }), {threshold:.12});
-  document.querySelectorAll('.section-heading,.feature-card,.about-copy,.portrait-wrap,.contact').forEach(el => observer.observe(el));
+  document.querySelectorAll('.section-heading,.service-grid article,.journey-preview-visual,.about-copy,.portrait-wrap,.contact').forEach(el => observer.observe(el));
   const grid = document.querySelector('#photo-grid');
   const photoObserver = new IntersectionObserver(entries => entries.forEach(entry => {
     if (!entry.isIntersecting) return;
@@ -272,7 +237,7 @@ const motionAllowed = () => !matchMedia('(prefers-reduced-motion: reduce)').matc
       topToggle.setAttribute('aria-label',open ? 'Close menu' : 'Open menu');
       topToggle.querySelector('.menu-label').textContent=open ? 'Close' : 'Menu';
     }
-    if(restoreFocus)toggle.focus({preventScroll:true});
+    if(restoreFocus)topToggle.focus({preventScroll:true});
   }
   function syncMode(){
     const focusInside=root.contains(document.activeElement);
@@ -294,7 +259,7 @@ const motionAllowed = () => !matchMedia('(prefers-reduced-motion: reduce)').matc
       event.preventDefault();
       syncSection(index);setOpen(false);root.classList.add('is-minimized');
       const section=document.querySelector(link.hash);
-      if(section){history.pushState(null,'',link.hash);section.scrollIntoView({block:'start',behavior:'instant'});section.tabIndex=-1;section.focus({preventScroll:true});}
+      if(section){history.pushState(null,'',link.hash);section.scrollIntoView({block:'start',behavior:motionAllowed()?'smooth':'instant'});section.tabIndex=-1;section.focus({preventScroll:true});}
     });
     link.addEventListener('keydown',e=>{
       if(e.key==='ArrowLeft'||e.key==='ArrowRight'){

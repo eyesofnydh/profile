@@ -13,16 +13,16 @@ class TravelBuildTests(unittest.TestCase):
     def test_missing_optional_content(self):
         output = travel.render({'destinations':[{'destination':'A new place'}]})
         self.assertIn('A photograph will live here.', output)
-        self.assertIn('The full story is still being written.', output)
+        self.assertIn('The first photographs are on their way.', output)
         self.assertIn('PREVIEW JOURNAL', output)
 
     def test_empty_collection(self):
         output = travel.render({})
-        self.assertIn('The first series is on its way.',output)
+        self.assertIn('The first photographs are on their way.',output)
         self.assertNotIn('{{',output)
 
     def test_html_is_escaped_and_ids_are_unique(self):
-        output = travel.render({'intro':'<script>bad()</script>', 'destinations':[{'destination':'Test','id':'duplicate'},{'destination':'Test','id':'duplicate'}]})
+        output = travel.render({'intro':'<script>bad()</script>', 'destinations':[{'destination':'Test','id':'duplicate','photos':['f4.png']},{'destination':'Test','id':'duplicate','photos':['fp2.png']}]})
         self.assertIn('&lt;script&gt;',output)
         self.assertEqual(output.count('id="story-duplicate"'),1)
         self.assertEqual(output.count('id="story-duplicate-next"'),1)
@@ -35,6 +35,12 @@ class TravelBuildTests(unittest.TestCase):
         output = travel.render({'sample':False})
         self.assertNotIn('noindex',output)
         self.assertNotIn('Dummy trips',output)
+
+    def test_photo_notes_are_escaped(self):
+        output = travel.render({'sample':False, 'destinations':[{'destination':'Water','photos':['f4.png']}], 'photoNotes':{'f4.png':{'detail':'<b>Detail</b>', 'opinion':'<script>opinion</script>'}}})
+        self.assertIn('&lt;b&gt;Detail&lt;/b&gt;',output)
+        self.assertIn('&lt;script&gt;opinion&lt;/script&gt;',output)
+        self.assertNotIn('<script>opinion</script>',output)
 
     def test_single_destination_and_hemispheres(self):
         output = travel.travel_map(travel.normalize({'destinations':[{'destination':'Somewhere','coordinates':{'lat':-12,'lng':-70}}]}))

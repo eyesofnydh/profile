@@ -1,6 +1,6 @@
 """Render a static travel chapter from JSON; Python standard library only.
 
-The generated page works without JavaScript. Existing homepage files are never written.
+The generated page works without JavaScript. The marked homepage Journey preview is regenerated from the same content.
 """
 import argparse
 import html
@@ -100,6 +100,21 @@ def travel_map(items):
     return f'''<div class="journey-map-layout"><div class="journey-map-plot" role="group" aria-label="Destination map. Select a numbered location to explore it."><svg viewBox="0 0 600 400" preserveAspectRatio="none" aria-hidden="true"><defs><pattern id="map-grid" width="60" height="50" patternUnits="userSpaceOnUse"><path d="M 60 0 L 0 0 0 50" fill="none" stroke="currentColor" stroke-width=".5"/></pattern></defs><rect width="600" height="400" fill="url(#map-grid)"/><polyline points="{' '.join(points)}" fill="none" stroke="#b4f5ed" stroke-width="1.5" stroke-dasharray="4 8"/></svg><span class="journey-map-north" aria-hidden="true">N ↑</span>{''.join(markers)}<span class="journey-map-key">A location sketch<br>Approximate positions · not a route</span></div><div class="journey-map-details">{''.join(panels)}</div></div><p class="journey-map-status visually-hidden" role="status"></p>'''
 
 
+def trip_folders(data):
+    trail, folders = [], []
+    trips = data.get('trips', [])
+    for i, trip in enumerate(trips, 1):
+        slug = re.sub(r'[^a-z0-9-]', '', trip['id'])
+        title = esc(trip['name'])
+        trail.append(f'<a href="#trip-{slug}"><span>{i:02d}</span><strong>{title}</strong></a>')
+        photos = trip.get('photos', [])
+        note = 'Preview images from my archive. Trip photographs coming soon.' if trip.get('placeholder') else f'{len(photos):02d} photographs from this trip.'
+        frames = ''.join(f'<figure><a href="./assets/images/{esc(file)}" target="_blank" rel="noopener" aria-label="Open photograph: {esc(PHOTOS.get(file, {}).get("title", "Archive image"))}">{photo(file)}</a><figcaption>{esc(PHOTOS.get(file, {}).get("title", "Archive image"))}</figcaption></figure>' for file in photos)
+        folders.append(f'<details class="trip-folder" id="trip-{slug}"><summary><span class="trip-tab">TRIP / {i:02d}</span><span class="trip-cover">{photo(trip.get("cover"))}<span class="trip-stamp">{"PREVIEW" if trip.get("placeholder") else "PHOTO JOURNAL"}</span></span><span class="trip-folder-title"><strong>{title}</strong><span class="trip-plus" aria-hidden="true">+</span></span><span class="trip-region">{esc(trip.get("region"))}</span><span class="trip-open-label">Open folder</span></summary><div class="trip-folder-content"><p>{note}</p><div class="trip-frames">{frames}</div></div></details>')
+    trail.append(f'<span class="trip-next"><span>{len(trips)+1:02d}</span><strong>The next chapter</strong><small>Still unfolding</small></span>')
+    return '<nav class="trip-trail" aria-label="Trip chapters">'+''.join(trail)+'</nav><div class="trip-folders">'+''.join(folders)+'</div>'
+
+
 def render(data):
     items = normalize(data)
     sample = bool(data.get('sample', True))
@@ -111,7 +126,15 @@ def render(data):
             if file in seen or file not in PHOTOS:
                 continue
             seen.add(file)
-            moments.append(f'<figure><a class="journey-image-link" href="./assets/images/{esc(file)}" aria-label="View original: {esc(PHOTOS[file]["title"])}">{photo(file)}</a><figcaption><span>{esc(PHOTOS[file]["title"])}</span><span>{"Archive study" if sample else esc(item["destination"])}</span></figcaption></figure>')
+            first = file == next((f for f in item['photos'] if f in PHOTOS), None)
+            anchor = f' id="story-{item["id"]}"' if first else ''
+            notes = data.get('photoNotes') or {}
+            entry = notes.get(file) or ({'detail':item.get('description'), 'opinion':item.get('memory')} if first else {})
+            detail = f'<p>{esc(entry.get("detail"))}</p>' if entry.get('detail') else ''
+            opinion = f'<details><summary>My perspective <span aria-hidden="true">+</span></summary><p>{esc(entry.get("opinion"))}</p></details>' if entry.get('opinion') else ''
+            note = f'<div class="journey-frame-note">{detail}{opinion}</div>' if detail or opinion else ''
+            moments.append(f'<figure class="journey-frame" data-series="{item["id"]}"{anchor}><a class="journey-image-link" href="./assets/images/{esc(file)}" aria-label="View original: {esc(PHOTOS[file]["title"])}">{photo(file)}</a><figcaption><span>{esc(PHOTOS[file]["title"])}</span><span>{esc(item["destination"])}</span></figcaption>{note}</figure>')
+
     stats = data.get('stats') or {}
     def number(key, suffix=''):
         value = stats.get(key)
@@ -119,7 +142,8 @@ def render(data):
     statistics = ''.join(f'<div><dt>{label}</dt><dd>{value}</dd></div>' for label,value in [('Story series',f'{len(items):02d}'),('Archive status','Ongoing'),('Photos',f'{len(seen):02d}'),('Home base','Kerala')])
     current = ''.join(f'<div><dt>{esc(key)}</dt><dd>{esc(value or "Still deciding")}</dd></div>' for key,value in (data.get('currently') or {}).items())
     kit = ''.join(f'<details><summary>{esc(item.get("name", "An essential"))}</summary><p>{esc(item.get("note", "A little something for the road."))}</p></details>' for item in data.get('kit',[]) if isinstance(item,dict))
-    values = {'NOTICE':warning, 'INTRO':esc(data.get('intro')), 'HERO':photo(data.get('heroImage'),eager=True,sizes='(max-width: 760px) 100vw, 85vw'), 'DESTINATIONS':''.join(destination(item,i+1) for i,item in enumerate(items)) or '<p>The first series is on its way.</p>', 'STORIES':''.join(story(item) for item in items) or '<p>The next story is still being written.</p>', 'MEMORIES':''.join(memory(item,i+1) for i,item in enumerate(items)), 'MOMENTS':''.join(moments), 'MAP':'', 'STATS':statistics, 'STATS_NOTE':'Three honest, ongoing studies assembled from photographs already in the archive.', 'CURRENT':current, 'KIT':kit, 'ROBOTS':'<meta name="robots" content="noindex,follow">' if sample else '<meta name="robots" content="index,follow,max-image-preview:large">'}
+    filters = '<button data-series-filter="all" aria-pressed="true">All photographs</button>' + ''.join(f'<button data-series-filter="{item["id"]}" aria-pressed="false">{esc(item["destination"])}</button>' for item in items)
+    values = {'TRIP_FOLDERS':trip_folders(data), 'FILTERS':filters, 'NOTICE':warning, 'INTRO':esc(data.get('intro')), 'HERO':photo(data.get('heroImage'),eager=True,sizes='(max-width: 760px) 100vw, 85vw'), 'DESTINATIONS':''.join(destination(item,i+1) for i,item in enumerate(items)) or '<p>The first series is on its way.</p>', 'STORIES':''.join(story(item) for item in items) or '<p>The next story is still being written.</p>', 'MEMORIES':''.join(memory(item,i+1) for i,item in enumerate(items)), 'MOMENTS':''.join(moments) or '<p>The first photographs are on their way.</p>', 'MAP':'', 'STATS':statistics, 'STATS_NOTE':'Three honest, ongoing studies assembled from photographs already in the archive.', 'CURRENT':current, 'KIT':kit, 'ROBOTS':'<meta name="robots" content="noindex,follow">' if sample else '<meta name="robots" content="index,follow,max-image-preview:large">'}
     output = (ROOT/'tools/travel-template.html').read_text(encoding='utf-8')
     for key,value in values.items():
         output = output.replace('{{'+key+'}}',value)
@@ -133,7 +157,9 @@ def render_home_preview(data):
     if data.get('sample',True):
         template = template.replace('class="journey-preview-chapters"','class="journey-preview-chapters" data-nosnippet')
     chapters = ''.join(f'<a href="./travel.html#story-{item["id"]}"><span class="journey-preview-number">{index+1:02d}</span><span><strong>{esc(item["destination"])}</strong><small>{esc(item["region"])} · {esc(item["year"])}</small></span><span aria-hidden="true">↗</span></a>' for index,item in enumerate(items[:3]))
-    values = {'MAIN_PHOTO': photo(photos[0] if photos else None), 'SIDE_PHOTO': photo(photos[1] if len(photos)>1 else None), 'CHAPTERS': chapters, 'NOTE': 'A preview of the journal · sample trips and archive photographs for now.' if data.get('sample',True) else 'Three honest photo stories drawn from the existing archive.'}
+    if data.get('trips'):
+        chapters = ''.join(f'<a href="./travel.html#trip-{esc(trip["id"])}"><span class="journey-preview-number">{index+1:02d}</span><span><strong>{esc(trip["name"])}</strong><small>Open the trip folder</small></span><span aria-hidden="true">&#8599;</span></a>' for index,trip in enumerate(data['trips']))
+    values = {'MAIN_PHOTO': photo(photos[0] if photos else None), 'SIDE_PHOTO': photo(photos[1] if len(photos)>1 else None), 'CHAPTERS': chapters, 'NOTE': 'A preview of the journal · sample trips and archive photographs for now.' if data.get('sample',True) else 'Photographs, small details, and personal notes.'}
     for key,value in values.items():
         template=template.replace('{{'+key+'}}',value)
     return template

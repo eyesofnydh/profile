@@ -20,7 +20,7 @@
     });
     document.querySelector('#chapter-title').textContent=chapter.title;
     document.querySelector('#chapter-description').textContent=chapter.copy;
-    document.querySelector('#chapter-number').textContent=`A SMALL PHOTO ESSAY / ${chapter.number}`;
+    document.querySelector('#chapter-number').textContent=`A PHOTO SERIES / ${chapter.number}`;
     document.querySelector('#chapter-count').textContent=`03 FRAMES / ${chapter.label}`;
     document.querySelector('#chapter-print-caption').textContent=chapter.note;
     document.querySelector('#chapter-progress').textContent=`${chapter.number} / 03`;

@@ -24,10 +24,12 @@
 
   // Local story URLs work on a static host and remain useful without JS.
   function openStory(hash, focus = false) {
-    const story = [...document.querySelectorAll('.journey-story')].find(element => `#${element.id}` === hash);
+    const story = [...document.querySelectorAll('.journey-frame[id]')].find(element => `#${element.id}` === hash);
     if (!story) return;
-    story.open = true;
-    if (focus) story.querySelector('summary').focus({preventScroll:true});
+    document.querySelector('[data-series-filter="all"]')?.click();
+    const details = story.querySelector('details');
+    if (details) details.open = true;
+    if (focus) (story.querySelector('summary') || story.querySelector('a')).focus({preventScroll:true});
     requestAnimationFrame(() => story.scrollIntoView({block:'start',behavior:motionAllowed()?'smooth':'instant'}));
   }
   document.querySelectorAll('a[href^="#story-"]').forEach(link => link.addEventListener('click', () => openStory(link.hash, true)));
@@ -92,7 +94,7 @@
       observer.unobserve(entry.target);
       if (motionAllowed()) entry.target.animate([{opacity:.5,transform:'translateY(12px)'},{opacity:1,transform:'translateY(0)'}],{duration:450,easing:'ease-out'});
     }),{threshold:.1});
-    document.querySelectorAll('.journey-destination,.journey-memory').forEach(element => observer.observe(element));
+    document.querySelectorAll('.journey-frame,.journey-now').forEach(element => observer.observe(element));
   }
 
   // Keep the reader oriented without taking over native scrolling.
@@ -131,7 +133,26 @@
   // A native dialog keeps original photographs in the journal, with a real-link fallback.
   const viewer = document.querySelector('.journey-viewer');
   const viewerImage = viewer.querySelector('img');
-  const photoLinks = [...document.querySelectorAll('.journey-moments .journey-image-link')];
+  const allPhotoLinks = [...document.querySelectorAll('.journey-moments .journey-image-link')];
+  let photoLinks = allPhotoLinks;
+  const frames = [...document.querySelectorAll('.journey-frame')];
+  const filters = [...document.querySelectorAll('[data-series-filter]')];
+  document.querySelector('.journey-tools').hidden = false;
+  function filterFrames(series) {
+    frames.forEach(frame => frame.hidden = series !== 'all' && frame.dataset.series !== series);
+    photoLinks = allPhotoLinks.filter(link => !link.closest('figure').hidden);
+    filters.forEach(button => button.setAttribute('aria-pressed', String(button.dataset.seriesFilter === series)));
+    document.querySelector('.journey-result').textContent = `${photoLinks.length} photographs · ${series === 'all' ? 'All moments' : filters.find(button => button.dataset.seriesFilter === series).textContent}`;
+  }
+  filters.forEach(button => button.addEventListener('click', () => filterFrames(button.dataset.seriesFilter)));
+  filterFrames('all');
+  const notesToggle = document.querySelector('.journey-notes-toggle');
+  notesToggle.addEventListener('click', () => {
+    const hidden = notesToggle.getAttribute('aria-pressed') !== 'true';
+    document.querySelector('.journey-moments').classList.toggle('notes-hidden', hidden);
+    notesToggle.setAttribute('aria-pressed', String(hidden));
+    notesToggle.textContent = hidden ? 'Show notes' : 'Hide notes';
+  });
   let photoIndex = 0, photoOpener = null, swipeStart = null;
   function showMoment(index) {
     photoIndex = (index+photoLinks.length)%photoLinks.length;
@@ -147,9 +168,9 @@
     viewer.querySelectorAll('[data-viewer-step]').forEach(button=>button.disabled=photoLinks.length<2);
     enter(viewerImage);
   }
-  photoLinks.forEach((link,index)=>link.addEventListener('click',event=>{
+  allPhotoLinks.forEach(link=>link.addEventListener('click',event=>{
     if(event.ctrlKey||event.metaKey||event.shiftKey||event.altKey||typeof viewer.showModal!=='function')return;
-    event.preventDefault(); photoOpener=link; showMoment(index); viewer.showModal(); document.body.classList.add('journey-viewer-open');
+    event.preventDefault(); photoOpener=link; showMoment(photoLinks.indexOf(link)); viewer.showModal(); document.body.classList.add('journey-viewer-open');
   }));
   viewer.querySelector('.journey-viewer-close').addEventListener('click',()=>viewer.close());
   viewer.querySelectorAll('[data-viewer-step]').forEach(button=>button.addEventListener('click',()=>showMoment(photoIndex+Number(button.dataset.viewerStep))));
@@ -170,4 +191,29 @@
     const dx=event.changedTouches[0].clientX-swipeStart.x,dy=event.changedTouches[0].clientY-swipeStart.y;swipeStart=null;
     if(Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy)*1.5)showMoment(photoIndex+(dx<0?1:-1));
   },{passive:true});
+})();
+
+// Native folders work without JavaScript. Numbered stops also support deep links.
+(() => {
+  const folders = [...document.querySelectorAll('.trip-folder')];
+  function revealTrip() {
+    const folder = folders.find(item => `#${item.id}` === location.hash);
+    if (!folder) return;
+    folder.open = true;
+    requestAnimationFrame(() => folder.scrollIntoView({block:'start',behavior:'instant'}));
+  }
+  folders.forEach(folder => folder.addEventListener('toggle', () => {
+    const link = document.querySelector(`.trip-trail a[href="#${folder.id}"]`);
+    link?.toggleAttribute('data-open',folder.open);
+    folder.querySelector('.trip-open-label').textContent = folder.open ? 'Close folder' : 'Open folder';
+    if (folder.open && !document.body.classList.contains('motion-paused')) {
+      folder.querySelector('.trip-folder-content').animate([{opacity:0,transform:'translateY(10px)'},{opacity:1,transform:'none'}],{duration:380,easing:'ease-out'});
+    }
+  }));
+  document.querySelectorAll('.trip-trail a').forEach(link => link.addEventListener('click', () => {
+    const folder = folders.find(item => `#${item.id}` === link.hash);
+    if (folder) folder.open = true;
+  }));
+  addEventListener('hashchange',revealTrip);
+  revealTrip();
 })();

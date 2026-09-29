@@ -1,133 +1,70 @@
 # eyesofnydh
 
-A responsive photography portfolio for Nidhin Narayanan. Built with plain HTML, CSS, and JavaScript; the portfolio remains fully usable without third-party runtime code, while optional production analytics uses Plausible. The travel chapter includes a static-page generator.
+Nidhin Narayanan’s photography portfolio. Plain HTML, CSS, and JavaScript, with responsive image previews and no runtime framework.
 
-The homepage also includes service and availability details, an honest selected-work/testimonial-ready area, privacy-friendly analytics hooks, and 27 generated shareable photograph pages with canonical metadata and related work.
+## Current experience
 
-## Production content and generated pages
+- Mobile photography first, with camera photography and photo/video editing.
+- Scroll-linked desktop focus dial and rotating mobile lens menu, with keyboard controls and Escape dismissal.
+- A cinematic photo selector, photo stack, record shelf, photo wall, search, filters, saved photos, and shareable photo pages.
+- Journey is a photo collection with optional short details and personal opinions, rather than a blog. It includes series filters, a show/hide notes control, and a keyboard/swipe photo viewer.
+- Subtle photo and section entrances, hover effects, Pause motion, and system reduced-motion support.
+- Existing photographs remain accessible without JavaScript. No client testimonials or unverified service promises are displayed.
 
-- `python tools/build-photo-pages.py` rebuilds the 27 pages in `photos/` from `assets/js/photos.js`. Every page includes a caption, an honest “not published/not recorded” value where location or camera data is unavailable, related photographs, canonical metadata, and `ImageObject` structured data.
-- `python tools/build-photo-pages.py --check` verifies those pages. Run `python tools/build-seo.py` after rebuilding so every page is represented in the sitemap.
-- The travel journal now contains three archive-based visual essays rather than invented trips. Update `assets/data/travel.json` when verified place, date, or equipment information becomes available.
-- `assets/js/analytics.js` loads Plausible only on the production hostname and records gallery opens, saved-photo actions, enquiry clicks, and journal-story opens. Register `eyesofnydh.netlify.app` in Plausible (or replace the provider adapter) before expecting dashboard data. No analytics request is made on localhost.
-- `netlify.toml` disables Pretty URL rewriting so internal links, canonical URLs, and tests consistently use `/travel.html`. It also adds security headers and browser caching for static assets.
+## Preview and build
 
-## My Journey — travel extension
+Serve the repository root with `python -m http.server 4173`, then open `http://localhost:4173/` or `http://localhost:4173/travel.html`.
 
-Open [the local travel chapter](http://localhost:4173/travel.html). A prominent homepage My Journey section, menu entry, and footer link lead to it; the existing homepage sections, camera navigation, gallery, and shared styles are unchanged. Travel uses the same navy/cyan colors, Segoe UI and Georgia accents, spacing scale, original archive images, responsive preview pipeline, and saved motion preference. The full journal CSS and JavaScript load only on `travel.html`; the homepage preview uses the existing homepage styles.
+This is a static site; there is no npm build step. Netlify serves the checked-in files. Local changes and validation do not deploy it.
 
-### Local development and production
+After changing Journey content or templates:
 
-1. **Dependencies:** no npm install, framework, map SDK, API key, or environment variables are needed. Python 3.9+ is needed only to regenerate the static page and run the local server. A browser can also view the checked-in HTML directly.
-2. **Start:** from the repository root, run `python -m http.server 4173`.
-3. **Local URLs:** homepage `http://localhost:4173/`; travel `http://localhost:4173/travel.html`.
-4. **Production generation:** run `python tools/build-travel.py`, then `python tools/build-travel.py --check`. This generates the checked-in `travel.html` from the data and template. It also updates only the marked Journey preview block in the homepage. There is no bundling step for this static site.
-5. **Production preview:** serve the same repository root with `python -m http.server 4173`; these are the exact static HTML/CSS/JS/assets served in production.
+```sh
+python tools/build-travel.py
+python tools/build-travel.py --check
+python tools/build-seo.py --check
+```
 
-Netlify can continue publishing the same site root with its existing settings. Commit the generated `travel.html` alongside the travel data, CSS, and JS. No SPA rewrite is needed: `/travel.html` is a real file, and story URLs such as `/travel.html#story-munnar` use local anchors. No deployment configuration was added or changed. Local validation does not deploy the website.
+The generator updates `travel.html` and only the marked Journey preview in `index.html`. Templates live in `tools/travel-template.html` and `tools/travel-home-template.html`. Shared layout refinements live in `assets/css/refinement.css`.
 
-### Updating trips
+## Adding photographs and notes
 
-Edit `assets/data/travel.json`, then regenerate the page. Each destination has an ID, name, region, year, date, duration, cover image, photo list, introduction, story paragraphs, travel details, memory, and optional latitude/longitude. IDs should stay stable so saved story links continue to work.
+The main collection uses `assets/js/photos.js`. Add the original image to `assets/images/`, describe it accurately, and generate responsive previews using `tools/build-previews.ps1`. Run `python tools/build-photo-pages.py` and `python tools/build-seo.py` to refresh durable photo pages and the sitemap.
 
-- `sample: false` publishes the current archive-based essays. Set it to `true` while drafting unverified material; draft mode adds a visible warning and `noindex,follow`.
-- The published essays avoid unverified destinations, dates, client names, and equipment. Add those details only when they are known.
-- `currently` and `kit` are editable separately. Remove kit entries to omit those items.
-- Image filenames refer to `assets/js/photos.js`. To add new photographs, follow the existing photo workflow below, generate previews, and reference the filename in the travel data. The travel page reuses JPEG previews rather than adding another image toolchain; full originals open from the moments gallery.
-- The lightweight map is a coordinate-based location sketch, not a street map or a claimed travel route. It runs locally without tiles or a third-party service. Entries without valid coordinates still appear in the destination/story sections.
-- Missing optional story fields render readable placeholders. Failed images render a text fallback; content and navigation remain usable. With JavaScript disabled, native story disclosures, destination links, and original-photo links still work.
+Trip folders live in the `trips` list in `assets/data/travel.json`. Replace each `cover` and `photos` list with filenames from the photo collection, then set `placeholder` to `false` to remove the preview label. The numbered trail and homepage folder links are generated from that list. Run the travel builder after edits.
 
-The generator is split into destination, story, memory, map, image, and page functions in `tools/build-travel.py`; page structure lives in `tools/travel-template.html`. Runtime interactions live in `assets/js/travel.js`, with page-scoped styling in `assets/css/travel.css`.
+Journey uses `assets/data/travel.json`. The `destinations` list groups images into series; each `photos` array contains filenames from the main collection. Stable IDs preserve existing Journey links. Existing series descriptions and short reflections appear beneath the first photograph in each series.
 
-### Travel validation
+To add details or opinions to any individual photograph, add a top-level `photoNotes` object:
 
-- `python tests/travel-build.py`: incomplete data, empty collection, safe text/IDs, invalid coordinates, and sample indexing behavior.
-- `python tools/build-travel.py --check`: generated production HTML matches the data/template and referenced previews exist.
-- `node tests/travel.cjs`: homepage integration; archive stories and direct links; desktop horizontal and mobile vertical layouts; keyboard controls; all eight requested widths (375, 390, 414, 768, 1024, 1280, 1440, 1920); images and local links; SEO metadata; reduced motion; no JavaScript; failed images and blocked storage. Uses the same Playwright environment described below.
-- Existing gallery/navigation tests remain applicable. The gallery-experience test now waits for browser motion updates instead of relying on 60 ms timing.
+```json
+"photoNotes": {
+  "f4.png": {
+    "detail": "Your details about this photograph.",
+    "opinion": "Your personal thoughts about the moment or the edit."
+  }
+}
+```
 
-Travel screenshots are generated in `tests/travel-*.png`. Test tooling is optional and is not shipped as a runtime dependency.
+Both fields are optional. Text is escaped by the generator. Equipment and settings are not inferred for individual images. Update `intro`, `currently`, and `kit` to change the process section. The page has no online editor or upload service; edit the content file and regenerate it.
 
-## Preview
+## Validation
 
-From the project directory, run `python -m http.server 4173`, then open http://localhost:4173.
+With the preview server running and Playwright installed:
 
-## Features
+```sh
+node tests/refinement.cjs
+node tests/gallery-ui.cjs
+node tests/improvements.cjs
+python tests/travel-build.py
+python tools/build-travel.py --check
+python tools/build-seo.py --check
+```
 
-- Original navy and cyan palette with translucent glass panels with responsive layouts and existing original photographs.
-- Collection search, category filters, and browser-local favorites.
-- Accessible native photo dialog with previous/next controls, arrow keys, Escape, and focus restoration.
-- Camera-dial desktop navigation inspired by https://epochtales.com/, with a moving label drum, fixed center pointer, scroll snapping, wheel gestures, and keyboard controls.
-- Bottom mobile camera lens with a rotating focus ring, six-section fan menu, scroll tracking, touch targets, keyboard controls, and outside-click dismissal.
-- Cinematic hero with three manually selectable photographs, a glass filmstrip, arrow-key controls, and reduced-motion support.
-- Reading-progress indicator, photo reveals, pointer lighting, and animated headline entrances.
-- Expandable glass navigation with staggered links and a glass mobile lens menu.
-- A 27-photo archive with a layered journal, angled record shelf, and paginated photo wall.
-- Drag, horizontal trackpad scrolling, arrow keys, and a range slider browse the 3D cards. Click a side card to select it; click the selected card to open it.
-- Collapsible search/filter controls and a clickable strip of tilted photo prints near the footer.
-- Thumbnail-strip navigation, frame counters, swipe navigation, and native-size viewing for small images.
-- Scroll-linked hero depth, rotating ribbon details, and staggered photo reveals.
-- Clearly labeled Pause motion / Enable motion control; system reduced-motion preferences always take priority.
-- Three interactive photo essays (By the water, Into the green, After hours), each with a curated lightbox sequence.
-- “Just the photograph” mode removes hero copy while keeping photo controls accessible.
-- “Surprise me” opens a random photograph without immediately repeating the last discovery.
-- Reduced-motion support, skip link, and content accessible without JavaScript.
-- Direct Instagram and LinkedIn contact links; no nonfunctional contact form.
+`refinement.cjs` covers mobile/desktop navigation, seven widths from 320 to 1920 pixels, short landscape screens, image loading, local anchors, search, viewers, Journey filters/notes, focus restoration, deep links, motion preference persistence, and JavaScript-free browsing. Screenshots are saved under `tests/` and ignored by Git.
 
-## Sanity checks
+The gallery suites cover card layout, search recovery, saved photos, original-image viewing, sharing, blocked storage, and keyboard editing. Older camera-dial, lens-fan, and travel-article suites describe the previous design; `refinement.cjs` replaces those design-specific checks.
 
-With the preview server running and Playwright available, run `node tests/sanity.cjs`.
-You can set `PLAYWRIGHT_MODULE` to an existing Playwright module path, `CHROMIUM_PATH` to a Chromium executable, and `SITE_URL` to another preview URL.
+## Production
 
-The test covers 320, 375, 390, 768, 1024, and 1440px viewports, image loading, local anchor targets, search/filter combinations, empty states, favorites persistence, restricted browser storage, lightbox controls, keyboard/focus behavior, the mobile menu, reduced motion, and content without JavaScript. It also checks browser errors and failed HTTP responses, and generates desktop/mobile screenshots in `tests/`.
-
-External social profile ownership and availability are not validated by this local test.
-
-## Add more photographs
-
-Place new images in `assets/images/`, then add an entry in `assets/js/photos.js` with `file`, `title`, `category`, descriptive `alt`, and the actual pixel `width` and `height`. Supported categories are Nature, Coast, Travel, and People. The gallery, search, favorites, random discovery, pagination, and viewer all use this collection. Use original high-resolution files where available; some existing photographs are thumbnails, and the viewer avoids stretching them.
-
-## Archive interaction checks
-
-Run `node tests/archive.cjs` with the same Playwright environment as the sanity test. It checks the journal and shelf, drag and native touch gestures, keyboard navigation, photo-wall pagination, filters, empty states, focus restoration, and responsive card bounds. Reference images were used for visual direction only; all displayed photographs come from the existing project assets.
-
-Run `node tests/chapters.cjs` to verify motion labels, system preferences, story navigation, curated photo sequences, focus restoration, and responsive layouts.
-
-Run `node tests/mobile-lens.cjs` to verify touch navigation, keyboard controls, responsive bounds, reduced motion, and desktop navigation.
-
-## Image delivery and recovery
-
-Gallery, story, and hero images use generated JPEG previews with responsive candidates; the viewer always opens the unchanged PNG originals. Regenerate previews after adding photos with `powershell -File tools/build-previews.ps1` (Windows, System.Drawing). The 800px preview set is about 0.93 MB versus 11.92 MB for the collection originals (92% smaller). Small originals are never enlarged during generation.
-
-Save is available in the journal, shelf, photo wall, and viewer. Favorites persist in this browser when storage is available; otherwise a message explains that they last for this visit. Every empty layout offers a reset, and status describes the current layout and position.
-
-The viewer can share a photo link using native sharing, clipboard copy, or a selectable link when those are unavailable. Shared links now open a durable page such as `/photos/a-world-of-green.html`, with canonical metadata and related photographs. Contact guidance uses the existing Instagram and LinkedIn profiles. With JavaScript disabled, all 27 photographs remain available as links to originals.
-
-Run `node tests/improvements.cjs` with the same browser environment as the other tests to check previews, original viewing, sharing fallback and deep links, Save synchronization, all-layout recovery, blocked storage, and JavaScript-free browsing.
-
-Run `node tests/gallery-ui.cjs` to check gallery layout bounds at six viewport widths, selected shelf-card clipping, arrow alignment, Save/title overlap, preserved filter controls, empty-state keyboard focus, and share-link editing. It also captures mobile and desktop gallery screenshots in `tests/`.
-
-## Travel interactions and shelf-frame checks
-
-My Journey includes sticky chapter tracking, a reading-progress line, subtle story/map transitions, photo hover cues, and an original-image viewer with arrow keys, swipe navigation, Escape, and focus restoration. All effects respect Pause motion and system reduced motion. Run `node tests/travel-ui.cjs` to verify those interactions.
-
-The gallery record shelf uses even, thin borders and separates neighboring sleeves from the selected frame. Run `node tests/shelf-frames.cjs` to verify selected-frame visibility, bounds, and symmetric borders at nine widths from 320px through 1920px.
-
-The homepage Journey preview is generated from the same trip data, using `tools/travel-home-template.html`. Run `node tests/journey-home.cjs` to check the menu entry, preview layout, original section presence, and story links at nine screen widths.
-
-
-## Search visibility and menu validation
-
-My Journey is in both the desktop camera menu and mobile lens menu, between Stories and About. There is no standalone Journey link in the header.
-
-The homepage includes a production canonical, descriptive title/description, Open Graph and Twitter cards, and factual Person/WebSite/WebPage JSON-LD. `robots.txt` permits crawling and advertises the XML sitemap. The sitemap includes the homepage, journal, 27 photograph pages, and 27 original images.
-
-After changing journal data, run `python tools/build-travel.py` followed by `python tools/build-seo.py`. Run both commands with `--check` to verify the committed output. No keyword stuffing, fabricated reviews, business addresses, trip dates, client quotes, or ranking claims are added.
-
-After publishing these files to Netlify, verify the deployed canonical URL, robots.txt and sitemap.xml. Verify ownership of `https://eyesofnydh.netlify.app/` in Google Search Console, submit `https://eyesofnydh.netlify.app/sitemap.xml`, and use URL Inspection to request indexing. Search Console ownership, live deployment, indexing, rich-result eligibility and rankings are not confirmed by local tests. Consistent real travel stories, descriptive original photographs and relevant links from your existing profiles support ongoing visibility.
-
-References: [Google canonical guidance](https://developers.google.com/search/docs/crawling-indexing/consolidate-duplicate-urls), [sitemap guidance](https://developers.google.com/search/docs/crawling-indexing/sitemaps/build-sitemap), and [robots/snippet controls](https://developers.google.com/search/docs/crawling-indexing/robots-meta-tag).
-
-`node tests/menu-seo.cjs` checks the six menu entries at 11 viewport/landscape sizes, 44px touch targets, overlap, section tracking, titles/metadata, heading and ID integrity, structured data, robots.txt and image-sitemap responses. The rest of the existing browser suites cover gallery, stories, saved photos, blocked storage, motion, the travel viewer and no-JavaScript fallback.
-
-`node tests/header-domain.cjs` checks motion-button text containment, the travel return-arrow alignment, compact gallery hint wrapping, `eyesofnydh` branding and the `eyesofnydh.netlify.app` canonicals at eight widths. The new domain is also used in structured data, social metadata, robots.txt and the generated image sitemap.
+The canonical domain is `https://eyesofnydh.netlify.app`. `netlify.toml` configures security headers, caching, and stable `.html` URLs. Optional Plausible analytics loads only on the production hostname. External profile ownership, analytics configuration, and live deployment are not verified by local checks.
