@@ -159,10 +159,10 @@ const motionAllowed = () => !matchMedia('(prefers-reduced-motion: reduce)').matc
     if (!entry.isIntersecting) return;
     observer.unobserve(entry.target);
     if (motionAllowed()) entry.target.animate(
-      [{opacity:.15,transform:'translateY(28px)',clipPath:'inset(0 0 12% 0)'},{opacity:1,transform:'translateY(0)',clipPath:'inset(0 0 0% 0)'}],
-      {duration:900,delay:entry.target.matches('.service-grid article') ? [...entry.target.parentElement.children].indexOf(entry.target)*90 : 0,easing:'cubic-bezier(.16,1,.3,1)'});
+      [{opacity:0,transform:'translateY(35px)'},{opacity:1,transform:'translateY(0)'}],
+      {duration:800,easing:'cubic-bezier(.16,1,.3,1)'});
   }), {threshold:.12});
-  document.querySelectorAll('.section-heading,.archive-heading,.chapter-copy,.service-grid article,.journey-preview-intro,.journey-preview-visual,.about-copy,.portrait-wrap,.contact' ).forEach(el => observer.observe(el));
+  document.querySelectorAll('.section-heading,.service-grid article,.journey-preview-visual,.about-copy,.portrait-wrap,.contact').forEach(el => observer.observe(el));
   const grid = document.querySelector('#photo-grid');
   const photoObserver = new IntersectionObserver(entries => entries.forEach(entry => {
     if (!entry.isIntersecting) return;
@@ -193,54 +193,27 @@ const motionAllowed = () => !matchMedia('(prefers-reduced-motion: reduce)').matc
   hero.addEventListener('pointerleave', () => { cancelAnimationFrame(frame); hero.style.removeProperty('--light-x'); hero.style.removeProperty('--light-y'); });
 })();
 
-// Cinematic depth follows native scrolling. Only visible frames are measured;
-// individual transform properties preserve scene changes and hover animations.
+// Scroll-linked depth: finite, clamped movement using the native document scroll.
 (() => {
-  document.querySelectorAll('.journey-preview-visual img').forEach(image => {
-    const crop = document.createElement('span');
-    crop.className = 'scroll-image-crop';
-    image.before(crop); crop.append(image);
-  });
-  const frames = [...document.querySelectorAll('.hero-frame,.chapter-photo,.portrait-wrap,.scroll-image-crop')]
-    .map(frame => ({frame, image:frame.querySelector('img')})).filter(item => item.image);
-  const visible = new Set();
-  const stars = [...document.querySelectorAll('.frame-ribbon b')];
+  const hero = document.querySelector('.cinematic-hero');
+  const frame = hero.querySelector('.hero-frame');
   const ribbon = document.querySelector('.frame-ribbon');
-  let pending = 0;
-  const clamp = value => Math.max(-1, Math.min(1, value));
-  function reset() {
-    frames.forEach(({image}) => { image.style.removeProperty('translate'); image.style.removeProperty('scale'); });
-    stars.forEach(star => star.style.removeProperty('rotate'));
-  }
+  let pending = false;
   function draw() {
-    pending = 0;
-    if (!motionAllowed() || document.hidden) { reset(); return; }
-    // Batch geometry reads before writing styles; no perpetual animation loop.
-    const positions = [...visible].map(item => ({...item, rect:item.frame.getBoundingClientRect()}));
-    const ribbonRect = ribbon.getBoundingClientRect();
-    positions.forEach(({image,rect}) => {
-      if (!rect.height) return;
-      const progress = clamp((innerHeight / 2 - rect.top - rect.height / 2) / ((innerHeight + rect.height) / 2));
-      const distance = Math.min(innerWidth <= 760 ? 14 : 32, rect.height * .045);
-      image.style.translate = `0 ${(-progress * distance).toFixed(2)}px`;
-      image.style.scale = String(1 + distance * 2 / rect.height + .015);
-    });
-    const progress = clamp((innerHeight * .5 - ribbonRect.top) / innerHeight);
-    stars.forEach((star,index) => { star.style.rotate = `${progress * (index % 2 ? -100 : 100)}deg`; });
+    const top = hero.getBoundingClientRect().top;
+    const depth = motionAllowed() && innerWidth > 760 ? Math.min(65, Math.max(0, -top * .15)) : 0;
+    frame.style.translate = `0 ${depth}px`;
+    frame.style.scale = depth ? '1.08' : '1';
+    const r = ribbon.getBoundingClientRect();
+    const progress = motionAllowed() ? Math.max(-1,Math.min(1,(innerHeight*.5-r.top)/innerHeight)) : 0;
+    ribbon.querySelectorAll('b').forEach((star,index) => { star.style.rotate = `${progress * (index%2 ? -100 : 100)}deg`; });
+    pending = false;
   }
-  function schedule() { if (!pending) pending = requestAnimationFrame(draw); }
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      const item = frames.find(item => item.frame === entry.target);
-      if (entry.isIntersecting) visible.add(item); else visible.delete(item);
-    });
-    schedule();
-  }, {rootMargin:'80px 0px'});
-  frames.forEach(item => observer.observe(item.frame));
+  function schedule() { if (!pending) { pending = true; requestAnimationFrame(draw); } }
   addEventListener('scroll',schedule,{passive:true});
   addEventListener('resize',schedule);
-  document.addEventListener('visibilitychange',schedule);
-  document.addEventListener('nydh:motion',() => { reset(); schedule(); });
+  document.addEventListener('nydh:motion',schedule);
+  draw();
 })();
 
 // Mobile navigation: the lens opens a fan of sections and rotates with the page.
