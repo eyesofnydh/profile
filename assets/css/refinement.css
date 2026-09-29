@@ -151,3 +151,11 @@ body:not(.journey-page) .container { width:min(1400px,calc(100% - 96px)); margin
 .motion-paused .trip-folder *,.motion-paused .trip-trail *, .motion-paused .focus-dial,.motion-paused .focus-dial *,.motion-paused .mobile-lens * { animation:none!important; transition:none!important; }
 
 #trips { scroll-margin-top:150px; }
+
+/* The crop keeps parallax inside each photograph without adding scroll space. */
+.scroll-image-crop { display:block; overflow:hidden; border-radius:4px; }
+.cinematic-hero .hero-frame { overflow:hidden; }
+.motion-paused :is(.hero-frame,.chapter-photo,.portrait-wrap,.scroll-image-crop) > img { translate:none!important; scale:none!important; }
+@media(prefers-reduced-motion:reduce) {
+  :is(.hero-frame,.chapter-photo,.portrait-wrap,.scroll-image-crop) > img { translate:none!important; scale:none!important; }
+}
