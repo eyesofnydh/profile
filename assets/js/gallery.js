@@ -101,7 +101,9 @@
     const img = document.createElement('img'); window.setPhotoPreview(img, photo, '(max-width: 760px) 100vw, 33vw'); img.alt = photo.alt; img.loading = 'lazy'; img.decoding = 'async'; img.width = photo.width; img.height = photo.height;
     view.append(img); view.addEventListener('click', () => showPhoto(items, index, view));
     const info = document.createElement('div'); info.className = 'photo-info';
-    const title = document.createElement('h3'); title.textContent = photo.title;
+    const title = document.createElement('h3');
+    const permalink = document.createElement('a'); permalink.href = `./photos/${slug(photo)}.html`; permalink.textContent = photo.title;
+    title.append(permalink);
     const tag = document.createElement('p'); tag.textContent = `${String(photos.indexOf(photo)+1).padStart(2,'0')} / ${photo.category}`;
     const save = document.createElement('button'); save.className = 'save-photo';
     syncSave(save, photo);

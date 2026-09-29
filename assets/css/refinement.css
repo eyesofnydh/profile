@@ -6,9 +6,11 @@ body:not(.journey-page) .container { width:min(1400px,calc(100% - 96px)); margin
 .service-grid { gap:20px; }
 .service-grid article { position:relative; min-height:0; padding:30px; transition:transform .3s,border-color .3s; }
 .service-grid article:hover { transform:translateY(-5px); border-color:#91efe67a; }
-.service-grid h3 { margin:24px 0 14px; font-size:clamp(25px,2.5vw,36px); line-height:1.2; max-width:14ch; }
+.service-grid h3 { margin:24px 0 14px; font:400 clamp(25px,2.5vw,36px)/1.2 var(--sans); letter-spacing:-1px; max-width:16ch; }
 .service-grid article > span { color:#a3e9e5; }
-.service-grid .craft-symbol { display:block; width:48px; height:48px; margin-bottom:24px; font:36px/48px Georgia,serif; }
+.service-grid .craft-symbol { display:block; width:56px; height:56px; margin-bottom:24px; }
+.craft-symbol svg { display:block; width:100%; height:100%; fill:none; stroke:currentColor; stroke-width:1.5; stroke-linecap:round; stroke-linejoin:round; }
+.service-grid article > span:not(.craft-symbol) { font:500 11px/1.4 var(--sans); letter-spacing:.12em; }
 .service-grid p { font-size:15px; }
 @media(min-width:761px) {
   body:not(.journey-page) .container { width:min(1320px,calc(100% - 160px)); margin-left:max(32px,calc((100% - 1480px)/2)); }
@@ -64,8 +66,14 @@ body:not(.journey-page) .container { width:min(1400px,calc(100% - 96px)); margin
 }
 @media(max-width:760px) {
   body:not(.journey-page) .container,.journey-page .container,.journey-page .journey-nav { width:calc(100% - 40px); margin-inline:auto; }
-  .header-inner { gap:10px; }
+  body:not(.journey-page) .header-inner { gap:8px; flex-wrap:nowrap; min-height:76px; padding-block:12px; }
   .header-inner .motion-toggle { font-size:10px; min-width:0; padding:8px; }
+  .services .section-heading > div,.selected-work .section-heading > div { flex-basis:auto; }
+  .services .section-heading { margin-bottom:0; }
+  .service-grid { margin-top:28px; }
+  .mosaic-grid .photo-card:nth-child(n) { grid-column:span 1; }
+  .mosaic-grid .photo-card:nth-child(n) .photo-view img { aspect-ratio:1; }
+  .gallery-pagination { margin-top:24px; }
   .service-grid { gap:14px; }
   .service-grid article { padding:24px; }
   .service-grid .craft-symbol { float:right; margin:0; text-align:right; }
@@ -90,10 +98,10 @@ body:not(.journey-page) .container { width:min(1400px,calc(100% - 96px)); margin
 
 @media(max-width:480px) {
   .journey-moments { grid-template-columns:1fr; }
-  body:not(.journey-page) .header-inner { flex-wrap:wrap; height:auto; min-height:76px; padding-block:12px; }
-  body:not(.journey-page) .header-inner .wordmark { font-size:24px; }
-  body:not(.journey-page) .header-inner .brand-dot { font-size:24px; }
-  body:not(.journey-page) .header-inner .motion-toggle { order:3; width:100%; min-height:32px; padding:0; }
+  body:not(.journey-page) .header-inner .wordmark { font-size:clamp(18px,5.5vw,24px); letter-spacing:-1px; }
+  body:not(.journey-page) .header-inner .brand-dot { font-size:20px; margin-left:3px; }
+  body:not(.journey-page) .header-inner .motion-toggle { width:auto; min-height:44px; padding:8px; }
+  body:not(.journey-page) .nav-open-btn { padding:8px; gap:6px; font-size:11px; flex-shrink:0; }
   .journey-now dl div { grid-template-columns:100px minmax(0,1fr); }
 }
 @media(prefers-reduced-motion:reduce) { .service-grid article:hover { transform:none; } }
