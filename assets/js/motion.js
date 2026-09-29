@@ -5,10 +5,12 @@
 // motion is paused, reduced, unsupported, or JavaScript is unavailable.
 (() => {
   const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+  const isIOSDevice = /iP(?:ad|hone|od)/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1 && /Mobile\//.test(navigator.userAgent));
+  if (isIOSDevice) document.documentElement.classList.add('is-ios');
   const motionAllowed = () => {
     let savedPause = false;
     try { savedPause = localStorage.getItem('nydh-motion-paused') === 'true'; } catch {}
-    return !reducedMotion.matches && !savedPause &&
+    return !isIOSDevice && !reducedMotion.matches && !savedPause &&
       !document.documentElement.classList.contains('motion-paused') &&
       !document.body.classList.contains('motion-paused');
   };

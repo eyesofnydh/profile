@@ -2,18 +2,22 @@
 (() => {
   const preference = matchMedia('(prefers-reduced-motion: reduce)');
   const toggle = document.querySelector('.journey-motion');
+  const isIOSDevice = /iP(?:ad|hone|od)/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1 && /Mobile\//.test(navigator.userAgent));
+  if (isIOSDevice) document.documentElement.classList.add('is-ios');
   let paused = false;
   try { paused = localStorage.getItem('nydh-motion-paused') === 'true'; } catch {}
-  const motionAllowed = () => !paused && !preference.matches;
+  const motionAllowed = () => !isIOSDevice && !paused && !preference.matches;
   function syncMotion() {
-    document.body.classList.toggle('motion-paused', paused || preference.matches);
-    toggle.textContent = preference.matches ? 'Reduced motion' : paused ? 'Enable motion' : 'Pause motion';
-    toggle.disabled = preference.matches;
-    toggle.setAttribute('aria-pressed', String(paused || preference.matches));
+    document.body.classList.toggle('motion-paused', isIOSDevice || paused || preference.matches);
+    toggle.textContent = isIOSDevice ? 'iOS motion safe' : preference.matches ? 'Reduced motion' : paused ? 'Enable motion' : 'Pause motion';
+    toggle.disabled = preference.matches || isIOSDevice;
+    toggle.setAttribute('aria-pressed', String(isIOSDevice || paused || preference.matches));
+    toggle.title = isIOSDevice ? 'Heavy effects are disabled on iOS so scrolling and controls stay smooth.' : '';
     if (!motionAllowed()) document.getAnimations().forEach(animation => animation.cancel());
   }
   toggle.hidden = false;
   toggle.addEventListener('click', () => {
+    if (isIOSDevice) return;
     paused = !paused;
     try { localStorage.setItem('nydh-motion-paused', String(paused)); } catch {}
     syncMotion();
@@ -206,7 +210,7 @@
     const link = document.querySelector(`.trip-trail a[href="#${folder.id}"]`);
     link?.toggleAttribute('data-open',folder.open);
     folder.querySelector('.trip-open-label').textContent = folder.open ? 'Close folder' : 'Open folder';
-    if (folder.open && !document.body.classList.contains('motion-paused')) {
+    if (folder.open && !document.body.classList.contains('motion-paused') && !document.documentElement.classList.contains('is-ios')) {
       folder.querySelector('.trip-folder-content').animate([{opacity:0,transform:'translateY(10px)'},{opacity:1,transform:'none'}],{duration:380,easing:'ease-out'});
     }
   }));

@@ -1,6 +1,8 @@
 'use strict';
+const isIOSDevice = /iP(?:ad|hone|od)/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1 && /Mobile\//.test(navigator.userAgent));
+if (isIOSDevice) document.documentElement.classList.add('is-ios');
 try { if (localStorage.getItem('nydh-motion-paused') === 'true') document.documentElement.classList.add('motion-paused'); } catch {}
-const motionAllowed = () => !matchMedia('(prefers-reduced-motion: reduce)').matches && !document.documentElement.classList.contains('motion-paused');
+const motionAllowed = () => !isIOSDevice && !matchMedia('(prefers-reduced-motion: reduce)').matches && !document.documentElement.classList.contains('motion-paused');
 (() => {
   const nav = document.querySelector('[data-navbar]');
   const toggle = document.querySelector('.nav-open-btn');
@@ -133,15 +135,15 @@ const motionAllowed = () => !matchMedia('(prefers-reduced-motion: reduce)').matc
   function refresh() {
     const paused = !motionAllowed();
     toggle.setAttribute('aria-pressed', String(paused));
-    toggle.setAttribute('aria-label', preference.matches ? 'Reduced motion is enabled in your system settings' : paused ? 'Enable animations' : 'Pause animations');
-    toggle.textContent = preference.matches ? 'Reduced motion' : paused ? 'Enable motion' : 'Pause motion';
-    toggle.setAttribute('aria-disabled', String(preference.matches));
-    toggle.title = preference.matches ? 'Your device requests reduced motion. Animations stay off.' : paused ? 'Turn on scroll, card, and photo transitions.' : 'Turn off scroll, card, and photo transitions. Photos and navigation still work.';
+    toggle.setAttribute('aria-label', isIOSDevice ? 'Motion is simplified for iOS stability' : preference.matches ? 'Reduced motion is enabled in your system settings' : paused ? 'Enable animations' : 'Pause animations');
+    toggle.textContent = isIOSDevice ? 'iOS motion safe' : preference.matches ? 'Reduced motion' : paused ? 'Enable motion' : 'Pause motion';
+    toggle.setAttribute('aria-disabled', String(preference.matches || isIOSDevice));
+    toggle.title = isIOSDevice ? 'Heavy effects are disabled on iOS so scrolling and controls stay smooth.' : preference.matches ? 'Your device requests reduced motion. Animations stay off.' : paused ? 'Turn on scroll, card, and photo transitions.' : 'Turn off scroll, card, and photo transitions. Photos and navigation still work.';
     if (paused) document.getAnimations().forEach(animation => animation.cancel());
     document.dispatchEvent(new Event('nydh:motion'));
   }
   toggle.addEventListener('click', () => {
-    if (preference.matches) return;
+    if (preference.matches || isIOSDevice) return;
     const paused = document.documentElement.classList.toggle('motion-paused');
     try { localStorage.setItem('nydh-motion-paused', String(paused)); } catch {}
     refresh();
@@ -202,8 +204,13 @@ const motionAllowed = () => !matchMedia('(prefers-reduced-motion: reduce)').matc
   function draw() {
     const top = hero.getBoundingClientRect().top;
     const depth = motionAllowed() && innerWidth > 760 ? Math.min(65, Math.max(0, -top * .15)) : 0;
-    frame.style.translate = `0 ${depth}px`;
-    frame.style.scale = depth ? '1.08' : '1';
+    if (isIOSDevice) {
+      frame.style.removeProperty('translate');
+      frame.style.removeProperty('scale');
+    } else {
+      frame.style.translate = `0 ${depth}px`;
+      frame.style.scale = depth ? '1.08' : '1';
+    }
     const r = ribbon.getBoundingClientRect();
     const progress = motionAllowed() ? Math.max(-1,Math.min(1,(innerHeight*.5-r.top)/innerHeight)) : 0;
     ribbon.querySelectorAll('b').forEach((star,index) => { star.style.rotate = `${progress * (index%2 ? -100 : 100)}deg`; });
@@ -237,7 +244,7 @@ const motionAllowed = () => !matchMedia('(prefers-reduced-motion: reduce)').matc
       topToggle.setAttribute('aria-label',open ? 'Close menu' : 'Open menu');
       topToggle.querySelector('.menu-label').textContent=open ? 'Close' : 'Menu';
     }
-    if(restoreFocus)topToggle.focus({preventScroll:true});
+    if(restoreFocus)(mobile.matches ? toggle : topToggle).focus({preventScroll:true});
   }
   function syncMode(){
     const focusInside=root.contains(document.activeElement);
